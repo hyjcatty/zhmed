@@ -15,7 +15,7 @@ import React, {
 
 import classNames from 'classnames';
 import '../../../../resource/css/font-awesome.min.css';
-
+import { deepCopy } from '../../../util/util.js';
 import './parameter.css';
 
 
@@ -87,31 +87,12 @@ export default class parametercard extends Component {
             },800);
         }
     }
-    deepCopy(o) {
-        if (o instanceof Array) {
-            var n = [];
-            for (var i = 0; i < o.length; ++i) {
-                n[i] = this.deepCopy(o[i]);
-            }
-            return n;
-        } else if (o instanceof Function) {
-            var n = new Function("return " + o.toString())();
-            return n
-        } else if (o instanceof Object) {
-            var n = {}
-            for (var i in o) {
-                n[i] = this.deepCopy(o[i]);
-            }
-            return n;
-        } else {
-            return o;
-        }
-    }
+
     handleChange(e){
         let change_value = e.target.value;
         let group_id= parseInt(e.target.getAttribute('data-group'));
         let parameter_id= parseInt(e.target.getAttribute('data-parameter'));
-        let new_state = this.deepCopy(this.state.configuration);
+        let new_state = deepCopy(this.state.configuration);
         new_state.parameter.groups[group_id].list[parameter_id].value=change_value;
         this.setState({configuration:new_state});
     }

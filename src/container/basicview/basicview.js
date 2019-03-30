@@ -113,7 +113,7 @@ export default class basicview extends Component {
                 this.refs.Panelcard.change_status("choice");
             }else{
 
-                //console.log("change to view status");
+                console.log("change to view status");
                 this.handle_stop();
             }
             //

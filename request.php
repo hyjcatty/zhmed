@@ -188,6 +188,78 @@ function get_file_list($dir,$type){
         $json = json_encode($array);
         return urldecode($json);
     }
+
+
+    function buildoneresult($seriesNo){
+        $series = $seriesNo;
+        $videoing="done";
+        $shooting="done";
+        $analysising="done";
+        $video="./demo/video/avorion.mp4";
+        $shootnumber = rand(1,4);
+        $shootarray = array();
+        for($k=0;$k<$shootnumber;$k++){
+            array_push($shootarray,"./demo/pic/shoot".(string)($k+1).".png");
+        }
+        $resultPic=array();
+        for($k=0;$k<$shootnumber;$k++){
+            array_push($resultPic,"./demo/pic/result.png");
+        }
+        $resultAna=array();
+         for($k=0;$k<5;$k++){
+            $resultitem=array(
+                'title'=>'result'.(string)$k,
+                'value'=>(string)rand(0,1000)
+            );
+            array_push($resultAna,$resultitem);
+         }
+         $result=array(
+             'resultPic'=>$resultPic,
+             'result'=>$resultAna
+         );
+         $subpic=array(
+              "series"=>$series,
+              "shoot"=>$shootarray,
+              "video"=>$video,
+              "shooting"=>$shooting,
+              "videoing"=>$videoing,
+              "analysising"=>$analysising,
+              "analysis"=>$result
+          );
+          return $subpic;
+    }
+    function buildrandomresult(){
+
+        $filename = array("2x3","3x4","4x6","6x8","8x12","16x24");
+        $x = rand(0,5);
+        $retarray = json_decode(getfiledetail("./baseconf/plateconf/".$filename[$x].".json"),true);
+        $retarray['basic']['batch']="1231231231";
+        if($x==0){
+            for($i=0;$i<count($retarray["basic"]["longitude"]);$i++){
+                    $y = rand(0,100);
+                    if($y<10) continue;
+                    else{
+                        $series = $retarray["basic"]["longitude"][$i];
+                        array_push($retarray["picture"],buildoneresult($series));
+                    }
+            }
+        }else{
+            for($i=0;$i<count($retarray["basic"]["latitude"]);$i++){
+                    for($j=0;$j<count($retarray["basic"]["longitude"]);$j++){
+                        $y = rand(0,100);
+                        if($y<30) continue;
+                        else{
+                            $series = $retarray["basic"]["latitude"][$i].$retarray["basic"]["longitude"][$j];
+                            array_push($retarray["picture"],buildoneresult($series));
+                        }
+                    }
+                }
+        }
+        return $retarray;
+
+
+
+    }
 $request_body = file_get_contents('php://input');
 //echo $request_body;
 $payload = json_decode($request_body,true);
@@ -271,7 +343,8 @@ switch ($key){
                 echo $jsonencode; break;
     case "ZH_Medicine_task_info":
             $body=$payload["body"];
-            $panel = $body["configure"];
+            //$panel = $body["configure"];
+            $panel = buildrandomresult();
                 $retarray;
                 $retarray = getfiledetail("./sysconf/systeminfo.json");
 

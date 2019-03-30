@@ -10,7 +10,7 @@ var gulp=require('gulp');
 //var sass = require('gulp-sass');
 //var minifycss = require("gulp-minify-css");
 var concat = require('gulp-concat');
-//var uglify = require('gulp-uglify');
+var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var clean = require('gulp-clean');
 var htmlmin = require('gulp-htmlmin');
@@ -88,7 +88,7 @@ gulp.task("resourcecopy",function(){
         .pipe(gulp.dest(option.buildPath+"/resource/pnotify/"));
     gulp.src("./resource/colorpicker/**/*")
         .pipe(gulp.dest(option.buildPath+"/resource/colorpicker/"));
-    gulp.src("./resource/cropper/*")
+    gulp.src("./resource/cropper/*.css")
         .pipe(gulp.dest(option.buildPath+"/resource/cropper/"));
     mkdirp.sync(option.buildPath+"/upload/");
     gulp.src("./svg/*")
@@ -156,6 +156,12 @@ gulp.task('scripts', function() {
      gulp.src('./test.html')
      .pipe(htmlmin(option_html))
      .pipe(gulp.dest(option.buildPath+'/'));*/
+    gulp.src('./resource/cropper/cropper.js')
+        .pipe(concat('cropper.js'))
+        // .pipe(gulp.dest('./dist/js'))
+        .pipe(rename('cropper.min.js'))
+        .pipe(uglify())
+        .pipe(gulp.dest(option.buildPath+'/resource/cropper/'));
     gulp.src('./index.html')
         .pipe(htmlmin(option_html))
         .pipe(gulp.dest(option.buildPath+'/'));

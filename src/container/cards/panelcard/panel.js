@@ -15,6 +15,8 @@ import React, {
 
 import classNames from 'classnames';
 import '../../../../resource/css/font-awesome.min.css';
+
+import { deepCopy } from '../../../util/util.js';
 import './panel.css';
 
 
@@ -275,8 +277,8 @@ export default class panelcard extends Component {
     add_selected(id){
         if(this.if_selected(id)) return;
         else{
-            let temp = this.deepCopy(this.state.configure);
-            let newchoice = this.deepCopy(temp.pictureclass);
+            let temp = deepCopy(this.state.configure);
+            let newchoice = deepCopy(temp.pictureclass);
             newchoice.series = id;
             newchoice.shoot = [];
             temp.picture.push(newchoice);
@@ -286,7 +288,7 @@ export default class panelcard extends Component {
     remove_selected(id){
         if(!this.if_selected(id)) return;
         else{
-            let temp = this.deepCopy(this.state.configure);
+            let temp = deepCopy(this.state.configure);
             for(let i=0;i<temp.picture.length;i++){
                 if(id === temp.picture[i].series){
                     temp.picture.splice(i,1);
@@ -329,11 +331,11 @@ export default class panelcard extends Component {
         return ret;
     }
     select_all(){
-        let temp = this.deepCopy(this.state.configure);
+        let temp = deepCopy(this.state.configure);
         temp.picture=[];
         let all_list = this.build_series_list("all");
         for(let i=0;i<all_list.length;i++){
-            let newchoice = this.deepCopy(temp.pictureclass);
+            let newchoice = deepCopy(temp.pictureclass);
             newchoice.series = all_list[i];
             newchoice.shoot = [];
             temp.picture.push(newchoice);
@@ -341,16 +343,16 @@ export default class panelcard extends Component {
         this.setState({configure:temp});
     }
     remove_all(){
-        let temp = this.deepCopy(this.state.configure);
+        let temp = deepCopy(this.state.configure);
         temp.picture=[];
         this.setState({configure:temp});
     }
     add_index_selected(index){
-        let temp = this.deepCopy(this.state.configure);
+        let temp = deepCopy(this.state.configure);
         let all_list = this.build_series_list(index);
         for(let i=0;i<all_list.length;i++){
             if(!this.if_selected(all_list[i])){
-                let newchoice = this.deepCopy(temp.pictureclass);
+                let newchoice = deepCopy(temp.pictureclass);
                 newchoice.series = all_list[i];
                 temp.picture.push(newchoice);
             }
@@ -358,7 +360,7 @@ export default class panelcard extends Component {
         this.setState({configure:temp});
     }
     remove_index_selected(index){
-        let temp = this.deepCopy(this.state.configure);
+        let temp = deepCopy(this.state.configure);
         let all_list = this.build_series_list(index);
         //console.log(all_list);
         for(let i=0;i<all_list.length;i++){
@@ -389,28 +391,8 @@ export default class panelcard extends Component {
             this.setState({hide:"block",animate:"animated fadeInRight"});
         }
     }
-    deepCopy(o) {
-        if (o instanceof Array) {
-            var n = [];
-            for (var i = 0; i < o.length; ++i) {
-                n[i] = this.deepCopy(o[i]);
-            }
-            return n;
-        } else if (o instanceof Function) {
-            var n = new Function("return " + o.toString())();
-            return n
-        } else if (o instanceof Object) {
-            var n = {}
-            for (var i in o) {
-                n[i] = this.deepCopy(o[i]);
-            }
-            return n;
-        } else {
-            return o;
-        }
-    }
     clearruninfo(){
-        let temp = this.deepCopy(this.state.configure);
+        let temp = deepCopy(this.state.configure);
         for(let i =0; i < temp.picture.length;i++){
             temp.picture[i].shoot=[];
             temp.picture[i].video="";
