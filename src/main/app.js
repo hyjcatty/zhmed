@@ -512,40 +512,10 @@ function initialize_mqtt(){
         //if(Running===false)return;
         switch(ret.action)
         {
-            case "XH_High_Speed_Balance_statistics_status":
-                app_handle.update_status(ret.data);
-                //console.log("updated");
+            case "ZH_Medicine_Log_Update":
                 break;
-            //case "XH_High_Speed_Balance_version_status":
-                //app_handle.updateVersion(ret.data);
-                //app_handle.initialize_animateview_chamber(ret.data);
-                //break;
-            case "XH_High_Speed_Balance_report_status":
-                app_handle.updateContent(ret.data);
-                //app_handle.initialize_animateview_chamber(ret.data);
+            case "ZH_Medicine_Hardware_status_Change":
                 break;
-            case "XH_High_Speed_Balance_alarm_status":
-                app_handle.showalarm(ret.data.msg);
-                //app_handle.update_animateview_chamber(ret.data);
-                break;
-            case "XH_High_Speed_Balance_debug_status":
-                app_handle.debug_label_update(ret.data);
-                //app_handle.update_animateview_statistics(ret.data);
-                break;
-            case "XH_High_Speed_Balance_fetal_status":
-                app_handle.initializesyserror(resize,ret.data);
-                app_handle.syserrorview();
-                break;
-            case "XH_High_Speed_Balance_calibration_zero_status":
-                app_handle.update_cali_status(ret.data.balance,1,ret.data.msg,ret.data.debugmsg);break;
-            case "XH_High_Speed_Balance_calibration_weight_status":
-                app_handle.update_cali_status(ret.data.balance,2,ret.data.msg,ret.data.debugmsg);break;
-            case "XH_High_Speed_Balance_calibration_dynamic_status":
-                app_handle.update_cali_dynamic_status(ret.data);break;
-            case "XH_High_Speed_Balance_calibration_zero_finish":
-                app_handle.calibration_zero_finish();break;
-            case "XH_High_Speed_Balance_calibration_full_finish":
-                app_handle.calibration_full_finish();break;
             default:
                 return;
         }
@@ -553,16 +523,12 @@ function initialize_mqtt(){
 }
 
 function systemstart(){
-    //xhbalanceiconlist();
 
     sysconffetch();
-    //app_handle.initializeUrl(request_head);
-//app_handle.initializefoot(footcallback_return,footcallback_back,footcallback_configure);
-    //flushuserlistfetch();
     systeminfofetch();
     app_handle.initializefoot();
     app_handle.initializehead();
-    app_handle.initializeLogin(xhbalancelogin);
+    app_handle.initializeLogin(zhmedlogin);
     app_handle.initializeBasic(taskrunfetch,
         footcallback_save,
         gettempconffetch,
@@ -578,7 +544,6 @@ function systemstart(){
     updateclock();
 }
 var footcallback_back= function(){
-    //xhbalanceconfiglist();
     tips("");
 }
 function updateclock(){
@@ -650,10 +615,12 @@ function getRelativeURL(){
 function jsonParse(res) {
     return res.json().then(jsonResult => ({ res, jsonResult }));
 }
-function xhbalanceconfiglist(){
+
+/*
+function zhmedconfiglist(){
 
     var listreq = {
-        action:"XH_Balance_config_list",
+        action:"ZH_Medicine_config_list",
         type:"query",
         user:app_handle.getuser()
     };
@@ -666,11 +633,28 @@ function xhbalanceconfiglist(){
             },
             body:JSON.stringify(listreq)
         }).then(jsonParse)
-        .then(xhbalanceconfiglistcallback)
+        .then(zhmedconfiglistcallback)
         .catch( (error) => {
             console.log('request error', error);
             return { error };
         });
+}
+
+function zhmedconfiglistcallback(res){
+    if(res.jsonResult.status == "false"){
+        alert(language.message.alert1);
+        app_handle.initializeLogin(zhmedlogin);
+        app_handle.loginview();
+        return;
+    }
+    if(res.jsonResult.auth == "false"){
+        return;
+    }
+    bricklist = res.jsonResult.ret.configure;
+    baselist = res.jsonResult.ret.base;
+    //app_handle.initializeBrick(bricklist,baselist,brickclickfetch,bricknewclickfetch);
+    app_handle.brickview();
+    tips("");
 }
 function brickclickfetch(configuration,type){
     var body = {
@@ -678,7 +662,7 @@ function brickclickfetch(configuration,type){
         file:configuration.name
     };
     var map={
-        action:"XH_Balance_config_detail",
+        action:"ZH_Medicine_config_detail",
         type:"query",
         lang:default_language,
         body: body,
@@ -718,7 +702,7 @@ function bricknewclickfetch(configuration,type){
         file:configuration.name
     };
     var map={
-        action:"XH_Balance_config_detail",
+        action:"ZH_Medicine_config_detail",
         type:"query",
         lang:default_language,
         body: body,
@@ -751,31 +735,15 @@ function bricknewclickcallback(res){
     //console.log(configuration);
     app_handle.workview_new(configuration);
     //app_handle.workview();
-}
-function xhbalanceconfiglistcallback(res){
-    if(res.jsonResult.status == "false"){
-        alert(language.message.alert1);
-        app_handle.initializeLogin(xhbalancelogin);
-        app_handle.loginview();
-        return;
-    }
-    if(res.jsonResult.auth == "false"){
-        return;
-    }
-    bricklist = res.jsonResult.ret.configure;
-    baselist = res.jsonResult.ret.base;
-    app_handle.initializeBrick(bricklist,baselist,brickclickfetch,bricknewclickfetch);
-    app_handle.brickview();
-    tips("");
-}
-function xhbalancelogin(username,password){
+}*/
+function zhmedlogin(username,password){
 
     var body = {
     username:username,
     password:b64_sha1(password)
     };
     var map={
-        action:"XH_Balance_Login",
+        action:"ZH_Medicine_Login",
         type:"query",
         lang:default_language,
         body: body,
@@ -791,7 +759,7 @@ function xhbalancelogin(username,password){
             },
             body:JSON.stringify(map)
         }).then(jsonParse)
-        .then(xhbalancelogincallback)
+        .then(zhmedlogincallback)
         //.then(fetchlist)
         .catch( (error) => {
             console.log('request error', error);
@@ -799,10 +767,10 @@ function xhbalancelogin(username,password){
         });
 }
 
-function xhbalancelogincallback(res){
+function zhmedlogincallback(res){
     if(res.jsonResult.status == "false"){
         alert(language.message.alert2);
-        app_handle.initializeLogin(xhbalancelogin);
+        app_handle.initializeLogin(zhmedlogin);
         app_handle.loginview();
         return;
     }
@@ -816,13 +784,12 @@ function xhbalancelogincallback(res){
     currentPanelfetch("");
     app_handle.basicview();
     app_handle.taskview();
-    //xhbalanceconfiglist();
     tips("");
 }
 
 function sysconffetch(){
     var map={
-        action:"XH_Balance_sys_config",
+        action:"ZH_Medicine_sys_config",
         type:"query",
         lang:default_language,
         user:null
@@ -852,13 +819,13 @@ function sysconffetchcallback(res){
     }
     let configuration = res.jsonResult.ret;
 
-    app_handle.initializesysconf(xhbalancesavesysconf,configuration);
+    app_handle.initializesysconf(zhmedsavesysconf,configuration);
     //app_handle.workview();
 }
-function xhbalancesavesysconf(configure){
+function zhmedsavesysconf(configure){
 
     var map={
-        action:"XH_Balance_sys_config_save",
+        action:"ZH_Medicine_sys_config_save",
         type:"mod",
         lang:default_language,
         body:configure,
@@ -873,7 +840,7 @@ function xhbalancesavesysconf(configure){
             },
             body:JSON.stringify(map)
         }).then(jsonParse)
-        .then(xhbalancesavesysconfcallback)
+        .then(zhmedsavesysconfcallback)
         //.then(fetchlist)
         .catch( (error) => {
             console.log('request error', error);
@@ -881,7 +848,7 @@ function xhbalancesavesysconf(configure){
         });
 }
 
-function xhbalancesavesysconfcallback(res){
+function zhmedsavesysconfcallback(res){
     if(res.jsonResult.status == "false"){
         alert(language.message.alert9);
         return;
@@ -889,14 +856,14 @@ function xhbalancesavesysconfcallback(res){
     if(res.jsonResult.auth == "false"){
         return;
     }
-    //xhbalanceconfiglist();
+    //zhmedconfiglist();
     sysconffetch();
     currentPanelfetch("");
     tips(language.message.message4);
 }
 
 function footcallback_save(){
-    xhbalancesavesysconf(app_handle.getsysconfset());
+    zhmedsavesysconf(app_handle.getsysconfset());
 
 }
 function modal_middle(modal){
@@ -927,7 +894,7 @@ function show_Module(msg){
 }
 function syslanguagefetch(language_list){
     var map={
-        action:"XH_Balance_sys_language",
+        action:"ZH_Medicine_sys_language",
         type:"query",
         lang:default_language,
         user:null,
@@ -966,7 +933,7 @@ function syslanguagefetchcallback(res){
 
 function syslanguagelistfetch(){
     var map={
-        action:"XH_Balance_sys_language_list",
+        action:"ZH_Medicine_sys_language_list",
         type:"query",
         lang:default_language,
         user:null
@@ -1010,7 +977,7 @@ function language_brick_callback(language_conf){
 
 function sysversionfetch(){
     var map={
-        action:"XH_Balance_sys_version",
+        action:"ZH_Medicine_sys_version",
         type:"query",
         lang:default_language,
         user:null
@@ -1050,7 +1017,7 @@ function changepasswordfetch(username,oldpassword,newpassword){
         newpassword:b64_sha1(newpassword)
     }
     var map={
-        action:"XH_Balance_change_passwd",
+        action:"ZH_Medicine_change_passwd",
         body:body,
         type:"mod",
         lang:default_language,
@@ -1087,7 +1054,7 @@ function changepasswordfetchcallback(res){
 }
 function flushuserlistfetch(){
     var map={
-        action:"XH_Balance_get_user_list",
+        action:"ZH_Medicine_get_user_list",
         type:"query",
         lang:default_language,
         user:null
@@ -1121,7 +1088,7 @@ function flushuserlistfetchcallback(res){
 }
 function resetuserfetch(username){
     var map={
-        action:"XH_Balance_reset_user",
+        action:"ZH_Medicine_reset_user",
         body:{
             username:username
         },
@@ -1159,7 +1126,7 @@ function resetuserfetchcallback(res){
 
 function newuserfetch(username){
     var map={
-        action:"XH_Balance_new_user",
+        action:"ZH_Medicine_new_user",
         body:{
             username:username
         },
@@ -1197,7 +1164,7 @@ function newuserfetchcallback(res){
 }
 function deluserfetch(username){
     var map={
-        action:"XH_Balance_del_user",
+        action:"ZH_Medicine_del_user",
         body:{
             username:username
         },
@@ -1235,7 +1202,7 @@ function deluserfetchcallback(res){
 }
 function removealarmfetch(){
     var map={
-        action:"XH_Balance_remove_alarm",
+        action:"ZH_Medicine_remove_alarm",
         type:"mod",
         lang:default_language,
         user:null
@@ -1267,7 +1234,7 @@ function removealarmfetchcallback(res){
 }
 function fetchmqtt(username){
     var map={
-        action:"XH_Balance_mqtt_conf",
+        action:"ZH_Medicine_mqtt_conf",
         type:"query",
         lang:default_language,
         user:null
