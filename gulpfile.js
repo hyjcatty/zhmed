@@ -15,11 +15,11 @@ var rename = require('gulp-rename');
 var clean = require('gulp-clean');
 var htmlmin = require('gulp-htmlmin');
 var mkdirp = require('mkdirp');
+var fs=require('fs');
 var option = {
-
     buildPath: "../www/zhmed"
-    //buildPath: "./dist"
 }
+var jsserverpath="../nodewww";
 var option_html = {
     collapseWhitespace:true,
     collapseBooleanAttributes:true,
@@ -40,30 +40,30 @@ gulp.task('clean',function(){
     return gulp.src(option.buildPath,{
         read:false
     }).pipe(clean({force:true}));
+});
+gulp.task('cleanjs',function(){
+    return gulp.src(jsserverpath,{
+        read:false
+    }).pipe(clean({force:true}));
+});
+gulp.task('partlyclean',function(){
+    var list = fs.readdirSync(jsserverpath);
+    for(var i=0;i<list.length;i++){
+        if(list[i]!="node_modules"){
+            gulp.src(option.buildPath+"/"+list[i],{
+                read:false
+            }).pipe(clean({force:true}));
+        }
+    }
 })
-/*
- gulp.task('sass', function() {
- gulp.src('./scss/*.scss')
- .pipe(sass())
- .pipe(gulp.dest('./css'));
- });*/
 gulp.task("resourcecopy",function(){
 
     gulp.src("./build/bundle.js")
-        .pipe(gulp.dest(option.buildPath+"/build/"));/*
-     gulp.src("./js/*")
-     .pipe(gulp.dest(option.buildPath+"/js/"));
-     gulp.src("./css/*")
-     .pipe(gulp.dest(option.buildPath+"/css/"));*/
+        .pipe(gulp.dest(option.buildPath+"/build/"));
     gulp.src("./*.php")
         .pipe(gulp.dest(option.buildPath+"/"));
-    /*
-     gulp.src("./*.ico")
-     .pipe(gulp.dest(option.buildPath+"/"));*/
-
-    //gulp.src("./build/**/*")
-    //    .pipe(gulp.dest(option.buildPath+"/build/"));
-
+    gulp.src("./*.ico")
+        .pipe(gulp.dest(option.buildPath+"/"));
     gulp.src("./build/resource/**/*")
         .pipe(gulp.dest(option.buildPath+"/resource/"));
     gulp.src("./resource/js/*")
@@ -99,10 +99,10 @@ gulp.task("resourcecopy",function(){
         .pipe(gulp.dest(option.buildPath+"/demo/"));
     gulp.src("./sysconf/*")
         .pipe(gulp.dest(option.buildPath+"/sysconf/"));
-    //gulp.src("./language/*")
-    //    .pipe(gulp.dest(option.buildPath+"/language/"));
     gulp.src("./flag/*")
         .pipe(gulp.dest(option.buildPath+"/flag/"));
+    gulp.src("./msg/*")
+        .pipe(gulp.dest(option.buildPath+"/msg/"));
     gulp.src("./mqttclient.js")
         .pipe(gulp.dest(option.buildPath+"/"));
     gulp.src("./mqttserver.js")
@@ -125,37 +125,10 @@ gulp.task("resourcecopy",function(){
         .pipe(gulp.dest(option.buildPath+"/language/"))
         .pipe(rename('language_fr.json'))
         .pipe(gulp.dest(option.buildPath+"/language/"));
-    /*
-     gulp.src("./*.html")
-     .pipe(gulp.dest(option.buildPath+"/"));*/
 })
 
 
 gulp.task('scripts', function() {
-    /*
-     gulp.src('./js/util.js')
-     .pipe(concat('util.js'))
-     //.pipe(gulp.dest('./dist/js'))
-     .pipe(rename('util.js'))
-     .pipe(uglify())
-     .pipe(gulp.dest(option.buildPath+'/js/'));
-     gulp.src('./js/app.js')
-     .pipe(concat('app.js'))
-     //.pipe(gulp.dest('./dist/js'))
-     .pipe(rename('app.js'))
-     .pipe(uglify())
-     .pipe(gulp.dest(option.buildPath+'/js/'));
-     gulp.src('./js/test.js')
-     .pipe(concat('test.js'))
-     // .pipe(gulp.dest('./dist/js'))
-     .pipe(rename('test.js'))
-     .pipe(uglify())
-     .pipe(gulp.dest(option.buildPath+'/js/'));
-
-
-     gulp.src('./test.html')
-     .pipe(htmlmin(option_html))
-     .pipe(gulp.dest(option.buildPath+'/'));*/
     gulp.src('./resource/cropper/cropper.js')
         .pipe(concat('cropper.js'))
         // .pipe(gulp.dest('./dist/js'))
@@ -170,7 +143,27 @@ gulp.task('scripts', function() {
         .pipe(htmlmin(option_html))
         .pipe(gulp.dest(option.buildPath+'/'));
 });
-
+gulp.task("server",function(){
+    gulp.src("./jsserver/ejs/req.js")
+        .pipe(gulp.dest(option.buildPath+"/ejs/"));
+    gulp.src("./jsserver/launch.js")
+        .pipe(gulp.dest(option.buildPath+"/"));
+    gulp.src("./jsserver/mqttserver.js")
+        .pipe(gulp.dest(option.buildPath+"/"));
+});
+gulp.task("server-module",function(){
+    gulp.src("./target_module/node_modules/**/*")
+        .pipe(gulp.dest(option.buildPath+"/node_modules/"));
+});
 gulp.task('default',['clean'], function(){
     gulp.run( 'scripts','resourcecopy');
+});
+
+gulp.task('jsserver',['cleanjs'],function(){
+    option.buildPath = jsserverpath;
+    gulp.run('scripts','resourcecopy','server','server-module');
+});
+gulp.task('jsupdate',['partlyclean'],function(){
+    option.buildPath = jsserverpath;
+    gulp.run('scripts','resourcecopy','server');
 });

@@ -340,7 +340,7 @@ switch ($key){
                  $temp = array(
                     'parameter'=>$obj,
                     'configure'=>$panel,
-                    'running'=> false
+                    'running'=> 'false'
                  );
                 $retval=array(
                     'status'=>'true',
@@ -356,8 +356,8 @@ switch ($key){
         $status = $body["status"];
         $panel = $body["configure"];
         $panel["basic"]["batch"]="test".(string)rand(0,999);
-        $retstatus=false;
-        if($status == "true") $retstatus=true;
+        $retstatus="false";
+        if($status == "true") $retstatus="true";
                     $retarray;
                     $retarray = getfiledetail("./sysconf/systeminfo.json");
 
@@ -379,7 +379,7 @@ switch ($key){
     case "ZH_Medicine_task_running":
         $body=$payload["body"];
         $panel = $body["configure"];
-        $retstatus=true;
+        $retstatus="true";
         $arrlength=count($panel["picture"]);
         //echo "picturelength:".(string)$arrlength;
         for($i=0;$i<$arrlength;$i++){
@@ -490,7 +490,7 @@ switch ($key){
                         );
                         array_push($panel["picture"][$i]["analysis"]["result"],$resultitem);
                      }
-                    $retstatus = false;
+                    $retstatus = "false";
                 }
             }
 
@@ -514,26 +514,7 @@ switch ($key){
 
                     $jsonencode = _encode($retval);
                     echo $jsonencode; break;
-    case "ZH_Medicine_Panel_info":
-        $filename = array("2x3","3x4","4x6","6x8","8x12","16x24");
-        $body=$payload["body"];
-        $x= -1;
-        if($body!=""){
-            $x=$filename.indexOf($body,0);
-        }
-        if($x<0) $x = rand(0,5);
-        $retarray = getfiledetail("./baseconf/plateconf/".$filename[$x].".json");
-        //echo("./baseconf/plateconf/".$filename[$x].".json");
-        //echo($retarray);
-        $obj=json_decode($retarray,true);
-        $retval=array(
-            'status'=>'true',
-            'auth'=>'true',
-            'ret'=>$obj,
-            'msg'=>''
-        );
-        $jsonencode = _encode($retval);
-        echo $jsonencode; break;
+    
     case "ZH_Medicine_set_temp_conf":
         $body=$payload["body"];
 

@@ -18,7 +18,7 @@ import Basicview from "../container/basicview/basicview"
 import Systeminfocard from "../container/cards/systeminfocard/systeminfo"
 import './App.css';
 import fetch from 'isomorphic-fetch';
-import { b64_sha1,deepCopy } from '../util/util.js';
+import { b64_sha1,jsondeepCopy } from '../util/util.js';
 require('es6-promise').polyfill();
 
 
@@ -311,7 +311,7 @@ class App extends Component{
     handleTempChange(e){
         let change_value = e.target.value;
         let group_id= (e.target.getAttribute('data-key'));
-        let new_state = deepCopy(this.state.tempconf);
+        let new_state = jsondeepCopy(this.state.tempconf);
         new_state[group_id]=change_value;
         this.setState({tempconf:new_state});
     }
@@ -489,7 +489,7 @@ var temp_inteval_handle = setInterval(function(){
 syslanguagelistfetch();
 var client;
 //initialize_mqtt();
-//fetchmqtt();
+fetchmqtt();
 function initialize_mqtt(){
 
     client = mqtt.connect(mqttconf.server ,{
@@ -513,9 +513,7 @@ function initialize_mqtt(){
         switch(ret.action)
         {
             case "ZH_Medicine_Log_Update":
-                break;
-            case "ZH_Medicine_Hardware_status_Change":
-                break;
+                update_log_test(ret.msg);
             default:
                 return;
         }
@@ -535,7 +533,7 @@ function systemstart(){
         savetempconffetch,
         runtempanalysisfetch);
     app_handle.loginview();
-    update_log_test();
+    //update_log_test();
     if(winHeight < 768 || winWidth<1366){
         app_handle.revolution_alarm();
     }else{
@@ -1232,7 +1230,7 @@ function removealarmfetchcallback(res){
         windows.close();
     }
 }
-function fetchmqtt(username){
+function fetchmqtt(){
     var map={
         action:"ZH_Medicine_mqtt_conf",
         type:"query",
@@ -1320,7 +1318,8 @@ function systeminfofetchcallback(res){
     console.log(systeminfo);
     app_handle.update_system_info(systeminfo);
 }
-function update_log_test(){
+function update_log_test(str){
+    /**
     setInterval(function(){
         let x = GetRandomNum(5,50);
         let str = "["+x+"]:";
@@ -1328,7 +1327,8 @@ function update_log_test(){
             str = str + "x ";
         }
         app_handle.update_logs(str);
-    },4000);
+    },4000);*/
+    app_handle.update_logs(str);
 }
 
 function currentPanelfetch(selected){

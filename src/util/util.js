@@ -219,7 +219,10 @@ function deepCopy(o) {
         return o;
     }
 }
-export {str2binb,binb2str,binb2hex,binb2b64,b64_sha1,deepCopy}
+function jsondeepCopy(o){
+    return JSON.parse(JSON.stringify(o));
+}
+export {str2binb,binb2str,binb2hex,binb2b64,b64_sha1,deepCopy,jsondeepCopy}
 /*
  async function testSync() {
  const response = await new Promise(resolve => {

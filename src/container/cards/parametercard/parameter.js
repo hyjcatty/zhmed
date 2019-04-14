@@ -15,7 +15,7 @@ import React, {
 
 import classNames from 'classnames';
 import '../../../../resource/css/font-awesome.min.css';
-import { deepCopy } from '../../../util/util.js';
+import { jsondeepCopy } from '../../../util/util.js';
 import './parameter.css';
 
 
@@ -92,9 +92,10 @@ export default class parametercard extends Component {
         let change_value = e.target.value;
         let group_id= parseInt(e.target.getAttribute('data-group'));
         let parameter_id= parseInt(e.target.getAttribute('data-parameter'));
-        let new_state = deepCopy(this.state.configuration);
+
+        let new_state = jsondeepCopy(this.state.configure);
         new_state.parameter.groups[group_id].list[parameter_id].value=change_value;
-        this.setState({configuration:new_state});
+        this.setState({configure:new_state});
     }
     handleBlur(){
 

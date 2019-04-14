@@ -103,13 +103,13 @@ export default class basicview extends Component {
     update_task(task){
         this.refs.Taskcard.update_configure(task);
         this.refs.Panelcard.update_configure(task.configure);
-        if(task.running){
-            //console.log("change to run status");
+        if(task.running==="true"){
+            console.log("change to run status");
             this.handle_running();
         }else{
             if(task.configure.basic.batch === ""){
 
-                //console.log("change to reset status");
+                console.log("change to reset status");
                 this.refs.Panelcard.change_status("choice");
             }else{
 

@@ -88,10 +88,14 @@ export default class taskcard extends Component {
         }
     }
     update_configure(task){
-        if(task.running) this.props.basiccallbacklockfoot(true);
+        let x = false;
+        if(task.running==="true"){
+            console.log("task set running true");
+            this.props.basiccallbacklockfoot(true);
+            x=true;
+        }
         else this.props.basiccallbacklockfoot(false);
-
-        this.setState({parameter:task.parameter.info,running:task.running,configure:task.configure});
+        this.setState({parameter:task.parameter.info,running:x,configure:task.configure});
     }
     update_configure_panel(configure){
         this.setState({configure:configure});
