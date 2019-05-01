@@ -2,7 +2,6 @@
 var http = require('http');
 
 var mosca = require('mosca');
-
 var MqttServer = new mosca.Server({
 
     http:{

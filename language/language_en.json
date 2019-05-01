@@ -52,6 +52,11 @@
       "start":"Start",
       "stop":"Stop",
       "reset":"Reset"
+    },
+    "location":{
+      "locationinfo":"location calibration",
+      "buttoncalimodeyes":"Calibration Mode",
+      "buttoncalimodeno":"Normal Mode"
     }
   },
   "alarmview":{

@@ -99,6 +99,8 @@ gulp.task("resourcecopy",function(){
         .pipe(gulp.dest(option.buildPath+"/demo/"));
     gulp.src("./sysconf/*")
         .pipe(gulp.dest(option.buildPath+"/sysconf/"));
+    gulp.src("./img/*")
+        .pipe(gulp.dest(option.buildPath+"/img/"));
     gulp.src("./flag/*")
         .pipe(gulp.dest(option.buildPath+"/flag/"));
     gulp.src("./msg/*")
@@ -150,6 +152,8 @@ gulp.task("server",function(){
         .pipe(gulp.dest(option.buildPath+"/"));
     gulp.src("./jsserver/mqttserver.js")
         .pipe(gulp.dest(option.buildPath+"/"));
+    gulp.src("./jsserver/jpg/*")
+        .pipe(gulp.dest(option.buildPath+"/jpg/"));
 });
 gulp.task("server-module",function(){
     gulp.src("./target_module/node_modules/**/*")

@@ -82,9 +82,16 @@ export default class realpicturecard extends Component {
                 <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key="status-top">
                     <div className="tile-stats"  style={{marginTop:"15px"}}>
                         <div className="count" style={{fontSize:24}}>{this.state.language.pictureinfo}</div>
-
+                        <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" id="imgview" style={{minHeight:520}}>
+                            <img src="./img/default.jpg" style={{position: "absolute", left: 10, top: 20,zIndex:99}}/>
+                        </div>
+                        <div className="clearfix"/>
                     </div>
+
+                    <div className="clearfix"/>
                 </div>
+
+                <div className="clearfix"/>
             </div>
         );
     }

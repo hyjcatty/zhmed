@@ -116,7 +116,6 @@ class App extends Component{
         this.refs.foot.update_language(language.foot);
         this.refs.Systeminfocard.update_language(language.systeminfo);
         this.refs.Alarmview.update_language(language.alarmview);
-
         this.refs.Basicview.update_language(language.basicview);
     }
     updateVersion(version){
@@ -332,6 +331,22 @@ class App extends Component{
     updateresultcontentdirectly(content){
         this.refs.Basicview.refs.Resultviewcard.update_content(content);
     }
+    updatecalibration(callbackmode,callbackrun,configure){
+        this.refs.Basicview.refs.Locationcard.updatecalibration(callbackmode,callbackrun,configure);
+    }
+    calibrationmode(triger){
+        if(triger){
+            if(!this.refs.Basicview.refs.Locationcard.if_show()){
+                this.refs.Basicview.locationview();
+            }
+                this.footButtonShow(false,false,false,false,false,false,false);
+                this.refs.Basicview.refs.Locationcard.updatecalimode(true);
+
+        }else{
+            this.refs.Basicview.refs.Locationcard.updatecalimode(false);
+            this.footButtonShow(false,false,true,true,true,true,true);
+        }
+    }
     render() {
 
         let temp_conf=[];
@@ -514,6 +529,8 @@ function initialize_mqtt(){
         {
             case "ZH_Medicine_Log_Update":
                 update_log_test(ret.msg);
+            case "ZH_Medicine_Realtime_Picture_Update":
+                update_image_test(ret.msg);
             default:
                 return;
         }
@@ -523,6 +540,7 @@ function initialize_mqtt(){
 function systemstart(){
 
     sysconffetch();
+    caliconffetch();
     systeminfofetch();
     app_handle.initializefoot();
     app_handle.initializehead();
@@ -781,7 +799,7 @@ function zhmedlogincallback(res){
 
     currentPanelfetch("");
     app_handle.basicview();
-    app_handle.taskview();
+    zhmedcheckcalimode();
     tips("");
 }
 
@@ -820,6 +838,7 @@ function sysconffetchcallback(res){
     app_handle.initializesysconf(zhmedsavesysconf,configuration);
     //app_handle.workview();
 }
+
 function zhmedsavesysconf(configure){
 
     var map={
@@ -859,7 +878,154 @@ function zhmedsavesysconfcallback(res){
     currentPanelfetch("");
     tips(language.message.message4);
 }
+function caliconffetch(){
+    var map={
+        action:"ZH_Medicine_cali_config",
+        type:"query",
+        lang:default_language,
+        user:null
+    };
+    fetch(request_head,
+        {
+            method:'POST',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify(map)
+        }).then(jsonParse)
+        .then(caliconffetchcallback)
+        .catch( (error) => {
+            console.log('request error', error);
+            return { error };
+        });
+}
+function caliconffetchcallback(res){
+    if(res.jsonResult.status == "false"){
+        alert(language.message.alert1);
+        return;
+    }
+    if(res.jsonResult.auth == "false"){
+        return;
+    }
+    let configuration = res.jsonResult.ret;
 
+    app_handle.updatecalibration(zhmedcalimode,zhmedruncaliconf,configuration);
+
+}
+function zhmedruncaliconf(command){
+    var map={
+        action:"ZH_Medicine_cali_command",
+        type:"mod",
+        lang:default_language,
+        body:command,
+        user:app_handle.getuser()
+    };
+    fetch(request_head,
+        {
+            method:'POST',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify(map)
+        }).then(jsonParse)
+        .then(zhmedruncaliconfcallback)
+        .catch( (error) => {
+            console.log('request error', error);
+            console.log('request error', error);
+            return { error };
+        });
+}
+function zhmedruncaliconfcallback(res){
+    if(res.jsonResult.status == "false"){
+        alert(language.message.alert9);
+        return;
+    }
+    if(res.jsonResult.auth == "false"){
+        return;
+    }
+
+    //TODO: Do not know what to do in this period
+    console.log(res.jsonResult.msg);
+}
+function zhmedcalimode(triger){
+    let x = "false"; if(triger) x= "true";
+    var map={
+        action:"ZH_Medicine_cali_mode",
+        type:"mod",
+        lang:default_language,
+        body:x,
+        user:app_handle.getuser()
+    };
+    fetch(request_head,
+        {
+            method:'POST',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify(map)
+        }).then(jsonParse)
+        .then(zhmedcalimodecallback)
+        .catch( (error) => {
+            console.log('request error', error);
+            return { error };
+        });
+}
+function zhmedcalimodecallback(res){
+    if(res.jsonResult.status == "false"){
+        alert(language.message.alert9);
+        return;
+    }
+    if(res.jsonResult.auth == "false"){
+        return;
+    }
+    let output = true;
+    if(res.jsonResult.ret == "false") output = false;
+    app_handle.calibrationmode(output);
+    if(output === false){
+        clearwebview();
+    }
+}
+function zhmedcheckcalimode(){
+    var map={
+        action:"ZH_Medicine_cali_mode",
+        type:"mod",
+        lang:default_language,
+        body:"check",
+        user:app_handle.getuser()
+    };
+    fetch(request_head,
+        {
+            method:'POST',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify(map)
+        }).then(jsonParse)
+        .then(zhmedcheckcalimodecallback)
+        .catch( (error) => {
+            console.log('request error', error);
+            return { error };
+        });
+}
+function zhmedcheckcalimodecallback(res){
+    if(res.jsonResult.status == "false"){
+        alert(language.message.alert9);
+        return;
+    }
+    if(res.jsonResult.auth == "false"){
+        return;
+    }
+    if(res.jsonResult.ret == "true")
+        app_handle.calibrationmode(true);
+    else{
+        app_handle.taskview();
+    }
+
+}
 function footcallback_save(){
     zhmedsavesysconf(app_handle.getsysconfset());
 
@@ -1689,4 +1855,70 @@ function savetempconffetchcallback(res){
 function showtempmodal(){
     modal_middle($('#TempConf'));
     $('#TempConf').modal('show') ;
+}
+
+
+/**
+ * for image_show
+ */
+//var socket = io.connect();
+var start = 98;
+//var image_handle = document.getElementById("imgview");
+function update_image_test(src){
+    var image_handle = document.getElementById("imgview");
+    if(image_handle === null || image_handle === undefined){
+        console.log("imgview can not find")
+        return;
+    }
+    var img = document.createElement('img');
+    img.src = src;
+    img.style="position: absolute; left: 10px; top: 20px;z-index: "+(start--);
+    img.onload = function(){
+        window.URL.revokeObjectURL(src);
+    };
+    console.log("add image");
+    //removeAllChild(document.body);
+    image_handle.appendChild(img);
+    image_handle.removeChild(image_handle.firstChild);
+    if(start==0) start = 99;
+}
+/*
+socket.on('news',function(data){
+
+    var image_handle = document.getElementById("imgview");
+    if(image_handle === null || image_handle === undefined){
+        console.log("imgview can not find")
+        return;
+    }
+    var blob = new Blob([data.shuju],{"type":"image\/jpeg"});
+    var src = window.URL.createObjectURL(blob);
+    var img = document.createElement('img');
+    img.src = src;
+    img.style="position: absolute; left: 10px; top: 20px;z-index: "+(start--);
+    img.onload = function(){
+        window.URL.revokeObjectURL(src);
+    };
+    console.log("add image");
+    //removeAllChild(document.body);
+    image_handle.appendChild(img);
+    image_handle.removeChild(image_handle.firstChild);
+    if(start==-99) start = 99;
+});*/
+function clearwebview(){
+    var image_handle = document.getElementById("imgview");
+    removeAllChild(image_handle);
+    var src = "./img/default.jpg";
+    var img = document.createElement('img');
+    img.src = src;
+    img.style="position: absolute; left: 10px; top: 20px;z-index: 99";
+    image_handle.appendChild(img);
+    start = 98;
+}
+function removeAllChild(_element)  {
+
+    while(_element.hasChildNodes()) //当div下还存在子节点时 循环继续
+    {
+        _element.removeChild(_element.firstChild);
+    }
+
 }

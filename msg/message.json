@@ -120,6 +120,24 @@
     },
     "msg":"12345"
   },
+  "ZH_Medicine_cali_mode":{
+    "status":"false",
+    "auth":"true",
+    "ret":"true",
+    "msg":"12345"
+  },
+  "ZH_Medicine_cali_command":{
+    "status":"false",
+    "auth":"true",
+    "msg":"12345"
+  },
+  "ZH_Medicine_cali_config":{
+    "status":"false",
+    "auth":"true",
+    "ret":{
+    },
+    "msg":"12345"
+  },
   "ZH_Medicine_default":{
     "status":"false",
     "auth":"true",

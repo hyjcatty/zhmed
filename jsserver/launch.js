@@ -6,11 +6,16 @@ const mqtt = require('mqtt');
 const path = require('path');
 const req = require('./ejs/req');
 const querystring = require('querystring');
+
+
+var sio = require('socket.io');
 /**
  * const structure which will comes from json and build as base structure
  */
 
 
+var connect=false;
+var start=0;
 var client  = mqtt.connect('mqtt://127.0.0.1',{
     username:'username',
     password:'password',
@@ -305,26 +310,62 @@ http.createServer(function(request, response) {
     }
 
 }).listen(8888);
+
+var socket = sio.listen(http);
 //req.req_test();
 console.log("server start......");
 client.on('connect', function () {
     console.log('Mqtt connected.....');
     client.subscribe('MQTT_ZH_Medicine_UI');
     fakelog(); //TODO: This function need to remove from the real environment
-
+    realtimepic();
 });
 client.on('message', function (topic, message) {
-    console.log(message.toString());
     var msg = JSON.parse(message.toString());
     req.mqttdatabase(msg);
-    /*
-    if(msg.action== "ZH_MSG") {
-        client.publish('ZH_Medicine_Log_Update', "");
-    }else if(msg.action == "ZH_MSG_2"){
-        client.publish('MQTT_XH_High_Speed_Balance_UI', "");
-    }*/
 });
-
+/*
+var socket = sio.listen(http);
+var bstring;
+fs.readFile('./img/default.jpg', function (err, data) {
+    if (err) throw err
+    console.log('isBuffer: ' + Buffer.isBuffer(data)) // isBuffer: true
+    bstring =data;// <Buffer 72 6f ... >
+});
+socket.on('connection',function(socket){
+    console.log("Socket.IO connected");
+    socket.emit('news',{shuju:bstring});
+    connect=true;
+});
+socket.on('disconnect',function(socket){
+    console.log("Socket.IO disconnected");
+    connect=false;
+});
+var handle=setInterval(function(){
+    if(connect===false) return;
+    if(!is_calibration()) return;
+    fs.readFile('./jpg/'+start+'.jpg', function (err, data) {
+        if (err) throw err
+        console.log('isBuffer: ' + Buffer.isBuffer(data)) // isBuffer: true
+        bstring =data;// <Buffer 72 6f ... >
+        socket.emit('news',{shuju:bstring});
+        start++;
+        if(start==23) start=0;
+    });
+},100);*/
+function realtimepic(){
+    setInterval(function(){
+        //console.log("what is calimode:"+req.is_calibration());
+        if(!req.is_calibration()) return;
+        let x = req.GetRandomNum(0,22);
+        let msg = {
+            action : "ZH_Medicine_Realtime_Picture_Update",
+            msg: "./jpg/"+x+".jpg"
+        }
+        //console.log("send pic:"+"./jpg/"+x+".jpg");
+        client.publish('MQTT_ZH_Medicine_UI', JSON.stringify(msg));
+    },100);
+}
 function fakelog(){
     setInterval(function(){
         let x = req.GetRandomNum(5,50);
@@ -337,7 +378,7 @@ function fakelog(){
             msg: str
         }
         client.publish('MQTT_ZH_Medicine_UI', JSON.stringify(msg));
-    },4000);
+    },40000);
 }
 
 

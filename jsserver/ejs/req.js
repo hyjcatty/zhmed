@@ -8,6 +8,8 @@
     var systeminfo;
     var identifyparameter;
     var mqttconfig;
+    var calibration;
+    var if_cali = "false";
     function database(data){
     var key = data.action;
     switch(key){
@@ -266,6 +268,23 @@
             ret.ret=mqttconfig;
             ret.status="true";
             return JSON.stringify(ret);
+        case "ZH_Medicine_cali_config":
+            var ret = msg.ZH_Medicine_cali_config;
+            ret.ret=calibration;
+            ret.status="true";
+            return JSON.stringify(ret);
+        case "ZH_Medicine_cali_command":
+            var ret = msg.ZH_Medicine_cali_command;
+            ret.status="true";
+            return JSON.stringify(ret);
+        case "ZH_Medicine_cali_mode":
+            var ret = msg.ZH_Medicine_cali_mode;
+            if(data.body == "true" || data.body == "false" ){
+                if_cali = data.body;
+            }
+            ret.ret=if_cali;
+            ret.status="true";
+            return JSON.stringify(ret);
         default:
             console.log("Don't understand query key:"+key);
             return JSON.stringify(msg.ZH_Medicine_default);
@@ -299,6 +318,7 @@
         systeminfo= JSON.parse(jsReadFiles("./sysconf/systeminfo.json"));
         identifyparameter= JSON.parse(jsReadFiles("./sysconf/IdentifyParameter.json"));
         mqttconfig = JSON.parse(jsReadFiles("./sysconf/mqtt.json"));
+        calibration = JSON.parse(jsReadFiles("./sysconf/calibration.json"));
         console.log("config load finish");
         //console.log("baseconf:");
         //console.log(JSON.stringify(baseconf));
@@ -387,10 +407,14 @@
         jsWriteFiles("./sysconf/supportlanguage.json",JSON.stringify(languagelist));
 
     }
-
+    function is_calibration(){
+        if(if_cali==="false") return false;
+        return true;
+    }
     exports.req_test=req_test;
     exports.database=database;
     exports.check_usr=check_usr;
     exports.prepareconf=prepareconf;
     exports.mqttdatabase=mqttdatabase;
     exports.GetRandomNum=GetRandomNum;
+    exports.is_calibration=is_calibration;

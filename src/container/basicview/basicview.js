@@ -50,6 +50,7 @@ export default class basicview extends Component {
         this.refs.Taskcard.update_language(language.task);
         this.refs.Panelcard.update_language(language.panel);
         this.refs.Resultviewcard.update_language(language.result);
+        this.refs.Locationcard.update_language(language.location);
     }
 
     initializeparameter(callback,configure){
