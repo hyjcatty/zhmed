@@ -29,6 +29,7 @@ export default class realpicturecard extends Component {
             animate:"animated fadeInRight",
             callback:null,
             margintop:20,
+            marginleft:10,
             content:[],
             key:"pictureinfo",
             language:{
@@ -41,7 +42,9 @@ export default class realpicturecard extends Component {
         this.setState({language:language});
     }
     update_size(width,height,margin){
-        this.setState({height:height,width:width,margin:margin});
+        this.setState({height:height,width:width,margin:margin},function(){
+            this.setState({marginleft:(width-680)/2});
+        });
     }
     update_content(content){
         this.setState({content:content});
@@ -75,6 +78,9 @@ export default class realpicturecard extends Component {
             },800);
         }
     }
+    componentDidUpdate(){
+
+    }
     render() {
 
         return (
@@ -82,7 +88,7 @@ export default class realpicturecard extends Component {
                 <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key="status-top">
                     <div className="tile-stats"  style={{marginTop:"15px"}}>
                         <div className="count" style={{fontSize:24}}>{this.state.language.pictureinfo}</div>
-                        <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" id="imgview" style={{minHeight:520}}>
+                        <div id="imgview" style={{position:"relative",minHeight:520,paddingLeft:10,paddingRight:10,width:660,marginLeft:this.state.marginleft}}>
                             <img src="./img/default.jpg" style={{position: "absolute", left: 10, top: 20,zIndex:99}}/>
                         </div>
                         <div className="clearfix"/>

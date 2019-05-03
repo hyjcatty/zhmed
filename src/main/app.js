@@ -529,8 +529,10 @@ function initialize_mqtt(){
         {
             case "ZH_Medicine_Log_Update":
                 update_log_test(ret.msg);
+                return;
             case "ZH_Medicine_Realtime_Picture_Update":
                 update_image_test(ret.msg);
+                return;
             default:
                 return;
         }
