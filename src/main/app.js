@@ -147,14 +147,16 @@ class App extends Component{
     initializeLanguageview(Languagelist,callback){
         this.refs.Languageview.update_buttonlist(Languagelist,callback);
     }
-    initializeBasic(callback,callbacksave,callbackgettempconf,callbacksavetempconf,callbackruntempconf){
+    initializeBasic(callback,callbacksave,callbackgettempconf,callbacksavetempconf,callbackruntempconf,callbackbuildgrid){
         this.refs.Basicview.update_task_callback(callback,null,callbacksave);
         this.refs.Basicview.update_result_callback(callbackgettempconf,callbacksavetempconf,callbackruntempconf);
+        this.refs.Basicview.refs.Historycard.update_callback(callbackbuildgrid);
     }
     initializehead(){
         this.refs.head.update_username(this.state.username);
     }
-    initializefoot(){
+    initializefoot(historycallback){
+        this.refs.foot.updatecallback(historycallback);
         this.refs.foot.hide_all();
     }
     initializesysconf(callback,configure){
@@ -208,6 +210,14 @@ class App extends Component{
     }
     parameterview(){
         this.refs.Basicview.parameterview();
+    }
+    /*
+    updatehistory(historylist){
+        this.refs.Basicview.clearview();
+        this.refs.Basicview.refs.Historycard.update_content(historylist);
+    }*/
+    historyview(historylist){
+        this.refs.Basicview.historyview(historylist);
     }
     locationview(){
         this.refs.Basicview.locationview();
@@ -467,6 +477,9 @@ class App extends Component{
 
 
 }
+
+
+
 var IconList=[];
 var interval_handle = -1;
 var Running=false;
@@ -482,6 +495,7 @@ var app_handle;
 react_element = <App/>;
 
 get_size();
+updatexhchartcallback(historytaskinfofetch);
 app_handle = ReactDOM.render(react_element,document.getElementById('app'));
 app_handle.initializeSize(winWidth,winHeight);
 app_handle.initializeAlarmSize(winWidth,winHeight);
@@ -544,14 +558,16 @@ function systemstart(){
     sysconffetch();
     caliconffetch();
     systeminfofetch();
-    app_handle.initializefoot();
+    app_handle.initializefoot(historyfetch);
     app_handle.initializehead();
     app_handle.initializeLogin(zhmedlogin);
     app_handle.initializeBasic(taskrunfetch,
         footcallback_save,
         gettempconffetch,
         savetempconffetch,
-        runtempanalysisfetch);
+        runtempanalysisfetch,
+        buildgrid
+        );
     app_handle.loginview();
     //update_log_test();
     if(winHeight < 768 || winWidth<1366){
@@ -1821,7 +1837,7 @@ function savetempconffetch(){
         action:"ZH_Medicine_save_temp_conf",
         type:"query",
         body:
-            conf
+        conf
         ,
         lang:default_language,
         user:null
@@ -1853,6 +1869,80 @@ function savetempconffetchcallback(res){
     sysconffetch();
     tips(language.message.message7);
 
+}
+function historyfetch(){
+    var map={
+        action:"ZH_Medicine_history_list",
+        type:"query",
+        lang:default_language,
+        user:null
+    };
+    fetch(request_head,
+        {
+            method:'POST',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify(map)
+        }).then(jsonParse)
+        .then(historyfetchcallback)
+        .catch( (error) => {
+            console.log('request error', error);
+            return { error };
+        });
+}
+function historyfetchcallback(res){
+    if(res.jsonResult.status == "false"){
+        alert("Fetal Error, Can not get system info!");
+        windows.close();
+    }
+    if(res.jsonResult.auth == "false"){
+        alert("Fetal Error, Can not get system info!");
+        windows.close();
+    }
+    app_handle.historyview( res.jsonResult.ret);
+    //tips(language.message.message7);
+
+}
+function historytaskinfofetch(batch){
+    var map={
+        action:"ZH_Medicine_history_task_info",
+        type:"query",
+        body:{
+            batch:batch
+        },
+        lang:default_language,
+        user:null
+    };
+    fetch(request_head,
+        {
+            method:'POST',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify(map)
+        }).then(jsonParse)
+        .then(historytaskinfofetchcallback)
+        .catch( (error) => {
+            console.log('request error', error);
+            return { error };
+        });
+}
+function historytaskinfofetchcallback(res){
+    if(res.jsonResult.status == "false"){
+        alert("Fetal Error, Can not get system info!");
+        windows.close();
+    }
+    if(res.jsonResult.auth == "false"){
+        alert("Fetal Error, Can not get system info!");
+        windows.close();
+    }
+    let task = res.jsonResult.ret;
+    app_handle.update_task_info(task);
+    app_handle.taskview();
+    //app_handle.setpanel(task.configure);
 }
 function showtempmodal(){
     modal_middle($('#TempConf'));
@@ -1924,3 +2014,8 @@ function removeAllChild(_element)  {
     }
 
 }
+function buildgrid(content){
+    updatexhchartcontent(content);
+}
+
+

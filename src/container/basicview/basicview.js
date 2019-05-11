@@ -20,6 +20,7 @@ import Realpicturecard from "../cards/realpicturecard/realpicture"
 import Parametercard from "../cards/parametercard/parameter"
 import Taskcard from "../cards/taskcard/task"
 import Resultviewcard from "../cards/resultviewcard/resultview"
+import Historycard from "../cards/historycard/history"
 
 
 
@@ -36,6 +37,7 @@ export default class basicview extends Component {
             callback:null,
             margintop:20,
             language:{
+                historyinfo:"操作历史"
             }
         }
         //this.keyboard_initialize();
@@ -51,6 +53,7 @@ export default class basicview extends Component {
         this.refs.Panelcard.update_language(language.panel);
         this.refs.Resultviewcard.update_language(language.result);
         this.refs.Locationcard.update_language(language.location);
+        this.refs.Historycard.update_language(language.history);
     }
 
     initializeparameter(callback,configure){
@@ -66,11 +69,10 @@ export default class basicview extends Component {
         this.refs.Localpicturecard.update_size(width-parseInt(width/2),height,0);
         this.refs.Realpicturecard.update_size(width-parseInt(width/2),height,0);
         this.refs.Resultviewcard.update_size(width,height,0);
+        this.refs.Historycard.update_size(parseInt(width),height,0);
     }
     update_result(result){
-
         this.refs.Resultviewcard.update_content(result);
-        //this.refs.Resultviewcard.show();
     }
     update_panel(configure){
         this.refs.Panelcard.update_configure(configure);
@@ -109,11 +111,9 @@ export default class basicview extends Component {
             this.handle_running();
         }else{
             if(task.configure.basic.batch === ""){
-
                 console.log("change to reset status");
                 this.refs.Panelcard.change_status("choice");
             }else{
-
                 console.log("change to view status");
                 this.handle_stop();
             }
@@ -167,6 +167,16 @@ export default class basicview extends Component {
         this.refs.Panelcard.hide();
         this.refs.Realpicturecard.hide();
         this.refs.Resultviewcard.hide();
+        this.refs.Historycard.hide();
+    }
+    historyview(content){
+        this.clearview();
+        let localitem = this;
+        setTimeout(function(){
+            //localitem.refs.Historycard.show();
+            localitem.refs.Historycard.update_content(content);
+            localitem.props.basiccallbacklockfoot(false);
+        },900);
     }
     taskview(){
         this.clearview();
@@ -234,6 +244,9 @@ export default class basicview extends Component {
                     <Localpicturecard ref="Localpicturecard" basiccallbacklockfoot = {this.props.basiccallbacklockfoot}/>
                     <Realpicturecard ref="Realpicturecard" basiccallbacklockfoot = {this.props.basiccallbacklockfoot}/>
                     <Resultviewcard ref="Resultviewcard"
+                                    basiccallbacklockfoot = {this.props.basiccallbacklockfoot}
+                    />
+                    <Historycard ref="Historycard"
                                     basiccallbacklockfoot = {this.props.basiccallbacklockfoot}
                     />
 

@@ -9,6 +9,7 @@
     var identifyparameter;
     var mqttconfig;
     var calibration;
+    var history;
     var if_cali = "false";
     function database(data){
     var key = data.action;
@@ -285,6 +286,20 @@
             ret.ret=if_cali;
             ret.status="true";
             return JSON.stringify(ret);
+        case "ZH_Medicine_history_list":
+            var ret = msg.ZH_Medicine_history_list;
+            ret.ret=build_random_history();
+            ret.status="true";
+            return JSON.stringify(ret);
+        case "ZH_Medicine_history_task_info":
+            var ret = msg.ZH_Medicine_history_task_info;
+            var panel = buildrandomresult();
+            panel.basic.batch = data.body.batch;
+            ret.ret.parameter=systeminfo;
+            ret.ret.configure=panel;
+            ret.ret.running="false";
+            ret.status="true";
+            return JSON.stringify(ret);
         default:
             console.log("Don't understand query key:"+key);
             return JSON.stringify(msg.ZH_Medicine_default);
@@ -319,6 +334,7 @@
         identifyparameter= JSON.parse(jsReadFiles("./sysconf/IdentifyParameter.json"));
         mqttconfig = JSON.parse(jsReadFiles("./sysconf/mqtt.json"));
         calibration = JSON.parse(jsReadFiles("./sysconf/calibration.json"));
+        history = JSON.parse(jsReadFiles("./sysconf/history.json"));
         console.log("config load finish");
         //console.log("baseconf:");
         //console.log(JSON.stringify(baseconf));
@@ -410,6 +426,28 @@
     function is_calibration(){
         if(if_cali==="false") return false;
         return true;
+    }
+    function build_random_history(){
+        let historylist = [];
+
+        let filename = ["2x3","3x4","4x6","6x8","8x12","16x24"];
+        let historylength = GetRandomNum(10,100);
+        for(let i=0;i<historylength;i++){
+            let item={};
+            for(let x in history.historyclass){
+                if(x==="batch"){
+                    item[x] = "xiaoma"+ GetRandomNum(100000,999999);
+                }else if(x === "date"){
+                    item[x] = ""+GetRandomNum(100000,999999);
+                }else if(x === "panel"){
+                    item[x] = ""+filename[GetRandomNum(0,5)];
+                }else{
+                    item[x]=""+GetRandomNum(0,123456);
+                }
+            }
+            historylist.push(item);
+        }
+        return historylist;
     }
     exports.req_test=req_test;
     exports.database=database;

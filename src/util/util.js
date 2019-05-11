@@ -28,6 +28,13 @@ function b64_hmac_sha1(key, data) {
 function str_hmac_sha1(key, data) {
     return binb2str(core_hmac_sha1(key, data));
 }
+
+function compareJSON(json1,json2){
+    let str1= JSON.stringify(json1);
+    let str2= JSON.stringify(json2);
+    if(str1 === str2) return true;
+    return false;
+}
 /*
  * Perform a simple self-test to see if the VM is working
  */
@@ -222,7 +229,7 @@ function deepCopy(o) {
 function jsondeepCopy(o){
     return JSON.parse(JSON.stringify(o));
 }
-export {str2binb,binb2str,binb2hex,binb2b64,b64_sha1,deepCopy,jsondeepCopy}
+export {str2binb,binb2str,binb2hex,binb2b64,b64_sha1,deepCopy,jsondeepCopy,compareJSON}
 /*
  async function testSync() {
  const response = await new Promise(resolve => {

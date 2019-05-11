@@ -36,6 +36,7 @@ export default class foot extends Component {
             systeminfo:"",
             loginfo:"xxxxxxxxx",
             icon:"fa fa-angle-double-left",
+            historycallback:null,
             language:{
                 "content":"",
                 "getting":"Getting......",
@@ -43,6 +44,9 @@ export default class foot extends Component {
                 "pnotifytitle":"System message:"
             }
         }
+    }
+    updatecallback(historycallback){
+        this.setState({historycallback:historycallback});
     }
     updateversion(version){
 
@@ -170,6 +174,11 @@ export default class foot extends Component {
             this.props.footcallbackparameter();
         }
     }
+    handle_click_history(){
+        if(this.state.historycallback!== null){
+            this.state.historycallback();
+        }
+    }
     handle_click_location(){
         if(this.props.footcallbacklocation){
             this.props.footcallbacklocation();
@@ -226,7 +235,7 @@ export default class foot extends Component {
                     <button  type="button" className="btn btn-warning btn-sm pull-left" style={{marginLeft:"5px",marginTop:"5px",height:(this.state.height-10),width:(this.state.height-10)*1.6,display:this.state.hideLocation}} disabled={this.state.disabled} onClick={this.handle_click_location.bind(this)}>
                         <i className="fa fa-crosshairs" style={{fontSize:25}}> </i>
                     </button>
-                    <button  type="button" className="btn btn-warning btn-sm pull-left" style={{marginLeft:"5px",marginTop:"5px",height:(this.state.height-10),width:(this.state.height-10)*1.6,display:this.state.hideHistory}} disabled={this.state.disabled} onClick={this.handle_click_return.bind(this)}>
+                    <button  type="button" className="btn btn-warning btn-sm pull-left" style={{marginLeft:"5px",marginTop:"5px",height:(this.state.height-10),width:(this.state.height-10)*1.6,display:this.state.hideHistory}} disabled={this.state.disabled} onClick={this.handle_click_history.bind(this)}>
                         <i className="fa fa-history" style={{fontSize:25}}> </i>
                     </button>
                     <button  type="button" className="btn btn-warning btn-sm pull-left" style={{marginLeft:"5px",marginTop:"5px",height:(this.state.height-10),width:(this.state.height-10)*1.6,display:this.state.hideAudit}} disabled={this.state.disabled} onClick={this.handle_click_return.bind(this)}>

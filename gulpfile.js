@@ -88,6 +88,14 @@ gulp.task("resourcecopy",function(){
         .pipe(gulp.dest(option.buildPath+"/resource/pnotify/"));
     gulp.src("./resource/colorpicker/**/*")
         .pipe(gulp.dest(option.buildPath+"/resource/colorpicker/"));
+    //gulp.src("./resource/xhgrid/assets/**/*")
+    //    .pipe(gulp.dest(option.buildPath+"/resource/xhgrid/assets/"));
+    gulp.src("./resource/xhgrid/Web/**/*")
+        .pipe(gulp.dest(option.buildPath+"/resource/xhgrid/Web/"));
+    gulp.src("./resource/xhgrid/js/xhGrid.js")
+        .pipe(gulp.dest(option.buildPath+"/resource/xhgrid/js/"));
+    gulp.src("./resource/xhgrid/assets/**/*")
+        .pipe(gulp.dest(option.buildPath+"/Assets/"));
     gulp.src("./resource/cropper/*.css")
         .pipe(gulp.dest(option.buildPath+"/resource/cropper/"));
     mkdirp.sync(option.buildPath+"/upload/");
@@ -137,6 +145,12 @@ gulp.task('scripts', function() {
         .pipe(rename('cropper.min.js'))
         .pipe(uglify())
         .pipe(gulp.dest(option.buildPath+'/resource/cropper/'));
+    gulp.src('./resource/xhgrid/js/xhgridout.js')
+        .pipe(concat('xhgridout.js'))
+        // .pipe(gulp.dest('./dist/js'))
+        .pipe(rename('xhgridout.min.js'))
+        .pipe(uglify())
+        .pipe(gulp.dest(option.buildPath+'/resource/xhgrid/js/'));
     gulp.src('./index.html')
         .pipe(htmlmin(option_html))
         .pipe(gulp.dest(option.buildPath+'/'));
