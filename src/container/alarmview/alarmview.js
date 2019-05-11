@@ -28,8 +28,8 @@ export default class alarmview extends Component {
             callback:null,
             margintop:20,
             language:{
-                "alarm":"分辨率警告",
-                "error":"系统错误"
+                "alarm":"UI loading",
+                "error":"please wait a minute"
             },
             iferror:false,
             alarm:"",
@@ -68,6 +68,7 @@ export default class alarmview extends Component {
         this.setState({hide:"block"});
     }
     render() {
+
         let center_panel;
         if(this.state.iferror){
             center_panel=

@@ -195,7 +195,7 @@
             return JSON.stringify(ret);
         case "ZH_Medicine_set_temp_conf":
             var ret = msg.ZH_Medicine_set_temp_conf;
-            identifyparameter=jsondeepcopy(data.body);
+            identifyparameter=jsondeepcopy(data.body.configure);
             ret.ret=identifyparameter;
             ret.status="true";
             return JSON.stringify(ret);
@@ -206,7 +206,7 @@
             return JSON.stringify(ret);
         case "ZH_Medicine_run_temp_analysis":
             var ret = msg.ZH_Medicine_set_temp_conf;
-            identifyparameter=jsondeepcopy(data.body);
+            identifyparameter=jsondeepcopy(data.body.configure);
             ret.ret=identifyparameter;
             ret.status="true";
             return JSON.stringify(ret);

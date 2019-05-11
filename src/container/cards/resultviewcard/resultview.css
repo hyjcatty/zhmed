@@ -1,0 +1,113 @@
+.hidebutton{
+    marginLeft:0;
+    marginTop:5px;
+    height:25px;
+    width:100%;
+    background:rgba(0,0,0,0);
+    border:0px
+}
+.hidebutton:hover{
+    background:rgba(0,0,0,0);
+    border:0px
+}
+.hidebutton:focus{
+    background:rgba(0,0,0,0);
+    border:0px;
+    outline: 0px;
+    outline-color: rgba(0,0,0,0);
+}
+.hidebutton:active{
+     background:rgba(0,0,0,0);
+     border:0px;
+     outline: 0px;
+     outline-color: rgba(0,0,0,0);
+ }
+.blingbling-LGRAY {
+    -webkit-animation: glow-LGRAY 2800ms ease-out infinite alternate;
+    -moz-animation: glow-LGRAY 2800ms ease-out infinite alternate;
+    -o-animation: glow-LGRAY 2800ms ease-out infinite alternate;
+    -ms-animation: glow-LGRAY 2800ms ease-out infinite alternate;
+    /*这里使用了呼吸动画*/
+    animation: glow-LGRAY 2800ms ease-out infinite alternate;
+    font-weight:bold;}
+
+.expand,.expand:before,.expand:after{
+    font-stretch:ultra-expanded;
+    color:rgba(255,255,255,1);
+}
+
+/*以下定义动画帧*/
+@-webkit-keyframes glow-LGRAY {
+    0% {
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 1px rgba(0,0,0,.1), inset 0 0 15px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        text-shadow:0 0 4px;
+        box-shadow:  0 0 2px rgba(0,0,0,.5), inset 0 0 20px rgba(0,0,0,.5), 0 2px 0 #fff;
+    }
+    100% {
+        text-shadow: 0 0 4px;
+        box-shadow:  0 0 1px rgba(0,0,0,.1), inset 0 0 15px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@-moz-keyframes glow-LGRAY {
+    0% {
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 1px rgba(0,0,0,.1), inset 0 0 15px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        text-shadow:0 0 4px;
+        box-shadow:  0 0 2px rgba(0,0,0,.5), inset 0 0 20px rgba(0,0,0,.5), 0 2px 0 #fff;
+    }
+    100% {
+        text-shadow: 0 0 4px;
+        box-shadow:  0 0 1px rgba(0,0,0,.1), inset 0 0 15px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@-o-keyframes glow-LGRAY {
+    0% {
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 1px rgba(0,0,0,.1), inset 0 0 15px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        text-shadow:0 0 4px;
+        box-shadow:  0 0 2px rgba(0,0,0,.5), inset 0 0 20px rgba(0,0,0,.5), 0 2px 0 #fff;
+    }
+    100% {
+        text-shadow: 0 0 4px;
+        box-shadow:  0 0 1px rgba(0,0,0,.1), inset 0 0 15px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@-ms-keyframes glow-LGRAY {
+    0% {
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 1px rgba(0,0,0,.1), inset 0 0 15px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        text-shadow:0 0 4px;
+        box-shadow:  0 0 2px rgba(0,0,0,.5), inset 0 0 20px rgba(0,0,0,.5), 0 2px 0 #fff;
+    }
+    100% {
+        text-shadow: 0 0 4px;
+        box-shadow:  0 0 1px rgba(0,0,0,.1), inset 0 0 15px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@keyframes glow-LGRAY {
+    0% {
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 1px rgba(0,0,0,.1), inset 0 0 15px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        text-shadow:0 0 4px;
+        box-shadow:  0 0 2px rgba(0,0,0,.5), inset 0 0 20px rgba(0,0,0,.5), 0 2px 0 #fff;
+    }
+    100% {
+        text-shadow: 0 0 4px;
+        box-shadow:  0 0 1px rgba(0,0,0,.1), inset 0 0 15px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+}
