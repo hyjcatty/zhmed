@@ -1,3 +1,6 @@
 20190202:
 Panel status: Running/Choice/View
 Need be controled in united level, this will be a critical issue in future.
+20190511:
+xhgird:
+如果view尺寸发生变化，会造成显示不出来

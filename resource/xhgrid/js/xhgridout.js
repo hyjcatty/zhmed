@@ -36,11 +36,16 @@ function updatexhchartcontent(content){
         gridApp.setData(gridData);
     }
 }
+function xhgridresize(){
+    if(gridApp===null) return;
+    KoolGrid.resize();
+}
 function gridReadyHandler(id) {
     gridApp = document.getElementById(id);	// A div object containing a grid
     gridRoot = gridApp.getRoot();			// An object containing data and grid
 
     gridApp.setLayout(layoutStr);
+
     gridApp.setData(gridData);
     var selectionChangeHandler = function(event) {
         var rowIndex = event.rowIndex;

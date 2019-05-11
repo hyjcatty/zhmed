@@ -40,6 +40,7 @@ export default class basicview extends Component {
                 historyinfo:"操作历史"
             }
         }
+        this.timeouttime=1200;
         //this.keyboard_initialize();
 
         this._taskcallbackreset=this.reset_panel.bind(this);
@@ -176,7 +177,7 @@ export default class basicview extends Component {
             //localitem.refs.Historycard.show();
             localitem.refs.Historycard.update_content(content);
             localitem.props.basiccallbacklockfoot(false);
-        },900);
+        },this.timeouttime);
     }
     taskview(){
         this.clearview();
@@ -185,7 +186,7 @@ export default class basicview extends Component {
             localitem.refs.Taskcard.show();
             localitem.refs.Panelcard.show();
             localitem.props.basiccallbacklockfoot(false);
-        },900);
+        },this.timeouttime);
 
 
     }
@@ -196,7 +197,7 @@ export default class basicview extends Component {
             localitem.refs.Parametercard.show();
             //localitem.refs.Localpicturecard.show();
             localitem.props.basiccallbacklockfoot(false);
-        },900);
+        },this.timeouttime);
 
 
         /*
@@ -217,7 +218,7 @@ export default class basicview extends Component {
             localitem.refs.Locationcard.show();
             localitem.refs.Realpicturecard.show();
             localitem.props.basiccallbacklockfoot(false);
-        },900);
+        },this.timeouttime);
 
         /*
         this.clearview();

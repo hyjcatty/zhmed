@@ -414,7 +414,7 @@ export default class panelcard extends Component {
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
-            },800);
+            },1200);
         }
     }
     render() {

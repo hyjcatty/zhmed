@@ -50,6 +50,7 @@ export default class historycard extends Component {
     }
     update_size(width,height,margin){
         this.setState({height:height,width:width,margin:margin});
+        xhgridresize();
     }
     update_content(content){
         if(compareJSON({'json':this.state.content},{'json':content})){

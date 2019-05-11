@@ -277,7 +277,7 @@ export default class resultview extends Component {
         let self = this;
         setTimeout(function(){
             self.setselectpicture(change_value);
-        },1000);
+        },1200);
 
     }
     handleBlur(){
