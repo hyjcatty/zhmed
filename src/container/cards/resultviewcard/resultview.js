@@ -384,7 +384,7 @@ export default class resultview extends Component {
         }
 
         return (
-            <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,right:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',zIndex:"99"}}>
+            <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,right:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',zIndex:"99",willChange: "transform, opacity"}}>
                 <div style={{position:"absolute",background:"rgba(55,55,55,0.4)",height:this.state.height,width:this.state.width,top:0,right:0,display:this.state.shield,zIndex:200}}>
                     <div className="container">
                         <div className="leaderboard" style={{marginTop: this.state.margintop}}>

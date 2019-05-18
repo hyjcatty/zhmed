@@ -78,7 +78,7 @@ export default class localpicturecard extends Component {
     render() {
 
         return (
-            <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,right:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',zIndex:"99"}}>
+            <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,right:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',zIndex:"99",willChange: "transform, opacity"}}>
                 <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key="status-top">
                     <div className="tile-stats"  style={{marginTop:"15px"}}>
                         <div className="count" style={{fontSize:24}}>{this.state.language.pictureinfo}</div>

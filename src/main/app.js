@@ -603,7 +603,7 @@ function get_size(){
 }
 function resize(){
     get_size();
-    if(winHeight < 768 || winWidth<1024){
+    if(winHeight < 768 || winWidth<1366){
         app_handle.revolution_alarm();
         app_handle.initializeAlarmSize(winWidth,winHeight);
     }else{

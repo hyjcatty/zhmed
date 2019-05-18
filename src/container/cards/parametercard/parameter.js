@@ -309,7 +309,7 @@ export default class parametercard extends Component {
 
         }
         return (
-            <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,left:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',zIndex:"99"}}>
+            <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,left:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',zIndex:"99",willChange: "transform, opacity"}}>
                 <div style={{float: "left",position:"relative",width:((this.state.footheight-10)*1.6+10),height:this.state.height,borderRight:"solid 2px #dddddd"}}>
                     <button  type="button" className="btn btn-warning btn-sm pull-right" style={{marginLeft:"5px",marginTop:"5px",height:(this.state.footheight-10)*1.6,width:(this.state.footheight-10)*1.6,display:this.state.hideSave}} disabled={this.state.disabled} onClick={this.handle_click_save.bind(this)}>
                         <i className="fa fa-save" style={{fontSize:25}}> </i>

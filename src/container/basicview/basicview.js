@@ -40,6 +40,7 @@ export default class basicview extends Component {
                 historyinfo:"操作历史"
             }
         }
+        this.localview = "";
         this.timeouttime=1200;
         //this.keyboard_initialize();
 
@@ -171,6 +172,7 @@ export default class basicview extends Component {
         this.refs.Historycard.hide();
     }
     historyview(content){
+        if(this.checkview("history")) return;
         this.clearview();
         let localitem = this;
         setTimeout(function(){
@@ -180,6 +182,7 @@ export default class basicview extends Component {
         },this.timeouttime);
     }
     taskview(){
+        if(this.checkview("task")) return;
         this.clearview();
         let localitem = this;
         setTimeout(function(){
@@ -191,6 +194,7 @@ export default class basicview extends Component {
 
     }
     parameterview(){
+        if(this.checkview("parameter")) return;
         this.clearview();
         let localitem = this;
         setTimeout(function(){
@@ -210,6 +214,7 @@ export default class basicview extends Component {
 
     }
     locationview(){
+        if(this.checkview("location")) return;
         this.clearview();
 
         let localitem = this;
@@ -220,16 +225,16 @@ export default class basicview extends Component {
             localitem.props.basiccallbacklockfoot(false);
         },this.timeouttime);
 
-        /*
-        this.clearview();
-        this.refs.Locationcard.show();
-        this.refs.Picturecard.show();
-        return new Promise((resolve) => {
-            this.setState({leftview:this.refs.Locationcard,right:this.refs.Picturecard}, resolve)
-        });*/
     }
     updatetempconf(conf){
         this.refs.Resultviewcard.updatetempconf(conf);
+    }
+    checkview(view){
+        if(this.localview === view) return true;
+        else {
+            this.localview = view;
+            return false;
+        }
     }
     render() {
         return (

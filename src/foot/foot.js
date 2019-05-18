@@ -195,7 +195,7 @@ export default class foot extends Component {
         let self = this;
         setTimeout(function(){
             self.setState({systeminfo:""});
-        },1000)
+        },1200)
     }
     switch_button_icon(){
         if(this.state.icon == "fa fa-angle-double-left"){

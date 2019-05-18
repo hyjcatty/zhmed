@@ -1,6 +1,16 @@
 20190202:
 Panel status: Running/Choice/View
-Need be controled in united level, this will be a critical issue in future.
+Need be controled in united level, this will be a critical issue in future.(done)
 20190511:
 xhgird:
-如果view尺寸发生变化，会造成显示不出来
+如果view尺寸发生变化，会造成显示不出来(done)
+20190511:
+foot:
+是否要锁定当前页面的button？否则即使在当前页面，按按钮还是会跳。目前在basic的层面做了一个状态，判断如果是一样的状态就不做操作。done
+button:
+button的disable style估计要全部重新做，目前的橙色不好看,目前先凑合用，后续如果我们还是要把触摸和鼠标界面分开，否则很难布局，这块最好找人设计一下。done
+Animation:
+跳帧，用10%速度尤其明显，查一下什么原因。目前无法完全解决跳帧问题，调整了fill mode,timing-function,同时chrome://flags/里面改变了几个默认渲染参数，
+用处不大，在performance里面可见的cpu消耗很低，但是依然会有fps降低到30的情况。
+Layout:
+System info card, console div's height can auto change by system alarm div. (done)

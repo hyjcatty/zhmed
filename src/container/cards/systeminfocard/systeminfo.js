@@ -24,6 +24,7 @@ export default class systeminfocard extends Component {
         this.state={
             height:700,
             width:600,
+            consoleheight:420,
             margin:75,
             hide:"none",
             animate:"animated fadeInRight",
@@ -36,17 +37,18 @@ export default class systeminfocard extends Component {
                 "consoletitle":"实时日志"
             }
         }
+        this.topref = ref => {this.refDom = ref};
     }
     update_language(language){
         this.setState({language:language});
     }
     update_size(width,height,margin){
-        this.setState({height:height,width:width,margin:margin});
+        this.setState({height:height,width:width,margin:margin},this.calculate_height);
     }
     update_content(content){
 
         console.log(content);
-        this.setState({content:content});
+        this.setState({content:content},this.calculate_height);
     }
     hide(){
         this.setState({hide:"none"});
@@ -56,7 +58,7 @@ export default class systeminfocard extends Component {
     }
     switch_system_info(){
         if(this.state.hide == "none"){
-            this.setState({hide:"block",animate:"animated fadeInRight"});
+            this.setState({hide:"block",animate:"animated fadeInRight"},this.calculate_height);
         }else{
             this.setState({animate:"animated fadeOutRight"});
             let self = this;
@@ -71,6 +73,13 @@ export default class systeminfocard extends Component {
             $("#screen").children('p')[$("#screen").children('p').length-1].remove();
         }
     }
+    calculate_height(){
+        const {clientWidth, clientHeight} = this.refDom;
+        console.log('====================================');
+        console.log(clientWidth, clientHeight, this.refDom);
+        console.log('====================================');
+        this.setState({consoleheight:(this.state.height-clientHeight-39-34)});
+    }
     render() {
         let center_panel=[];
         for(let i=0;i<this.state.content.length;i++){
@@ -81,17 +90,17 @@ export default class systeminfocard extends Component {
         }
         console.log(center_panel);
         return (
-            <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:this.state.margin,right:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',zIndex:"999"}}>
-                <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key="status-top">
+            <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:this.state.margin,right:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',zIndex:"999",willChange: "transform, opacity"}}>
+                <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key="status-top" ref={this.topref}>
                     <div className="tile-stats"  style={{marginTop:"15px"}}>
                         <div className="count" style={{fontSize:24}}>{this.state.language.systeminfo}</div>
                         {center_panel}
                     </div>
                 </div>
-                <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key="status-bottom">
+                <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key="status-bottom" >
                     <div className="tile-stats"  style={{marginTop:"15px"}}>
                         <div key="statuspanel" className="count" style={{fontSize:24}}>{this.state.language.consoletitle}</div>
-                        <div  id="screen" style={{width:"90%",height:this.state.height*0.6,marginLeft:"15px",overflow:'scroll',overflowX:'hidden'}}>
+                        <div  id="screen" style={{width:"calc(100%- 35px)",height:this.state.consoleheight,marginLeft:"15px",overflow:'scroll',overflowX:'hidden'}}>
 
                         </div>
                     </div>
