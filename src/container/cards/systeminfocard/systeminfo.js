@@ -75,9 +75,6 @@ export default class systeminfocard extends Component {
     }
     calculate_height(){
         const {clientWidth, clientHeight} = this.refDom;
-        console.log('====================================');
-        console.log(clientWidth, clientHeight, this.refDom);
-        console.log('====================================');
         this.setState({consoleheight:(this.state.height-clientHeight-39-34)});
     }
     render() {

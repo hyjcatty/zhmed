@@ -210,6 +210,8 @@ http.createServer(function(request, response) {
                 var str="";
                 request.on("data",function(chunk){
                     str+=chunk;
+                });
+                request.on("end",function(){
                     console.log("post data:"+str);
                     //var arg=querystring.parse(str);
                     //console.log(arg);

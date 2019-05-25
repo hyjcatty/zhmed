@@ -99,6 +99,41 @@ export default class locationcard extends Component {
     handle_click_mode(){
         this.state.callbackmode(!this.state.calimode);
     }
+    getUpdatedValue(){
+        let config = this.state.configure;
+        for(let i=0;i<config.parameter.groups.length;i++){
+            for(let j=0;j<config.parameter.groups[i].list.length;j++){
+                if(config.parameter.groups[i].list[j].type === "int"){
+                    config.parameter.groups[i].list[j].value=$("#"+this.state.key2+"G"+i+"P"+j+config.parameter.groups[i].list[j].type).val();
+                }
+                if(config.parameter.groups[i].list[j].type === "float"){
+                    config.parameter.groups[i].list[j].value=$("#"+this.state.key2+"G"+i+"P"+j+this.state.configure.parameter.groups[i].list[j].type).val();
+                }
+                if(this.state.configure.parameter.groups[i].list[j].type === "string"){
+                    this.state.configure.parameter.groups[i].list[j].value=$("#"+this.state.key2+"G"+i+"P"+j+this.state.configure.parameter.groups[i].list[j].type).val();
+                }
+                if(this.state.configure.parameter.groups[i].list[j].type === "choice"){
+                    this.state.configure.parameter.groups[i].list[j].value=$("#"+this.state.key2+"G"+i+"P"+j+this.state.configure.parameter.groups[i].list[j].type).get(0).selectedIndex+"";//val();
+                }
+                if(this.state.configure.parameter.groups[i].list[j].type === "checkbox"){
+                    this.state.configure.parameter.groups[i].list[j].value=$("#"+this.state.key2+"G"+i+"P"+j+this.state.configure.parameter.groups[i].list[j].type).is(":checked");
+                }
+            }
+        }
+        return config;
+    }
+    handleChange(e){
+        let change_value = e.target.value;
+        let group_id= parseInt(e.target.getAttribute('data-group'));
+        let parameter_id= parseInt(e.target.getAttribute('data-parameter'));
+
+        let new_state = jsondeepCopy(this.state.configure);
+        new_state.parameter.groups[group_id].list[parameter_id].value=change_value;
+        this.setState({configure:new_state});
+    }
+    handleBlur(){
+
+    }
     render() {
 
         let groups1 = [];
@@ -115,11 +150,18 @@ export default class locationcard extends Component {
             for(let i=0;i<this.state.configure.parameter.groups.length;i++){
                 let param = [];
                 for(let j=0;j<this.state.configure.parameter.groups[i].list.length;j++){
+                    if(this.state.configure.parameter.groups[i].list[j].type === "block"){
+                        param.push(
+                            <div className="col-xs-3 col-md-3 col-sm-3 col-lg-3" key={"block"+i+""+j}>
+                                <div style={{height:75,width:"100%"}}/>
+                            </div>
+                        );
+                    }
                     if(this.state.configure.parameter.groups[i].list[j].type === "button"){
                         param.push(
                             <div className="col-xs-3 col-md-3 col-sm-3 col-lg-3" key={"button"+i+""+j}>
                                 <button  type="button" className="btn btn-warning btn-sm pull-left"
-                                         style={{marginLeft:"5px",marginTop:"5px",height:(this.state.height*0.1),width:"90%"}}
+                                         style={{marginLeft:"10px",marginTop:"15px",height:60,width:"90%"}}
                                          data-i-series={""+i} data-j-series={""+j} onClick={this.handle_click_send.bind(this)}
                                          disabled={disabled}>
                                     <i data-i-series={""+i} data-j-series={""+j}
@@ -128,6 +170,115 @@ export default class locationcard extends Component {
                                 </button>
                             </div>
                         );
+                    }
+                    if(this.state.configure.parameter.groups[i].list[j].type === "int"){
+                        let contentline = "["+this.state.configure.parameter.groups[i].list[j].min+"->"+this.state.configure.parameter.groups[i].list[j].max+"]:"+this.state.configure.parameter.groups[i].list[j].note;
+                        let className="form-control "+"sys_conf_input_"+this.state.configure.parameter.groups[i].list[j].type;
+                        param.push(
+                            <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" key={this.state.key+i+"p"+j+"l"}>
+                            <div className="count" style={{fontSize:20,marginTop:15,verticalAlign:'bottom',width:"90%"}} key={this.state.key+i+"p"+j+"l"}>
+                                <div className="input-group">
+                                    <span className="input-group-addon"  style={{minWidth: "100px",fontSize:"12px"}}>{this.state.configure.parameter.groups[i].list[j].paraname+":"}</span>
+                                    <input type="text" className={className} placeholder="CONFIG Value" aria-describedby="basic-addon1"
+                                           key={this.state.key2+"G"+i+"P"+j+this.state.configure.parameter.groups[i].list[j].type} id={this.state.key2+"G"+i+"P"+j+this.state.configure.parameter.groups[i].list[j].type} data-group={i} data-parameter={j}
+                                           value={this.state.configure.parameter.groups[i].list[j].value} onChange={this.handleChange.bind(this)} onBlur={this.handleBlur.bind(this)}
+                                           data-min={this.state.configure.parameter.groups[i].list[j].min} data-max={this.state.configure.parameter.groups[i].list[j].max}/>
+                                </div>
+                                <h3 style={{fontSize:15,marginRight:5,color:"#333"}}  key={this.state.key2+i+"p"+j+"2"}>{contentline}</h3>
+                            </div>
+                            </div>);
+                    }
+                    if(this.state.configure.parameter.groups[i].list[j].type === "float"){
+                        let contentline = "["+this.state.configure.parameter.groups[i].list[j].min+"->"+this.state.configure.parameter.groups[i].list[j].max+"]:"+this.state.configure.parameter.groups[i].list[j].note;
+                        let className="form-control "+"sys_conf_input_"+this.state.configure.parameter.groups[i].list[j].type;
+                        param.push(
+                            <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" key={this.state.key+i+"p"+j+"l"}>
+                            <div className="count" style={{fontSize:20,marginTop:15,verticalAlign:'bottom',width:"90%"}} key={this.state.key+i+"p"+j+"l"}>
+                                <div className="input-group">
+                                    <span className="input-group-addon" style={{minWidth: "100px",fontSize:"12px"}}>{this.state.configure.parameter.groups[i].list[j].paraname+":"}</span>
+                                    <input type="text" className={className} placeholder="CONFIG Value" aria-describedby="basic-addon1"
+                                           key={this.state.key2+"G"+i+"P"+j+this.state.configure.parameter.groups[i].list[j].type} id={this.state.key2+"G"+i+"P"+j+this.state.configure.parameter.groups[i].list[j].type} data-group={i} data-parameter={j}
+                                           value={this.state.configure.parameter.groups[i].list[j].value} onChange={this.handleChange.bind(this)} onBlur={this.handleBlur.bind(this)}
+                                           data-min={this.state.configure.parameter.groups[i].list[j].min} data-max={this.state.configure.parameter.groups[i].list[j].max}/>
+                                </div>
+                                <h3 style={{fontSize:15,marginRight:5,color:"#333"}}  key={this.state.key2+i+"p"+j+"2"}>{contentline}</h3>
+                            </div>
+                            </div>);
+                    }
+                    if(this.state.configure.parameter.groups[i].list[j].type === "string"){
+                        //let contentline = "Max length:["+this.state.configure.parameter.groups[i].list[j].max+"];Note:"+this.state.configure.parameter.groups[i].list[j].note;
+                        let contentline = this.state.configure.parameter.groups[i].list[j].note;
+                        let className="form-control "+"sys_conf_input_"+this.state.configure.parameter.groups[i].list[j].type;
+                        param.push(
+                            <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" key={this.state.key+i+"p"+j+"l"}>
+                            <div className="count" style={{fontSize:20,marginTop:15,verticalAlign:'bottom',width:"90%"}} key={this.state.key+i+"p"+j+"l"}>
+                                <div className="input-group">
+                                    <span className="input-group-addon"  style={{minWidth: "100px",fontSize:"12px"}}>{this.state.configure.parameter.groups[i].list[j].paraname+":"}</span>
+                                    <input type="text" className={className} placeholder="CONFIG Value" aria-describedby="basic-addon1"
+                                           key={this.state.key2+"G"+i+"P"+j+this.state.configure.parameter.groups[i].list[j].type} id={this.state.key2+"G"+i+"P"+j+this.state.configure.parameter.groups[i].list[j].type} data-group={i} data-parameter={j}
+                                           value={this.state.configure.parameter.groups[i].list[j].value} onChange={this.handleChange.bind(this)} onBlur={this.handleBlur.bind(this)}
+                                           data-min={this.state.configure.parameter.groups[i].list[j].min} data-max={this.state.configure.parameter.groups[i].list[j].max}/>
+                                </div>
+                                <h3 style={{fontSize:15,marginRight:5,color:"#333"}}  key={this.state.key2+i+"p"+j+"2"}>{contentline}</h3>
+                            </div>
+                            </div>);
+                    }
+                    if(this.state.configure.parameter.groups[i].list[j].type === "choice"){
+                        let contentline = this.state.configure.parameter.groups[i].list[j].note;
+                        let className="form-control "+"sys_conf_choice";
+                        let choice_items = [];
+                        //this.state.configure.parameter.groups[i].list[j].value = this.state.configure.parameter.groups[i].list[j].items[parseInt(this.state.configure.parameter.groups[i].list[j].value)];
+                        for(let k=0;k<this.state.configure.parameter.groups[i].list[j].items.length;k++){
+                            /*if(k === parseInt(this.state.configure.parameter.groups[i].list[j].value))
+                             choice_items.push(<option value={this.state.configure.parameter.groups[i].list[j].items[k]} key={"choice_item_"+i+"_"+j+"_"+k} selected="selected">{this.state.configure.parameter.groups[i].list[j].items[k]}</option>);
+                             else*/
+                            choice_items.push(<option value={k+""} key={"choice_item_"+i+"_"+j+"_"+k}>{this.state.configure.parameter.groups[i].list[j].items[k]}</option>);
+
+
+                        }
+                        param.push(
+                            <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" key={this.state.key+i+"p"+j+"l"}>
+                                <div className="count" style={{fontSize:20,marginTop:15,verticalAlign:'bottom',width:"90%"}} key={this.state.key+i+"p"+j+"l"}>
+                                <div className="input-group">
+                                    <span className="input-group-addon"  style={{minWidth: "100px",fontSize:"12px"}}>{this.state.configure.parameter.groups[i].list[j].paraname+":"}</span>
+                                    <select className={className} placeholder="CONFIG Value" aria-describedby="basic-addon1"
+                                            key={this.state.key2+"G"+i+"P"+j+this.state.configure.parameter.groups[i].list[j].type} id={this.state.key2+"G"+i+"P"+j+this.state.configure.parameter.groups[i].list[j].type} data-group={i} data-parameter={j}
+                                            onChange={this.handleChange.bind(this)} onBlur={this.handleBlur.bind(this)}
+                                            value={this.state.configure.parameter.groups[i].list[j].value} >{choice_items}</select>
+                                </div>
+                                <h3 style={{fontSize:15,marginRight:5,color:"#333"}}  key={this.state.key2+i+"p"+j+"2"}>{contentline}</h3>
+                            </div></div>);
+
+
+
+                    }
+                    if(this.state.configure.parameter.groups[i].list[j].type === "checkbox"){
+                        if(this.state.configure.parameter.groups[i].list[j].value){
+
+                            let temp =
+                                <div className="col-xs-3 col-md-3 col-sm-3 col-lg-3" key={this.state.key+i+"p"+j+"l"}>
+
+                                <div className="count" style={{fontSize:20,marginTop:15,verticalAlign:'bottom',width:"90%"}} key={this.state.key+i+"p"+j+"l"}>
+                                <div>
+                                    <label className="sys-conf-checkbox-label" style={{fontSize: "16px",color:"#555"}}>
+                                        {this.state.configure.parameter.groups[i].list[j].paraname+":"}&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type="checkbox" id={this.state.key2+"G"+i+"P"+j+this.state.configure.parameter.groups[i].list[j].type} className="js-switch sys_conf_checkbox" defaultChecked="checked" onChange={this.handleChangecheck.bind(this)} data-switchery="true" value="on"/>
+                                    </label>
+                                </div></div></div>;
+                            param.push(temp);
+                        }else{
+                            let temp =
+
+                                <div className="col-xs-3 col-md-3 col-sm-3 col-lg-3" key={this.state.key+i+"p"+j+"l"}>
+                                <div className="count" style={{fontSize:20,marginTop:15,verticalAlign:'bottom',width:"90%"}} key={this.state.key+i+"p"+j+"l"}>
+                                <div>
+                                    <label className="sys-conf-checkbox-label" style={{fontSize: "16px",color:"#555"}}>
+                                        {this.state.configure.parameter.groups[i].list[j].paraname+":"}&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type="checkbox" id={this.state.key2+"G"+i+"P"+j+this.state.configure.parameter.groups[i].list[j].type} className="js-switch sys_conf_checkbox" onChange={this.handleChangecheck.bind(this)} data-switchery="true" value="on"/>
+                                    </label>
+                                </div></div></div>;
+                            param.push(temp);
+                        }
                     }
                 }
                 groups1.push(

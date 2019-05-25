@@ -6,12 +6,18 @@
       {
         "groupname": "group1",
         "list": [
+          {"type":"block"},
           {"paraname":"Move1","type":"button","action":"Move1"},
+          {"type":"block"},
+          {"type":"block"},
           {"paraname":"Move2","type":"button","action":"Move2"},
+          {"type":"block"},
           {"paraname":"Move3","type":"button","action":"Move3"},
+          {"type":"block"},
+          {"type":"block"},
           {"paraname":"Move4","type":"button","action":"Move4"},
-          {"paraname":"Move5","type":"button","action":"Move5"},
-          {"paraname":"Move6","type":"button","action":"Move6"}
+          {"type":"block"},
+          {"type":"block"}
                   ]
       },{
         "groupname": "group2",
@@ -21,7 +27,9 @@
           {"paraname":"focus3","type":"button","action":"focus3"},
           {"paraname":"focus4","type":"button","action":"focus4"},
           {"paraname":"focus5","type":"button","action":"focus5"},
-          {"paraname":"focus6","type":"button","action":"focus6"}
+          {"paraname":"focus6","type":"button","action":"focus6"},
+          {"paraname":"focus7","type":"button","action":"focus7"},
+          {"paraname":"定时拍照时间间隔","type":"int","max":"100","min":"0","value":"60","note":"单位：分钟"}
         ]
       }]
   }
