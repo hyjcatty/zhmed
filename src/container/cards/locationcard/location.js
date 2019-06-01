@@ -94,7 +94,7 @@ export default class locationcard extends Component {
         let i = parseInt(event.target.getAttribute("data-i-series"));
         let j = parseInt(event.target.getAttribute("data-j-series"));
         console.log(this.state.configure.parameter.groups[i].list[j].action);
-        this.state.callbackrun(this.state.configure.parameter.groups[i].list[j].action);
+        this.state.callbackrun(this.state.configure.parameter.groups[i].list[j].action,this.state.configure);
     }
     handle_click_mode(){
         this.state.callbackmode(!this.state.calimode);

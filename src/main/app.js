@@ -931,12 +931,15 @@ function caliconffetchcallback(res){
     app_handle.updatecalibration(zhmedcalimode,zhmedruncaliconf,configuration);
 
 }
-function zhmedruncaliconf(command){
+function zhmedruncaliconf(command,conf){
     var map={
         action:"ZH_Medicine_cali_command",
         type:"mod",
         lang:default_language,
-        body:command,
+        body:{
+            command:command,
+            parameter:conf
+        },
         user:app_handle.getuser()
     };
     fetch(request_head,
