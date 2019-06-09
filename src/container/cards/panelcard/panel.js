@@ -83,6 +83,11 @@ export default class panelcard extends Component {
                 "tupid":"tupid"
             }
         }
+
+        this.timeout = 1200;
+    }
+    update_timeout(timeout){
+        this.timeout=timeout;
     }
     update_language(language){
         this.setState({language:language});
@@ -97,11 +102,11 @@ export default class panelcard extends Component {
         return this.state.configure;
     }
     change_status(mode){
-        if(mode === "running"){
+        if(mode == "running"){
             this.setState({status:"running"});
             this.show_index(false);
             this.disable_button(true);
-        }else if(mode === "view"){
+        }else if(mode == "view"){
             this.setState({status:"view"});
             this.show_index(false);
             this.disable_button(false);
@@ -154,7 +159,7 @@ export default class panelcard extends Component {
     if_selected(id){
         if(this.state.configure == null) return false;
         for(let i=0;i<this.state.configure.picture.length;i++){
-            if(id === this.state.configure.picture[i].series){
+            if(id == this.state.configure.picture[i].series){
                 return true;
             }
         }
@@ -163,20 +168,20 @@ export default class panelcard extends Component {
     get_result(id){
         if(this.state.configure == null) return null;
         for(let i=0;i<this.state.configure.picture.length;i++){
-            if(id === this.state.configure.picture[i].series){
+            if(id == this.state.configure.picture[i].series){
                 return this.state.configure.picture[i];
             }
         }
         return null;
     }
     if_button_selected(index){
-        if(this.state.configure.basic.latitude.length ===0){
+        if(this.state.configure.basic.latitude.length ==0){
             if(this.if_selected(index)) return "holebutton-selected";
             else return "holebutton";
         }
 
-        if(index === "all"){
-            if(this.state.configure.basic.latitude.length ===0){
+        if(index == "all"){
+            if(this.state.configure.basic.latitude.length ==0){
                if(this.state.configure.picture.length==6) return "indexbutton-selected";
                else return "indexbutton";
             }else{
@@ -203,7 +208,7 @@ export default class panelcard extends Component {
     get_run_status(id){
         if(this.state.configure == null) return null;
         for(let i=0;i<this.state.configure.picture.length;i++){
-            if(id === this.state.configure.picture[i].series){
+            if(id == this.state.configure.picture[i].series){
                 return this.state.configure.picture[i];
             }
         }
@@ -216,8 +221,8 @@ export default class panelcard extends Component {
 
     handle_click(event){
         let key = event.target.getAttribute("data-key-series");
-        if(this.state.status === "choice"){
-            if(this.state.configure.basic.latitude.length ===0){
+        if(this.state.status == "choice"){
+            if(this.state.configure.basic.latitude.length ==0){
                 if(this.if_selected(key)){
                     this.remove_selected(key);
                 }else{
@@ -226,8 +231,8 @@ export default class panelcard extends Component {
                 return;
             }
             //console.log("button clicked:"+key);
-            if(key === "all"){
-                if(this.if_button_selected("all") ==="indexbutton-selected"){
+            if(key == "all"){
+                if(this.if_button_selected("all") =="indexbutton-selected"){
                     //console.log("should remove all");
                     this.remove_all();
                 }else{
@@ -237,7 +242,7 @@ export default class panelcard extends Component {
                 }
             }else{
                 if(this.state.configure.basic.latitude.indexOf(key)>=0){
-                    if(this.if_button_selected(key) ==="indexbutton-selected"){
+                    if(this.if_button_selected(key) =="indexbutton-selected"){
 
                         //console.log("should remove index:"+key);
                         this.remove_index_selected(key);
@@ -247,7 +252,7 @@ export default class panelcard extends Component {
                         this.add_index_selected(key);
                     }
                 }else if(this.state.configure.basic.longitude.indexOf(key)>=0){
-                    if(this.if_button_selected(key) ==="indexbutton-selected"){
+                    if(this.if_button_selected(key) =="indexbutton-selected"){
 
                         //console.log("should remove index:"+key);
                         this.remove_index_selected(key);
@@ -290,7 +295,7 @@ export default class panelcard extends Component {
         else{
             let temp = jsondeepCopy(this.state.configure);
             for(let i=0;i<temp.picture.length;i++){
-                if(id === temp.picture[i].series){
+                if(id == temp.picture[i].series){
                     temp.picture.splice(i,1);
                     break;
                 }
@@ -300,7 +305,7 @@ export default class panelcard extends Component {
     }
     build_series_list(index){
         let ret = [];
-        if(this.state.configure.basic.latitude.length ===0){
+        if(this.state.configure.basic.latitude.length ==0){
             if(index == "all"){
                 ret = this.state.configure.basic.longitude;
             }else{
@@ -365,7 +370,7 @@ export default class panelcard extends Component {
         //console.log(all_list);
         for(let i=0;i<all_list.length;i++){
             for(let j=0;j<temp.picture.length;j++){
-                if(temp.picture[j].series === all_list[i]){
+                if(temp.picture[j].series == all_list[i]){
                     temp.picture.splice(j,1);
                     break;
                 }
@@ -374,19 +379,19 @@ export default class panelcard extends Component {
         this.setState({configure:temp});
     }
     hide(){
-        if(this.state.hide === "none") return;
+        if(this.state.hide == "none") return;
         else{
             this.setState({animate:"animated fadeOutRight"});
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
-            },800);
+            },this.timeout);
         }
         //this.setState({hide:"none"});
     }
     show(){
         //this.setState({hide:"block"});
-        if(this.state.hide === "block") return;
+        if(this.state.hide == "block") return;
         else{
             this.setState({hide:"block",animate:"animated fadeInRight"});
         }
@@ -414,7 +419,7 @@ export default class panelcard extends Component {
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
-            },1200);
+            },this.timeout);
         }
     }
     render() {
@@ -425,7 +430,7 @@ export default class panelcard extends Component {
         let margin = "5px";
         let font = "15px";
         let weight ="700"
-        if(this.state.configure.basic.latitude.length ===0){
+        if(this.state.configure.basic.latitude.length ==0){
             //special for 2x3 layout;
             line = 2;
             row=3;
@@ -454,22 +459,22 @@ export default class panelcard extends Component {
                         if(picclass === null){
                             classstring = classstring+"holebutton"
                         }else{
-                            if(picclass.shooting === "true"||picclass.videoing === "true"||picclass.analysising === "true" )    {
-                                if(picclass.analysising === "true"){
+                            if(picclass.shooting == "true"||picclass.videoing == "true"||picclass.analysising == "true" )    {
+                                if(picclass.analysising == "true"){
                                     classstring = classstring+"holebutton-selected "+"blingbling-LGREEN green-button";
                                     iconclass = "fa fa-clipboard"
-                                }else if(picclass.videoing === "true"){
+                                }else if(picclass.videoing == "true"){
                                     classstring = classstring+"holebutton-selected "+"blingbling-ORANGE orange-button";
                                     iconclass = "fa fa-video-camera"
                                 }else{
                                     classstring = classstring+"holebutton-selected "+"blingbling-LBLUE blue-button";
                                     iconclass = "fa fa-camera-retro"
                                 }
-                            }else if(picclass.shooting === "done"||picclass.videoing === "done"||picclass.analysising === "done" ){
-                                if(picclass.analysising === "done"){
+                            }else if(picclass.shooting == "done"||picclass.videoing == "done"||picclass.analysising == "done" ){
+                                if(picclass.analysising == "done"){
                                     classstring = classstring+"holebutton-selected "+"green-button";
                                     iconclass = "fa fa-clipboard"
-                                }else if(picclass.videoing === "done"){
+                                }else if(picclass.videoing == "done"){
                                     classstring = classstring+"holebutton-selected "+"orange-button";
                                     iconclass = "fa fa-video-camera"
                                 }else{
@@ -519,8 +524,8 @@ export default class panelcard extends Component {
                             {this.state.configure.basic.longitude[i*3+j]}</i>
                     </button>*/
                 }else{
-                    if(i===0){
-                        if(j===0){
+                    if(i==0){
+                        if(j==0){
                             button =
                                 <button  type="button" className={"btn  btn-sm pull-left "+this.if_button_selected("all")}
                                          style={{padding:"0px",marginLeft:margin,marginTop:margin,height:size,width:size,borderRadius: size/2+"px",display:this.state.showindex}}
@@ -542,7 +547,7 @@ export default class panelcard extends Component {
                                 </button>
                         }
                     }else{
-                        if(j===0){
+                        if(j==0){
                             button =
                                 <button  type="button" className={"btn  btn-sm pull-left "+this.if_button_selected(this.state.configure.basic.latitude[i-1])}
                                          style={{padding:"0px",marginLeft:margin,marginTop:margin,height:size,width:size,borderRadius: size/2+"px",display:this.state.showindex}}
@@ -562,22 +567,22 @@ export default class panelcard extends Component {
                                 if(picclass === null){
                                     classstring = classstring+"holebutton"
                                 }else{
-                                    if(picclass.shooting === "true"||picclass.videoing === "true"||picclass.analysising === "true" )    {
-                                        if(picclass.analysising === "true"){
+                                    if(picclass.shooting == "true"||picclass.videoing == "true"||picclass.analysising == "true" )    {
+                                        if(picclass.analysising == "true"){
                                             classstring = classstring+"holebutton-selected "+"blingbling-LGREEN green-button";
                                             iconclass = "fa fa-clipboard"
-                                        }else if(picclass.videoing === "true"){
+                                        }else if(picclass.videoing == "true"){
                                             classstring = classstring+"holebutton-selected "+"blingbling-ORANGE orange-button";
                                             iconclass = "fa fa-video-camera"
                                         }else{
                                             classstring = classstring+"holebutton-selected "+"blingbling-LBLUE blue-button";
                                             iconclass = "fa fa-camera-retro"
                                         }
-                                    }else if(picclass.shooting === "done"||picclass.videoing === "done"||picclass.analysising === "done" ){
-                                        if(picclass.analysising === "done"){
+                                    }else if(picclass.shooting == "done"||picclass.videoing == "done"||picclass.analysising == "done" ){
+                                        if(picclass.analysising == "done"){
                                             classstring = classstring+"holebutton-selected "+"green-button";
                                             iconclass = "fa fa-clipboard"
-                                        }else if(picclass.videoing === "done"){
+                                        }else if(picclass.videoing == "done"){
                                             classstring = classstring+"holebutton-selected "+"orange-button";
                                             iconclass = "fa fa-video-camera"
                                         }else{

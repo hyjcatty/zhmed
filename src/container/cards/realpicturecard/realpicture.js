@@ -37,6 +37,11 @@ export default class realpicturecard extends Component {
                 "consoletitle":"实时日志"
             }
         }
+
+        this.timeout = 1200;
+    }
+    update_timeout(timeout){
+        this.timeout=timeout;
     }
     update_language(language){
         this.setState({language:language});
@@ -56,7 +61,7 @@ export default class realpicturecard extends Component {
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
-            },800);
+            },this.timeout);
         }
         //this.setState({hide:"none"});
     }
@@ -75,7 +80,7 @@ export default class realpicturecard extends Component {
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
-            },800);
+            },this.timeout);
         }
     }
     componentDidUpdate(){

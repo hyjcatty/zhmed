@@ -44,6 +44,11 @@ export default class historycard extends Component {
                 "historyinfo":"操作历史"
             }
         }
+
+        this.timeout = 1200;
+    }
+    update_timeout(timeout){
+        this.timeout=timeout;
     }
     update_language(language){
         this.setState({language:language});
@@ -68,16 +73,16 @@ export default class historycard extends Component {
     }
     initializegrid(){
         this.show();
-        this.state.callback(this.state.content);
+        //this.state.callback(this.state.content);
     }
     hide(){
         if(this.state.hide === "none") return;
         else{
-            this.setState({animate:"animated fadeOutLeft"});
+            this.setState({animate:"animated fadeOut"});
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
-            },800);
+            },this.timeout);
         }
         //this.setState({hide:"none"});
     }
@@ -85,18 +90,22 @@ export default class historycard extends Component {
         //this.setState({hide:"block"});
         if(this.state.hide === "block") return;
         else{
-            this.setState({hide:"block",animate:"animated fadeInLeft"});
+            this.setState({hide:"block",animate:"animated fadeIn"});
+            let self = this;
+            setTimeout(function(){
+                self.state.callback(self.state.content);
+            },this.timeout);
         }
     }
     switch_system_info(){
         if(this.state.hide == "none"){
-            this.setState({hide:"block",animate:"animated fadeInLeft"});
+            this.setState({hide:"block",animate:"animated fadeIn"});
         }else{
-            this.setState({animate:"animated fadeOutleft"});
+            this.setState({animate:"animated fadeOut"});
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
-            },800);
+            },this.timeout);
         }
     }
     componentDidMount(){

@@ -42,6 +42,11 @@ export default class parametercard extends Component {
                 "consoletitle":"实时日志"
             }
         }
+
+        this.timeout = 1200;
+    }
+    update_timeout(timeout){
+        this.timeout=timeout;
     }
     update_language(language){
         this.setState({language:language});
@@ -50,13 +55,13 @@ export default class parametercard extends Component {
         this.setState({height:height,width:width,margin:margin});
     }
     update_content(content){
-        this.setState({content:content});
+        this.setState({content:content},this.switchery_initialize);
     }
     update_callback(callback){
         this.setState({callback:callback});
     }
     update_config(configure){
-        this.setState({configure:configure});
+        this.setState({configure:configure},this.switchery_initialize);
     }
     hide(){
         if(this.state.hide === "none") return;
@@ -65,7 +70,7 @@ export default class parametercard extends Component {
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
-            },800);
+            },this.timeout);
         }
         //this.setState({hide:"none"});
     }
@@ -84,7 +89,7 @@ export default class parametercard extends Component {
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
-            },800);
+            },this.timeout);
         }
     }
 
@@ -138,15 +143,12 @@ export default class parametercard extends Component {
 
     }
     switchery_initialize(){
+        console.log("switchery_initialize");
         $(".sys-conf-checkbox-label").each(function(){
             $(this).find("span").each(function(){
                 $(this).remove();
             });
         });
-        /*
-         let switchery_list = $("#preemption_tab").find("span").each(function(){
-         $(this).remove();
-         });*/
         if(this.state.configure!==null){
 
             for(let i=0;i<this.state.configure.parameter.groups.length;i++){
@@ -158,9 +160,9 @@ export default class parametercard extends Component {
 
             }
         }
-
         if ($(".sys_conf_checkbox")[0]) {
             var elems = Array.prototype.slice.call(document.querySelectorAll('.sys_conf_checkbox'));
+            //var elems = document.querySelectorAll('.sys_conf_checkbox');
             //console.log("switchery list lenght:"+elems.length);
             elems.forEach(function (html) {
                 var switchery = new Switchery(html, {
@@ -170,10 +172,8 @@ export default class parametercard extends Component {
         }
     }
     componentDidMount(){
-        //this.keyboard_initialize();
     }
     componentDidUpdate(){
-        this.switchery_initialize();
     }
     render() {
         let groups1 = [];

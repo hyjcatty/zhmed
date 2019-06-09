@@ -56,6 +56,18 @@ export default class basicview extends Component {
         this.refs.Resultviewcard.update_language(language.result);
         this.refs.Locationcard.update_language(language.location);
         this.refs.Historycard.update_language(language.history);
+
+        this.refs.Localpicturecard.update_language(language.localpicture);
+        this.refs.Realpicturecard.update_language(language.realpicture);
+
+        this.refs.Parametercard.update_timeout(this.timeouttime);
+        this.refs.Taskcard.update_timeout(this.timeouttime);
+        this.refs.Panelcard.update_timeout(this.timeouttime);
+        this.refs.Resultviewcard.update_timeout(this.timeouttime);
+        this.refs.Locationcard.update_timeout(this.timeouttime);
+        this.refs.Historycard.update_timeout(this.timeouttime);
+        this.refs.Localpicturecard.update_timeout(this.timeouttime);
+        this.refs.Realpicturecard.update_timeout(this.timeouttime);
     }
 
     initializeparameter(callback,configure){

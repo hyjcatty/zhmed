@@ -60,6 +60,14 @@
     },
     "history":{
       "historyinfo":"操作历史"
+    },
+    "localpicture":{
+      "pictureinfo":"本地图片",
+      "consoletitle":"实时日志"
+    },
+    "realpicture":{
+      "pictureinfo":"实时成像",
+      "consoletitle":"实时日志"
     }
   },
   "alarmview":{

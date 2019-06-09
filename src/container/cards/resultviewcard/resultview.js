@@ -54,6 +54,11 @@ export default class resultview extends Component {
 
             }
         }
+
+        this.timeout = 1200;
+    }
+    update_timeout(timeout){
+        this.timeout=timeout;
     }
     update_language(language){
         this.setState({language:language});
@@ -98,7 +103,7 @@ export default class resultview extends Component {
             self.distroycropper();
             setTimeout(function(){
                 self.setState({hide:"none",defaultvalue:"",image:null,result:null});
-            },800);
+            },this.timeout);
         }
         //this.setState({hide:"none"});
     }
@@ -117,7 +122,7 @@ export default class resultview extends Component {
                     self.setState({defaultvalue:"",image:null,result:null});
                 }
                 //self.addcropper();
-            },1200);
+            },this.timeout);
         }
     }
 
@@ -129,7 +134,7 @@ export default class resultview extends Component {
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
-            },800);
+            },this.timeout);
         }
     }
     distroycropper(){
@@ -424,7 +429,7 @@ export default class resultview extends Component {
                     </div>
                 </div>
                 <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key="status-bottom">
-                    <button  type="button" className="btn btn-warning btn-sm pull-left hidebutton blingbling-LGRAY" style={{marginLeft:0,marginTop:"5px",height:25,width:'100%',background:"rgba(0,0,0,0)"}} onClick={this.handle_hide.bind(this)} disabled={this.state.disabled}>
+                    <button  type="button" className="btn btn-warning btn-sm pull-left hidebutton blingbling-LGRAY" style={{marginLeft:0,marginTop:"5px",height:25,width:'100%',background:"rgba(0,0,0,0.3)"}} onClick={this.handle_hide.bind(this)} disabled={this.state.disabled}>
                         <i className="fa fa-angle-double-up expand" > </i>
                     </button>
                 </div>

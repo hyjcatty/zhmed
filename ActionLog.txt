@@ -14,3 +14,11 @@ Animation:
 用处不大，在performance里面可见的cpu消耗很低，但是依然会有fps降低到30的情况。
 Layout:
 System info card, console div's height can auto change by system alarm div. (done)
+Performance:
+目前看起来xhgrid和parameter/location的 switchery initialize比较吃资源，已经知道资源怎么看，后续优化，parameter/location这边已经优化好，其他待续
+xhgrid,是一个大问题，目前由于他的渲染完成之前不会返回，那么就有一个问题，我们是在什么时候对他进行初始化呢？
+选择1：后台默许，但是目前动画动作没有和main做挂钩，也就是main不知道什么时候会触发动画，这样后台在调用xhgrid的时候会跑进来一个动画，依然卡顿。
+选择2：前台渲染，当动画完成之后再渲染，把钩子做到history里面去，也是一个办法不过动画会很不好看。
+修改了选择2，然后对浏览器做以下优化，结果会好很多（测试CPU4倍减速，效果依然可以接受）
+chrome://flags/#enable-gpu-rasterization设置Force-enable for all layers
+chrome://flags/#enable-zero-copy设置enabled

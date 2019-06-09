@@ -41,6 +41,11 @@ export default class locationcard extends Component {
                 "buttoncalimodeno":"离开校准模式",
             }
         }
+
+        this.timeout = 1200;
+    }
+    update_timeout(timeout){
+        this.timeout=timeout;
     }
     if_show(){
         if(this.state.hide === "none") return false;
@@ -53,13 +58,13 @@ export default class locationcard extends Component {
         this.setState({height:height,width:width,margin:margin});
     }
     updatecalibration(callbackmode,callbackrun,configure){
-        this.setState({callbackmode:callbackmode,callbackrun:callbackrun,configure:configure});
+        this.setState({callbackmode:callbackmode,callbackrun:callbackrun,configure:configure},this.switchery_initialize);
     }
     updatecalimode(calimode){
-        this.setState({calimode:calimode});
+        this.setState({calimode:calimode},this.switchery_initialize);
     }
     update_content(content){
-        this.setState({content:content});
+        this.setState({content:content},this.switchery_initialize);
     }
     hide(){
         if(this.state.hide === "none") return;
@@ -68,7 +73,7 @@ export default class locationcard extends Component {
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
-            },800);
+            },this.timeout);
         }
         //this.setState({hide:"none"});
     }
@@ -87,7 +92,7 @@ export default class locationcard extends Component {
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
-            },800);
+            },this.timeout);
         }
     }
     handle_click_send(event){
@@ -133,6 +138,41 @@ export default class locationcard extends Component {
     }
     handleBlur(){
 
+    }
+    switchery_initialize(){
+        $(".location-conf-checkbox-label").each(function(){
+            $(this).find("span").each(function(){
+                $(this).remove();
+            });
+        });
+        /*
+         let switchery_list = $("#preemption_tab").find("span").each(function(){
+         $(this).remove();
+         });*/
+        if(this.state.configure!==null){
+
+            for(let i=0;i<this.state.configure.parameter.groups.length;i++){
+                for(let j=0;j<this.state.configure.parameter.groups[i].list.length;j++){
+                    if(this.state.configure.parameter.groups[i].list[j].type === "checkbox"){
+                        $("#"+this.state.key2+"G"+i+"P"+j+this.state.configure.parameter.groups[i].list[j].type).prop("checked",this.state.configure.parameter.groups[i].list[j].value);
+                    }
+                }
+
+            }
+        }
+
+        if ($(".location_conf_checkbox")[0]) {
+            var elems = Array.prototype.slice.call(document.querySelectorAll('.location_conf_checkbox'));
+            //console.log("switchery list lenght:"+elems.length);
+            elems.forEach(function (html) {
+                var switchery = new Switchery(html, {
+                    color: '#26B99A'
+                });
+            });
+        }
+    }
+    componentDidUpdate(){
+        //this.switchery_initialize();
     }
     render() {
 
@@ -260,9 +300,9 @@ export default class locationcard extends Component {
 
                                 <div className="count" style={{fontSize:20,marginTop:15,verticalAlign:'bottom',width:"90%"}} key={this.state.key+i+"p"+j+"l"}>
                                 <div>
-                                    <label className="sys-conf-checkbox-label" style={{fontSize: "16px",color:"#555"}}>
+                                    <label className="location-conf-checkbox-label" style={{fontSize: "16px",color:"#555"}}>
                                         {this.state.configure.parameter.groups[i].list[j].paraname+":"}&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <input type="checkbox" id={this.state.key2+"G"+i+"P"+j+this.state.configure.parameter.groups[i].list[j].type} className="js-switch sys_conf_checkbox" defaultChecked="checked" onChange={this.handleChangecheck.bind(this)} data-switchery="true" value="on"/>
+                                        <input type="checkbox" id={this.state.key2+"G"+i+"P"+j+this.state.configure.parameter.groups[i].list[j].type} className="js-switch location_conf_checkbox" defaultChecked="checked" onChange={this.handleChangecheck.bind(this)} data-switchery="true" value="on"/>
                                     </label>
                                 </div></div></div>;
                             param.push(temp);
@@ -272,9 +312,9 @@ export default class locationcard extends Component {
                                 <div className="col-xs-3 col-md-3 col-sm-3 col-lg-3" key={this.state.key+i+"p"+j+"l"}>
                                 <div className="count" style={{fontSize:20,marginTop:15,verticalAlign:'bottom',width:"90%"}} key={this.state.key+i+"p"+j+"l"}>
                                 <div>
-                                    <label className="sys-conf-checkbox-label" style={{fontSize: "16px",color:"#555"}}>
+                                    <label className="location-conf-checkbox-label" style={{fontSize: "16px",color:"#555"}}>
                                         {this.state.configure.parameter.groups[i].list[j].paraname+":"}&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <input type="checkbox" id={this.state.key2+"G"+i+"P"+j+this.state.configure.parameter.groups[i].list[j].type} className="js-switch sys_conf_checkbox" onChange={this.handleChangecheck.bind(this)} data-switchery="true" value="on"/>
+                                        <input type="checkbox" id={this.state.key2+"G"+i+"P"+j+this.state.configure.parameter.groups[i].list[j].type} className="js-switch location_conf_checkbox" onChange={this.handleChangecheck.bind(this)} data-switchery="true" value="on"/>
                                     </label>
                                 </div></div></div>;
                             param.push(temp);

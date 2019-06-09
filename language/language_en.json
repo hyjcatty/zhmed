@@ -60,6 +60,14 @@
     },
     "history":{
       "historyinfo":"Operation history"
+    },
+    "localpicture":{
+      "pictureinfo":"Local Picture",
+      "consoletitle":"Realtime log"
+    },
+    "realpicture":{
+      "pictureinfo":"Realtime view",
+      "consoletitle":"Realtime log"
     }
   },
   "alarmview":{

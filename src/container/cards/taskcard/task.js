@@ -53,13 +53,29 @@ export default class taskcard extends Component {
                 "stop":"停止",
                 "reset":"重置状态"
             }
+        };
+
+        this.bufferstate={};
+        this.transform = false;
+
+        this.timeout = 1200;
+    }
+    update_timeout(timeout){
+        this.timeout=timeout;
+    }
+
+    syncSetState(state,callback){
+        if(!this.transform){
+            this.setState(state,callback);
+        }else{
+            Object.assign(this.bufferstate,state);
         }
     }
     update_language(language){
-        this.setState({language:language});
+        this.syncSetState({language:language});
     }
     update_size(width,height,margin){
-        this.setState({height:height,width:width,margin:margin});
+        this.syncSetState({height:height,width:width,margin:margin});
     }
     get_batch_info(){
         if(this.state.configure === null) return [];
@@ -87,6 +103,13 @@ export default class taskcard extends Component {
             return temp;
         }
     }
+    transformcallback(){
+        this.transform=false;
+        if(this.bufferstate !== {})
+        this.syncSetState(this.bufferstate,function(){
+            this.bufferstate = {};
+        })
+    }
     update_configure(task){
         let x = false;
         if(task.running==="true"){
@@ -95,54 +118,63 @@ export default class taskcard extends Component {
             x=true;
         }
         else this.props.basiccallbacklockfoot(false);
-        this.setState({parameter:task.parameter.info,running:x,configure:task.configure});
+        this.syncSetState({parameter:task.parameter.info,running:x,configure:task.configure});
     }
     update_configure_panel(configure){
-        this.setState({configure:configure});
+        this.syncSetState({configure:configure});
     }
     update_callback(callback,footcallback){
-        this.setState({callback:callback,footcallback:footcallback});
+        this.syncSetState({callback:callback,footcallback:footcallback});
     }
     set_running(bool){
         if(bool){
-            this.setState({running:true,disabledreset:"disabled"});
+            this.syncSetState({running:true,disabledreset:"disabled"});
         }else
-            this.setState({running:false,disabledreset:""});
+            this.syncSetState({running:false,disabledreset:""});
     }
     get_running(){
         return this.state.running;
     }
+
     hide(){
         if(this.state.hide === "none") return;
         else{
-            this.setState({animate:"animated fadeOutLeft"});
+            this.syncSetState({animate:"animated fadeOutLeft"});
+            this.transform=true;
             let self = this;
             setTimeout(function(){
-                self.setState({hide:"none"});
-            },800);
+                self.setState({hide:"none"},
+                    self.transformcallback);
+            },this.timeout);
         }
-        //this.setState({hide:"none"});
+        //this.syncSetState({hide:"none"});
     }
     show(){
-        //this.setState({hide:"block"});
+        //this.syncSetState({hide:"block"});
         if(this.state.hide === "block") return;
         else{
-            this.setState({hide:"block",animate:"animated fadeInLeft"});
+
+            this.syncSetState({hide:"block",animate:"animated fadeInLeft"});
+            this.transform=true;
+            let self = this;
+            setTimeout(function(){
+                self.transformcallback();
+            },this.timeout);
         }
     }
     switch_system_info(){
         if(this.state.hide == "none"){
-            this.setState({hide:"block",animate:"animated fadeInLeft"});
+            this.syncSetState({hide:"block",animate:"animated fadeInLeft"});
         }else{
-            this.setState({animate:"animated fadeOutleft"});
+            this.syncSetState({animate:"animated fadeOutleft"});
             let self = this;
             setTimeout(function(){
-                self.setState({hide:"none"});
-            },800);
+                self.syncSetState({hide:"none"});
+            },this.timeout);
         }
     }
     handle_click(){
-        this.setState({disabled:"disabled"});
+        this.syncSetState({disabled:"disabled"});
         if(this.get_running()){
             this.state.callback(false);
         }else{
@@ -150,8 +182,8 @@ export default class taskcard extends Component {
         }
         let temp = this;
         setTimeout(function(){
-            temp.setState({disabled:""});
-        },500);
+            temp.syncSetState({disabled:""});
+        },this.timeout);
         //console.log("click start button");
     }
     handle_reset(){

@@ -38,6 +38,11 @@ export default class systeminfocard extends Component {
             }
         }
         this.topref = ref => {this.refDom = ref};
+
+        this.timeout = 1200;
+    }
+    update_timeout(timeout){
+        this.timeout=timeout;
     }
     update_language(language){
         this.setState({language:language});
@@ -64,7 +69,7 @@ export default class systeminfocard extends Component {
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
-            },800);
+            },this.timeout);
         }
     }
     update_msg(msg){
