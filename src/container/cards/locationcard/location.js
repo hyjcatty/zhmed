@@ -38,7 +38,8 @@ export default class locationcard extends Component {
             language:{
                 "locationinfo":"位置校准",
                 "buttoncalimodeyes":"进入校准模式",
-                "buttoncalimodeno":"离开校准模式",
+                "buttoncalimodeno":"保存并离开",
+                "buttoncalimodecancel":"放弃并离开"
             }
         }
 
@@ -102,7 +103,10 @@ export default class locationcard extends Component {
         this.state.callbackrun(this.state.configure.parameter.groups[i].list[j].action,this.state.configure);
     }
     handle_click_mode(){
-        this.state.callbackmode(!this.state.calimode);
+        this.state.callbackmode(!this.state.calimode,"save");
+    }
+    handle_click_cancel(){
+        this.state.callbackmode(!this.state.calimode,"cancel");
     }
     getUpdatedValue(){
         let config = this.state.configure;
@@ -179,11 +183,39 @@ export default class locationcard extends Component {
         let groups1 = [];
 
         let grougs1size=0;
-        let modebutton = this.state.language.buttoncalimodeyes;
+        let modebutton =
+            <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" >
+            <button  type="button" className="btn btn-warning btn-sm pull-left"
+                     style={{marginLeft:"5px",marginTop:"5px",height:(this.state.height*0.1),width:"90%"}}
+                     onClick={this.handle_click_mode.bind(this)}>
+                <i style={{color:"#ffffff",fontSize:"15px",fontWeight:"bold"}}>
+                    {this.state.language.buttoncalimodeyes}</i>
+            </button>
+        </div>;
         let disabled = "disabled";
+        let button = [];
         if(this.state.calimode) {
             disabled = "";
-            modebutton = this.state.language.buttoncalimodeno;
+            modebutton = [];
+            modebutton.push(
+                <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" key="calisave">
+                    <button  type="button" className="btn btn-warning btn-sm pull-left"
+                             style={{marginLeft:"5px",marginTop:"5px",height:(this.state.height*0.1),width:"90%"}}
+                             onClick={this.handle_click_mode.bind(this)} >
+                        <i style={{color:"#ffffff",fontSize:"15px",fontWeight:"bold"}}>
+                            {this.state.language.buttoncalimodeno}</i>
+                    </button>
+                </div>);
+            modebutton.push(
+                <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" key="calicancel">
+                        <button  type="button" className="btn btn-warning btn-sm pull-left"
+                    style={{marginLeft:"5px",marginTop:"5px",height:(this.state.height*0.1),width:"90%"}}
+                    onClick={this.handle_click_cancel.bind(this)} >
+                <i style={{color:"#ffffff",fontSize:"15px",fontWeight:"bold"}}>
+                    {this.state.language.buttoncalimodecancel}</i>
+                </button>
+                </div>
+            );
         }
         if(this.state.configure!= null){
 
@@ -341,14 +373,8 @@ export default class locationcard extends Component {
                 <div className="tile-stats"  style={{marginTop:"15px"}}>
                     <div className="count" style={{fontSize:24}}>{this.state.language.locationinfo}</div>
                     <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12">
-                        <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" >
-                            <button  type="button" className="btn btn-warning btn-sm pull-left"
-                                     style={{marginLeft:"5px",marginTop:"5px",height:(this.state.height*0.1),width:"90%"}}
-                                     onClick={this.handle_click_mode.bind(this)}>
-                                <i style={{color:"#ffffff",fontSize:"15px",fontWeight:"bold"}}>
-                                    {modebutton}</i>
-                            </button>
-                        </div>
+
+                        {modebutton}
                     </div>
                     {groups1}
                 </div>

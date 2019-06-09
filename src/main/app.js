@@ -545,7 +545,7 @@ function initialize_mqtt(){
                 update_log_test(ret.msg);
                 return;
             case "ZH_Medicine_Realtime_Picture_Update":
-                update_image_test(ret.msg);
+                update_image_test(ret.msg,ret.blur);
                 return;
             default:
                 return;
@@ -970,13 +970,16 @@ function zhmedruncaliconfcallback(res){
     //TODO: Do not know what to do in this period
     console.log(res.jsonResult.msg);
 }
-function zhmedcalimode(triger){
+function zhmedcalimode(triger,action){
     let x = "false"; if(triger) x= "true";
     var map={
         action:"ZH_Medicine_cali_mode",
         type:"mod",
         lang:default_language,
-        body:x,
+        body:{
+            triger:x,
+            action:action
+        },
         user:app_handle.getuser()
     };
     fetch(request_head,
@@ -1007,6 +1010,7 @@ function zhmedcalimodecallback(res){
     app_handle.calibrationmode(output);
     if(output === false){
         clearwebview();
+        caliconffetch();
     }
 }
 function zhmedcheckcalimode(){
@@ -1959,8 +1963,9 @@ function showtempmodal(){
 //var socket = io.connect();
 var start = 98;
 //var image_handle = document.getElementById("imgview");
-function update_image_test(src){
+function update_image_test(src,blur){
     var image_handle = document.getElementById("imgview");
+    var blur_handle = document.getElementById("blurvalue");
     if(image_handle === null || image_handle === undefined){
         console.log("imgview can not find")
         return;
@@ -1971,10 +1976,10 @@ function update_image_test(src){
     img.onload = function(){
         window.URL.revokeObjectURL(src);
     };
-    console.log("add image");
     //removeAllChild(document.body);
     image_handle.appendChild(img);
     image_handle.removeChild(image_handle.firstChild);
+    blur_handle.innerHTML="blur:"+blur;
     if(start==0) start = 99;
 }
 /*
@@ -2001,12 +2006,14 @@ socket.on('news',function(data){
 });*/
 function clearwebview(){
     var image_handle = document.getElementById("imgview");
+    var blur_handle = document.getElementById("blurvalue");
     removeAllChild(image_handle);
     var src = "./img/default.jpg";
     var img = document.createElement('img');
     img.src = src;
     img.style="position: absolute; left: 10px; top: 20px;z-index: 99";
     image_handle.appendChild(img);
+    blur_handle.innerHTML="";
     start = 98;
 }
 function removeAllChild(_element)  {

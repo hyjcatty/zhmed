@@ -280,8 +280,8 @@
             return JSON.stringify(ret);
         case "ZH_Medicine_cali_mode":
             var ret = msg.ZH_Medicine_cali_mode;
-            if(data.body == "true" || data.body == "false" ){
-                if_cali = data.body;
+            if(data.body.triger == "true" || data.body.triger == "false" ){
+                if_cali = data.body.triger;
             }
             ret.ret=if_cali;
             ret.status="true";

@@ -429,7 +429,7 @@ export default class resultview extends Component {
                     </div>
                 </div>
                 <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key="status-bottom">
-                    <button  type="button" className="btn btn-warning btn-sm pull-left hidebutton blingbling-LGRAY" style={{marginLeft:0,marginTop:"5px",height:25,width:'100%',background:"rgba(0,0,0,0.3)"}} onClick={this.handle_hide.bind(this)} disabled={this.state.disabled}>
+                    <button  type="button" className="btn btn-warning  btn-sm pull-left hidebutton blingbling-LGRAY" style={{marginLeft:0,marginTop:"5px",height:25,width:'100%',background:"rgba(0,0,0,0.3)"}} onClick={this.handle_hide.bind(this)} disabled={this.state.disabled}>
                         <i className="fa fa-angle-double-up expand" > </i>
                     </button>
                 </div>

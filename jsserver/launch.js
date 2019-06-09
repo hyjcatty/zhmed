@@ -362,7 +362,8 @@ function realtimepic(){
         let x = req.GetRandomNum(0,22);
         let msg = {
             action : "ZH_Medicine_Realtime_Picture_Update",
-            msg: "./jpg/"+x+".jpg"
+            msg: "./jpg/"+x+".jpg",
+            blur: "4."+x
         }
         //console.log("send pic:"+"./jpg/"+x+".jpg");
         client.publish('MQTT_ZH_Medicine_UI', JSON.stringify(msg));

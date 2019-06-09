@@ -38,7 +38,7 @@
 .indexbutton-selected:active{
     box-shadow: none;
 }
-.holebutton{
+.holebutton,.holebutton:disabled{
     background-color: #ffffff;
     border-color:#999999;
     font-weight:100;
@@ -72,7 +72,7 @@
 }
 
 
-.green-button{
+.green-button,.green-button:disabled{
     background-color: #6f6;
     border-color:#999999;
     font-weight:800;
@@ -84,7 +84,7 @@
     font-weight:800;
     color:#444444
 }
-.orange-button{
+.orange-button,.orange-button:disabled{
     background-color: #FFD1A4;
     border-color:#999999;
     font-weight:800;
@@ -96,7 +96,7 @@
     font-weight:800;
     color:#444444
 }
-.blue-button{
+.blue-button,.blue-button:disabled{
      background-color: #0000ff;
      border-color:#999999;
      font-weight:800;

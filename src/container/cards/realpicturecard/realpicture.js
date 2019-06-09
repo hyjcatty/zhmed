@@ -97,6 +97,7 @@ export default class realpicturecard extends Component {
                             <img src="./img/default.jpg" style={{position: "absolute", left: 10, top: 20,zIndex:99}}/>
                         </div>
                         <div className="clearfix"/>
+                        <h3 style={{fontSize:15,marginRight:5,color:"#333"}}  id="blurvalue"></h3>
                     </div>
 
                     <div className="clearfix"/>

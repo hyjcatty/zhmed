@@ -26,4 +26,8 @@ chrome://flags/#enable-zero-copy设置enabled
 Calibration.json:
 根据建林的request修正
 
-目前有部分显示bug
+目前有部分显示bug: 问题没有找到，重启浏览器不见，怀疑和开了某些性能相关的相关
+
+离开校准要增加放弃 done
+增加debug
+实时图片增加模糊度 done

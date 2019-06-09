@@ -56,7 +56,8 @@
     "location":{
       "locationinfo":"location calibration",
       "buttoncalimodeyes":"Calibration Mode",
-      "buttoncalimodeno":"Normal Mode"
+      "buttoncalimodeno":"Save and Leave",
+      "buttoncalimodecancel":"Cancel and Leave"
     },
     "history":{
       "historyinfo":"Operation history"
