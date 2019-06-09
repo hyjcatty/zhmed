@@ -22,3 +22,8 @@ xhgrid,是一个大问题，目前由于他的渲染完成之前不会返回，�
 修改了选择2，然后对浏览器做以下优化，结果会好很多（测试CPU4倍减速，效果依然可以接受）
 chrome://flags/#enable-gpu-rasterization设置Force-enable for all layers
 chrome://flags/#enable-zero-copy设置enabled
+
+Calibration.json:
+根据建林的request修正
+
+目前有部分显示bug

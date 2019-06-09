@@ -41,7 +41,7 @@ export default class basicview extends Component {
             }
         }
         this.localview = "";
-        this.timeouttime=1200;
+        this.timeouttime=1250;
         //this.keyboard_initialize();
 
         this._taskcallbackreset=this.reset_panel.bind(this);
@@ -190,8 +190,11 @@ export default class basicview extends Component {
         setTimeout(function(){
             //localitem.refs.Historycard.show();
             localitem.refs.Historycard.update_content(content);
-            localitem.props.basiccallbacklockfoot(false);
+            //localitem.props.basiccallbacklockfoot(false);
         },this.timeouttime);
+        setTimeout(function(){
+            this.props.basiccallbacklockfoot(false);
+        }.bind(this),2*this.timeouttime);
     }
     taskview(){
         if(this.checkview("task")) return;
@@ -200,8 +203,11 @@ export default class basicview extends Component {
         setTimeout(function(){
             localitem.refs.Taskcard.show();
             localitem.refs.Panelcard.show();
-            localitem.props.basiccallbacklockfoot(false);
+            //localitem.props.basiccallbacklockfoot(false);
         },this.timeouttime);
+        setTimeout(function(){
+            this.props.basiccallbacklockfoot(false);
+        }.bind(this),2*this.timeouttime);
 
 
     }
@@ -212,8 +218,11 @@ export default class basicview extends Component {
         setTimeout(function(){
             localitem.refs.Parametercard.show();
             //localitem.refs.Localpicturecard.show();
-            localitem.props.basiccallbacklockfoot(false);
+            //localitem.props.basiccallbacklockfoot(false);
         },this.timeouttime);
+        setTimeout(function(){
+            this.props.basiccallbacklockfoot(false);
+        }.bind(this),2*this.timeouttime);
 
 
         /*
@@ -234,8 +243,11 @@ export default class basicview extends Component {
 
             localitem.refs.Locationcard.show();
             localitem.refs.Realpicturecard.show();
-            localitem.props.basiccallbacklockfoot(false);
+            //localitem.props.basiccallbacklockfoot(false);
         },this.timeouttime);
+        setTimeout(function(){
+            this.props.basiccallbacklockfoot(false);
+        }.bind(this),2*this.timeouttime);
 
     }
     updatetempconf(conf){

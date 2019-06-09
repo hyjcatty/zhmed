@@ -66,7 +66,7 @@ export default class parametercard extends Component {
     hide(){
         if(this.state.hide === "none") return;
         else{
-            this.setState({animate:"animated fadeOutLeft"});
+            this.setState({animate:"animated fadeOut"});
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
@@ -78,14 +78,14 @@ export default class parametercard extends Component {
         //this.setState({hide:"block"});
         if(this.state.hide === "block") return;
         else{
-            this.setState({hide:"block",animate:"animated fadeInLeft"});
+            this.setState({hide:"block",animate:"animated fadeIn"});
         }
     }
     switch_system_info(){
         if(this.state.hide == "none"){
-            this.setState({hide:"block",animate:"animated fadeInLeft"});
+            this.setState({hide:"block",animate:"animated fadeIn"});
         }else{
-            this.setState({animate:"animated fadeOutleft"});
+            this.setState({animate:"animated fadeOut"});
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
