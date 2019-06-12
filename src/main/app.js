@@ -16,6 +16,7 @@ import Languageview from "../container/languageview/languageview"
 import Alarmview from "../container/alarmview/alarmview"
 import Basicview from "../container/basicview/basicview"
 import Systeminfocard from "../container/cards/systeminfocard/systeminfo"
+import Debugcard from "../container/cards/debugcard/debug"
 import './App.css';
 import fetch from 'isomorphic-fetch';
 import { b64_sha1,jsondeepCopy } from '../util/util.js';
@@ -92,6 +93,8 @@ class App extends Component{
         this._footcallbackreturn=this.loginview.bind(this);
         this._footcallbacklanguage=this.languageview.bind(this);
         this._footcallbacksysteminfo=this.systeminfocard.bind(this);
+        this._footcallbackdebug=this.debugcard.bind(this);
+        this._footcallbackhidedebug=this.hidedebugcard.bind(this);
         this._footcallbacktask=this.taskview.bind(this);
         this._footcallbackparameter=this.parameterview.bind(this);
         this._footcallbacklocation=this.locationview.bind(this);
@@ -115,6 +118,7 @@ class App extends Component{
         this.refs.head.update_language(language.head);
         this.refs.foot.update_language(language.foot);
         this.refs.Systeminfocard.update_language(language.systeminfo);
+        this.refs.Debugcard.update_language(language.debug);
         this.refs.Alarmview.update_language(language.alarmview);
         this.refs.Basicview.update_language(language.basicview);
     }
@@ -137,6 +141,7 @@ class App extends Component{
         this.refs.Basicview.update_size(width,canvasheight);
         this.refs.Languageview.update_size(width,canvasheight);
         this.refs.Systeminfocard.update_size(parseInt(width/3),canvasheight,headfootheight);
+        this.refs.Debugcard.update_size(parseInt(width/3),canvasheight,headfootheight);
     }
     initializeAlarmSize(width,height){
         this.refs.Alarmview.update_size(width,height);
@@ -193,7 +198,7 @@ class App extends Component{
         this.refs.Languageview.show();
         this.refs.Loginview.hide();
         this.refs.Basicview.hide();
-        this.refs.foot.show_systeminfo_button(false);
+        this.refs.foot.show_systeminfo_button(true);
         this.footButtonShow(false,false,false,false,false,false,false);
         this.tipsinfo("");
     }
@@ -224,6 +229,12 @@ class App extends Component{
     }
     systeminfocard(){
         this.refs.Systeminfocard.switch_system_info();
+    }
+    debugcard(){
+        this.refs.Debugcard.switch_system_info();
+    }
+    hidedebugcard(){
+        this.refs.Debugcard.hide();
     }
     alarmview(bool){
         if(bool)
@@ -344,6 +355,9 @@ class App extends Component{
     updatecalibration(callbackmode,callbackrun,configure){
         this.refs.Basicview.refs.Locationcard.updatecalibration(callbackmode,callbackrun,configure);
     }
+    updatedebug(callbackrun,configure){
+        this.refs.Debugcard.updatedebug(callbackrun,configure);
+    }
     calibrationmode(triger){
         if(triger){
             if(!this.refs.Basicview.refs.Locationcard.if_show()){
@@ -386,6 +400,7 @@ class App extends Component{
             </div>
             <div>
                 <Systeminfocard ref="Systeminfocard"/>
+                <Debugcard ref="Debugcard"/>
             </div>
             <div>
                 <Languageview ref="Languageview"/>
@@ -397,6 +412,8 @@ class App extends Component{
                 <Foot ref="foot"
                       footcallbackreturn={this._footcallbackreturn}
                       footcallbacksysteminfo={this._footcallbacksysteminfo}
+                      footcallbackdebug={this._footcallbackdebug}
+                      footcallbackhidedebug={this._footcallbackhidedebug}
                       footcallbacklanguage={this._footcallbacklanguage}
                       footcallbacktask={this._footcallbacktask}
                       footcallbackparameter={this._footcallbackparameter}
@@ -557,6 +574,8 @@ function systemstart(){
 
     sysconffetch();
     caliconffetch();
+    debugconffetch();
+
     systeminfofetch();
     app_handle.initializefoot(historyfetch);
     app_handle.initializehead();
@@ -895,6 +914,81 @@ function zhmedsavesysconfcallback(res){
     sysconffetch();
     currentPanelfetch("");
     tips(language.message.message4);
+}
+function debugconffetch(){
+    var map={
+        action:"ZH_Medicine_debug_config",
+        type:"query",
+        lang:default_language,
+        user:null
+    };
+    fetch(request_head,
+        {
+            method:'POST',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify(map)
+        }).then(jsonParse)
+        .then(debugconffetchcallback)
+        .catch( (error) => {
+            console.log('request error', error);
+            return { error };
+        });
+}
+function debugconffetchcallback(res){
+    if(res.jsonResult.status == "false"){
+        alert(language.message.alert1);
+        return;
+    }
+    if(res.jsonResult.auth == "false"){
+        return;
+    }
+    let configuration = res.jsonResult.ret;
+
+    //app_handle.updatecalibration(zhmedcalimode,zhmedruncaliconf,configuration);
+
+    app_handle.updatedebug(zhmedrundebugconf,configuration);
+
+}
+function zhmedrundebugconf(command,conf){
+    var map={
+        action:"ZH_Medicine_debug_command",
+        type:"mod",
+        lang:default_language,
+        body:{
+            command:command,
+            parameter:conf
+        },
+        user:app_handle.getuser()
+    };
+    fetch(request_head,
+        {
+            method:'POST',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify(map)
+        }).then(jsonParse)
+        .then(zhmedrundebugconfcallback)
+        .catch( (error) => {
+            console.log('request error', error);
+            return { error };
+        });
+}
+function zhmedrundebugconfcallback(res){
+    if(res.jsonResult.status == "false"){
+        alert(language.message.alert9);
+        return;
+    }
+    if(res.jsonResult.auth == "false"){
+        return;
+    }
+
+    //TODO: Do not know what to do in this period
+    console.log(res.jsonResult.msg);
 }
 function caliconffetch(){
     var map={

@@ -10,6 +10,7 @@
     var mqttconfig;
     var calibration;
     var history;
+    var debug;
     var if_cali = "false";
     function database(data){
     var key = data.action;
@@ -300,6 +301,15 @@
             ret.ret.running="false";
             ret.status="true";
             return JSON.stringify(ret);
+        case "ZH_Medicine_debug_config":
+            var ret = msg.ZH_Medicine_debug_config;
+            ret.ret=debug;
+            ret.status="true";
+            return JSON.stringify(ret);
+        case "ZH_Medicine_debug_command":
+            var ret = msg.ZH_Medicine_cali_command;
+            ret.status="true";
+            return JSON.stringify(ret);
         default:
             console.log("Don't understand query key:"+key);
             return JSON.stringify(msg.ZH_Medicine_default);
@@ -335,6 +345,7 @@
         mqttconfig = JSON.parse(jsReadFiles("./sysconf/mqtt.json"));
         calibration = JSON.parse(jsReadFiles("./sysconf/calibration.json"));
         history = JSON.parse(jsReadFiles("./sysconf/history.json"));
+        debug = JSON.parse(jsReadFiles("./sysconf/debug.json"));
         console.log("config load finish");
         //console.log("baseconf:");
         //console.log(JSON.stringify(baseconf));

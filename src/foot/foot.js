@@ -32,6 +32,7 @@ export default class foot extends Component {
             hideHistory:"none",
             hideAudit:"none",
             hideSystemInfo:"block",
+            hideDebug:"none",
             disabled:"",
             systeminfo:"",
             loginfo:"xxxxxxxxx",
@@ -187,21 +188,30 @@ export default class foot extends Component {
     handle_click_system_info(){
         if(this.props.footcallbacksysteminfo){
             this.props.footcallbacksysteminfo();
+
             this.switch_button_icon();
             this.setState({systeminfo:"disabled"},this.release_system_info_button);
         }
     }
+    handle_click_debug(){
+        if(this.props.footcallbackdebug){
+            this.props.footcallbackdebug();
+            this.setState({systeminfo:"disabled"},this.release_system_info_button);
+        }
+    }
     release_system_info_button(){
-        let self = this;
+        //let self = this;
         setTimeout(function(){
-            self.setState({systeminfo:""});
-        },1200)
+            this.setState({systeminfo:""});
+        }.bind(this),1200)
     }
     switch_button_icon(){
         if(this.state.icon == "fa fa-angle-double-left"){
-            this.setState({icon:"fa fa-angle-double-right"});
+            this.setState({icon:"fa fa-angle-double-right",hideDebug:"block"});
         }else{
-            this.setState({icon:"fa fa-angle-double-left"});
+
+            this.props.footcallbackhidedebug();
+            this.setState({icon:"fa fa-angle-double-left",hideDebug:"none"});
         }
     }
     disable(b_input){
@@ -253,6 +263,9 @@ export default class foot extends Component {
                     </a>
                     <button  type="button" className="btn btn-warning btn-sm pull-right" style={{marginLeft:"5px",marginTop:"5px",height:(this.state.height-10),width:(this.state.height-10)*1.6,display:this.state.hideSystemInfo}} disabled={this.state.systeminfo} onClick={this.handle_click_system_info.bind(this)}>
                         <i className={this.state.icon} style={{fontSize:25}}> </i>
+                    </button>
+                    <button  type="button" className="btn btn-warning btn-sm pull-right" style={{marginLeft:"5px",marginTop:"5px",height:(this.state.height-10),width:(this.state.height-10)*1.6,display:this.state.hideDebug}} disabled={this.state.systeminfo} onClick={this.handle_click_debug.bind(this)}>
+                        <i className="fa fa-bug" style={{fontSize:25}}> </i>
                     </button>
                 </div>
             </div>

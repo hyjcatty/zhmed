@@ -175,6 +175,9 @@ export default class locationcard extends Component {
             });
         }
     }
+    handleChangecheck(){
+
+    }
     componentDidUpdate(){
         //this.switchery_initialize();
     }
