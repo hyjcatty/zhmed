@@ -1,4 +1,4 @@
-20190202:
+﻿20190202:
 Panel status: Running/Choice/View
 Need be controled in united level, this will be a critical issue in future.(done)
 20190511:
@@ -31,3 +31,5 @@ Calibration.json:
 离开校准要增加放弃 done
 增加debug
 实时图片增加模糊度 done
+
+校准模式下关闭界面，要重新打开时候直接进入校准界面

@@ -15,6 +15,7 @@ import React, {
 
 import classNames from 'classnames';
 import '../../../../resource/css/font-awesome.min.css';
+import { jsondeepCopy } from '../../../util/util.js';
 
 
 
@@ -31,7 +32,9 @@ export default class debugcard extends Component {
             callback:null,
             margintop:20,
             content:[],
-            key:"systeminfo",
+            key:"debuginfo",
+
+            key2:"debug_conf_input",
             callback:null,
             configure:null,
             language:{
@@ -141,7 +144,7 @@ export default class debugcard extends Component {
     handle_click_send(event){
         let i = parseInt(event.target.getAttribute("data-i-series"));
         console.log(this.state.configure.buttons[i].action);
-        this.state.callback(this.state.configure.buttons[i].action,this.state.configure);
+        this.state.callback(this.state.configure.buttons[i].action,this.getUpdatedValue());
     }
     handleChange(e){
         let change_value = e.target.value;

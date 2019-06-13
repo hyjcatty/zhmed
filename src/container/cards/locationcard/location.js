@@ -15,6 +15,7 @@ import React, {
 
 import classNames from 'classnames';
 import '../../../../resource/css/font-awesome.min.css';
+import { jsondeepCopy } from '../../../util/util.js';
 
 
 
@@ -31,6 +32,8 @@ export default class locationcard extends Component {
             margintop:20,
             content:[],
             key:"locationinfo",
+
+            key2:"location_conf_input",
             callbackmode:null,
             callbackrun:null,
             calimode:false,
@@ -100,7 +103,7 @@ export default class locationcard extends Component {
         let i = parseInt(event.target.getAttribute("data-i-series"));
         let j = parseInt(event.target.getAttribute("data-j-series"));
         console.log(this.state.configure.parameter.groups[i].list[j].action);
-        this.state.callbackrun(this.state.configure.parameter.groups[i].list[j].action,this.state.configure);
+        this.state.callbackrun(this.state.configure.parameter.groups[i].list[j].action,this.getUpdatedValue());
     }
     handle_click_mode(){
         this.state.callbackmode(!this.state.calimode,"save");
@@ -250,7 +253,7 @@ export default class locationcard extends Component {
                         let contentline = "["+this.state.configure.parameter.groups[i].list[j].min+"->"+this.state.configure.parameter.groups[i].list[j].max+"]:"+this.state.configure.parameter.groups[i].list[j].note;
                         let className="form-control "+"sys_conf_input_"+this.state.configure.parameter.groups[i].list[j].type;
                         param.push(
-                            <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" key={this.state.key+i+"p"+j+"l"}>
+                            <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" key={this.state.key+i+"p"+j+"l"} style={{height:75}}>
                             <div className="count" style={{fontSize:20,marginTop:15,verticalAlign:'bottom',width:"90%"}} key={this.state.key+i+"p"+j+"l"}>
                                 <div className="input-group">
                                     <span className="input-group-addon"  style={{minWidth: "100px",fontSize:"12px"}}>{this.state.configure.parameter.groups[i].list[j].paraname+":"}</span>
@@ -267,7 +270,7 @@ export default class locationcard extends Component {
                         let contentline = "["+this.state.configure.parameter.groups[i].list[j].min+"->"+this.state.configure.parameter.groups[i].list[j].max+"]:"+this.state.configure.parameter.groups[i].list[j].note;
                         let className="form-control "+"sys_conf_input_"+this.state.configure.parameter.groups[i].list[j].type;
                         param.push(
-                            <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" key={this.state.key+i+"p"+j+"l"}>
+                            <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" key={this.state.key+i+"p"+j+"l"} style={{height:75}}>
                             <div className="count" style={{fontSize:20,marginTop:15,verticalAlign:'bottom',width:"90%"}} key={this.state.key+i+"p"+j+"l"}>
                                 <div className="input-group">
                                     <span className="input-group-addon" style={{minWidth: "100px",fontSize:"12px"}}>{this.state.configure.parameter.groups[i].list[j].paraname+":"}</span>
@@ -285,7 +288,7 @@ export default class locationcard extends Component {
                         let contentline = this.state.configure.parameter.groups[i].list[j].note;
                         let className="form-control "+"sys_conf_input_"+this.state.configure.parameter.groups[i].list[j].type;
                         param.push(
-                            <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" key={this.state.key+i+"p"+j+"l"}>
+                            <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" key={this.state.key+i+"p"+j+"l"} style={{height:75}}>
                             <div className="count" style={{fontSize:20,marginTop:15,verticalAlign:'bottom',width:"90%"}} key={this.state.key+i+"p"+j+"l"}>
                                 <div className="input-group">
                                     <span className="input-group-addon"  style={{minWidth: "100px",fontSize:"12px"}}>{this.state.configure.parameter.groups[i].list[j].paraname+":"}</span>
@@ -312,7 +315,7 @@ export default class locationcard extends Component {
 
                         }
                         param.push(
-                            <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" key={this.state.key+i+"p"+j+"l"}>
+                            <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" key={this.state.key+i+"p"+j+"l"} style={{height:75}}>
                                 <div className="count" style={{fontSize:20,marginTop:15,verticalAlign:'bottom',width:"90%"}} key={this.state.key+i+"p"+j+"l"}>
                                 <div className="input-group">
                                     <span className="input-group-addon"  style={{minWidth: "100px",fontSize:"12px"}}>{this.state.configure.parameter.groups[i].list[j].paraname+":"}</span>
@@ -331,7 +334,7 @@ export default class locationcard extends Component {
                         if(this.state.configure.parameter.groups[i].list[j].value){
 
                             let temp =
-                                <div className="col-xs-3 col-md-3 col-sm-3 col-lg-3" key={this.state.key+i+"p"+j+"l"}>
+                                <div className="col-xs-3 col-md-3 col-sm-3 col-lg-3" key={this.state.key+i+"p"+j+"l"} style={{height:75}}>
 
                                 <div className="count" style={{fontSize:20,marginTop:15,verticalAlign:'bottom',width:"90%"}} key={this.state.key+i+"p"+j+"l"}>
                                 <div>
@@ -344,7 +347,7 @@ export default class locationcard extends Component {
                         }else{
                             let temp =
 
-                                <div className="col-xs-3 col-md-3 col-sm-3 col-lg-3" key={this.state.key+i+"p"+j+"l"}>
+                                <div className="col-xs-3 col-md-3 col-sm-3 col-lg-3" key={this.state.key+i+"p"+j+"l"} style={{height:75}}>
                                 <div className="count" style={{fontSize:20,marginTop:15,verticalAlign:'bottom',width:"90%"}} key={this.state.key+i+"p"+j+"l"}>
                                 <div>
                                     <label className="location-conf-checkbox-label" style={{fontSize: "16px",color:"#555"}}>
