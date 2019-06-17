@@ -139,7 +139,7 @@ export default class parametercard extends Component {
     }
 
     handle_click_save(){
-        this.state.callbackSave();
+        this.state.callback(this.getUpdatedValue());
 
     }
     switchery_initialize(){
