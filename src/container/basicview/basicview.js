@@ -134,8 +134,12 @@ export default class basicview extends Component {
             //
         }
     }
-    update_task_callback(callback,foot,callbacksave){
-        this.refs.Taskcard.update_callback(callback,foot);
+    update_task_callback(callback,foot,callbacksave,
+                         callbacksynctempconf,
+                         callbacklasthistoryinfo){
+        this.refs.Taskcard.update_callback(callback,foot,
+            callbacksynctempconf,
+            callbacklasthistoryinfo);
         this.refs.Parametercard.update_callback_save(callbacksave);
     }
     update_result_callback(gettemp,savetemp,runtemp){

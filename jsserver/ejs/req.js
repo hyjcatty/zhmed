@@ -12,7 +12,7 @@
     var history;
     var debug;
     var if_cali = "false";
-    function database(data){
+    async function database(data){
     var key = data.action;
     switch(key){
         case "ZH_Medicine_Login":
@@ -40,6 +40,14 @@
             ret.status="true";
             return JSON.stringify(ret);
         case "ZH_Medicine_task_info":
+            var ret = msg.ZH_Medicine_task_info;
+            var panel = buildrandomemptyresult();
+            ret.ret.parameter=systeminfo;
+            ret.ret.configure=panel;
+            ret.ret.running="false";
+            ret.status="true";
+            return JSON.stringify(ret);
+        case "ZH_Medicine_last_history":
             var ret = msg.ZH_Medicine_task_info;
             var panel = buildrandomresult();
             ret.ret.parameter=systeminfo;
@@ -205,6 +213,11 @@
             ret.ret=identifyparameter;
             ret.status="true";
             return JSON.stringify(ret);
+        case "ZH_Medicine_get_identify_conf":
+            var ret = msg.ZH_Medicine_get_temp_conf;
+            ret.ret=identifyparameter;
+            ret.status="true";
+            return JSON.stringify(ret);
         case "ZH_Medicine_run_temp_analysis":
             var ret = msg.ZH_Medicine_set_temp_conf;
             identifyparameter=jsondeepcopy(data.body.configure);
@@ -309,6 +322,14 @@
         case "ZH_Medicine_debug_command":
             var ret = msg.ZH_Medicine_cali_command;
             ret.status="true";
+            var pending =  function(){
+                return new Promise((resolve,reject)=>{
+                   setTimeout(()=>{
+                       resolve(1);
+                   },8000);
+                });
+            };
+            let res1 = await pending();
             return JSON.stringify(ret);
         default:
             console.log("Don't understand query key:"+key);
@@ -395,6 +416,13 @@
             'result':resultAna
         };
         return subpic;
+    }
+    function buildrandomemptyresult(){
+        var filename = ["2x3","3x4","4x6","6x8","8x12","16x24"];
+        var temp = GetRandomNum(0,5);
+        var retarray=jsondeepcopy(baseconf[filename[temp]]);
+        retarray.basic.parameter={};
+        return retarray;
     }
     function buildrandomresult(){
         var filename = ["2x3","3x4","4x6","6x8","8x12","16x24"];

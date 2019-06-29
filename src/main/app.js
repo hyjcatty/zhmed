@@ -56,6 +56,8 @@ class App extends Component{
                     "userunknown":"",
                     "tempmodaltitle":"训练参数",
                     "tempmodalrun":"分析",
+                    "debugmodaltitle":"调试中",
+                    "debugmodalcontent":"调试命令执行中，请稍候..."
                 },
 
                 "message":{
@@ -152,8 +154,13 @@ class App extends Component{
     initializeLanguageview(Languagelist,callback){
         this.refs.Languageview.update_buttonlist(Languagelist,callback);
     }
-    initializeBasic(callback,callbacksave,callbackgettempconf,callbacksavetempconf,callbackruntempconf,callbackbuildgrid){
-        this.refs.Basicview.update_task_callback(callback,null,callbacksave);
+    initializeBasic(callback,callbacksave,callbackgettempconf,callbacksavetempconf,callbackruntempconf
+        ,callbackbuildgrid,
+                    callbacksynctempconf,
+                    callbacklasthistoryinfo){
+        this.refs.Basicview.update_task_callback(callback,null,callbacksave,
+            callbacksynctempconf,
+            callbacklasthistoryinfo);
         this.refs.Basicview.update_result_callback(callbackgettempconf,callbacksavetempconf,callbackruntempconf);
         this.refs.Basicview.refs.Historycard.update_callback(callbackbuildgrid);
     }
@@ -297,7 +304,11 @@ class App extends Component{
     }
     updatetempconf(conf,callback){
         this.setState({tempconf:conf,originalconf:conf},callback);
-        //this.refs.Basicview.updatetempconf(conf);
+        //this.refs.Basicview.refs.Taskcard.updatetempconf(conf);
+    }
+    updateidentifyconf(conf){
+        //this.setState({tempconf:conf,originalconf:conf},callback);
+        this.refs.Basicview.refs.Taskcard.update_identify_conf(conf);
     }
     gettempparameter(){
         return this.state.tempconf;
@@ -364,10 +375,12 @@ class App extends Component{
                 this.refs.Basicview.locationview();
             }
                 this.footButtonShow(false,false,false,false,false,false,false);
+            this.refs.Debugcard.lockdebug(true);
                 this.refs.Basicview.refs.Locationcard.updatecalimode(true);
 
         }else{
             this.refs.Basicview.refs.Locationcard.updatecalimode(false);
+            this.refs.Debugcard.lockdebug(false);
             this.footButtonShow(false,false,true,true,true,true,true);
         }
     }
@@ -488,6 +501,21 @@ class App extends Component{
                     </div>
                 </div>
             </div>
+            <div className="modal fade" id="DebugLock" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel" >
+                <div className="modal-dialog" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h4 className="modal-title" id="TempConfModalLabel">{this.state.language.app.debugmodaltitle}</h4>
+                        </div>
+                        <div className="modal-body" id="TempConfModalContent">
+                            {this.state.language.app.debugmodalcontent}
+                        </div>
+                        <div className="clearfix"></div>
+                        <div className="modal-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         );
     }
@@ -512,6 +540,7 @@ var app_handle;
 react_element = <App/>;
 
 get_size();
+
 updatexhchartcallback(historytaskinfofetch);
 app_handle = ReactDOM.render(react_element,document.getElementById('app'));
 app_handle.initializeSize(winWidth,winHeight);
@@ -577,6 +606,7 @@ function systemstart(){
     debugconffetch();
 
     systeminfofetch();
+    getIdentifyconffetch();
     app_handle.initializefoot(historyfetch);
     app_handle.initializehead();
     app_handle.initializeLogin(zhmedlogin);
@@ -585,7 +615,9 @@ function systemstart(){
         gettempconffetch,
         savetempconffetch,
         runtempanalysisfetch,
-        buildgrid
+        buildgrid,
+        synctempconffetch,
+        lasthistoryinfofetch
         );
     app_handle.loginview();
     //update_log_test();
@@ -953,6 +985,7 @@ function debugconffetchcallback(res){
 
 }
 function zhmedrundebugconf(command,conf){
+
     var map={
         action:"ZH_Medicine_debug_command",
         type:"mod",
@@ -963,6 +996,11 @@ function zhmedrundebugconf(command,conf){
         },
         user:app_handle.getuser()
     };
+
+    modal_middlestatic($("#DebugLock"));
+    $("#DebugLock").modal({backdrop: "static",keyboard: false,show:true});
+
+    //$("#DebugLock").modal("show");
     fetch(request_head,
         {
             method:'POST',
@@ -986,6 +1024,8 @@ function zhmedrundebugconfcallback(res){
     if(res.jsonResult.auth == "false"){
         return;
     }
+    $('.modal-backdrop').remove();
+    $("#DebugLock").modal('hide');
 
     //TODO: Do not know what to do in this period
     console.log(res.jsonResult.msg);
@@ -1159,7 +1199,19 @@ function modal_middle(modal){
         }
     },wait_time_short);
 }
+function modal_middlestatic(modal){
+    var _modal = $(modal).find(".modal-dialog");
+    _modal.css('marginTop', parseInt(($(window).height() - 150)/2));
+    setTimeout(function () {
+        if(parseInt(($(window).height() - _modal.height())/2)>0){
 
+            //_modal.animate({'margin-top': parseInt(($(window).height() - _modal.height())/2)}, 100 );
+            _modal.css('marginTop', parseInt(($(window).height() - _modal.height())/2));
+        }
+    },wait_time_short);
+
+        //_modal.modal({backdrop: "static",keyboard: false});
+}
 function show_expiredModule(){
     activeconf = app_handle.get_active_configuration();
     if(activeconf === null) return;
@@ -1694,17 +1746,58 @@ function taskinfofetchcallback(res){
     app_handle.update_task_info(task);
     //app_handle.setpanel(task.configure);
 }
-function taskrunfetch(bool){
+function lasthistoryinfofetch(panel){
+    var map={
+        action:"ZH_Medicine_last_history",
+        type:"query",
+        body:{
+            configure:panel
+        },
+        lang:default_language,
+        user:null
+    };
+    fetch(request_head,
+        {
+            method:'POST',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify(map)
+        }).then(jsonParse)
+        .then(lasthistoryinfofetchcallback)
+        .catch( (error) => {
+            console.log('request error', error);
+            return { error };
+        });
+}
+function lasthistoryinfofetchcallback(res){
+    if(res.jsonResult.status == "false"){
+        alert("Fetal Error, Can not get system info!");
+        windows.close();
+    }
+    if(res.jsonResult.auth == "false"){
+        alert("Fetal Error, Can not get system info!");
+        windows.close();
+    }
+    let task = res.jsonResult.ret;
+    app_handle.update_task_info(task);
+    //app_handle.setpanel(task.configure);
+}
+function taskrunfetch(bool,shoot,analysis,parameter){
     let status = "false";
     if(bool) status = "true";
     let panel = app_handle.getpanel();
     if(panel.picture.length === 0) return;
+    panel.basic.parameter = parameter;
     var map={
         action:"ZH_Medicine_task_run",
         type:"query",
         body:{
             configure:panel,
-            status:status
+            status:status,
+            shoot:shoot,
+            analysis:analysis
         },
         lang:default_language,
         user:null
@@ -1847,6 +1940,40 @@ function gettempconffetchcallback(res){
     let conf = res.jsonResult.ret;
     app_handle.updatetempconf(conf,showtempmodal);
 }
+function getIdentifyconffetch(){
+    var map={
+        action:"ZH_Medicine_get_identify_conf",
+        type:"query",
+        lang:default_language,
+        user:null
+    };
+    fetch(request_head,
+        {
+            method:'POST',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify(map)
+        }).then(jsonParse)
+        .then(getIdentifyconffetchcallback)
+        .catch( (error) => {
+            console.log('request error', error);
+            return { error };
+        });
+}
+function getIdentifyconffetchcallback(res){
+    if(res.jsonResult.status == "false"){
+        alert("Fetal Error, Can not get system info!");
+        windows.close();
+    }
+    if(res.jsonResult.auth == "false"){
+        alert("Fetal Error, Can not get system info!");
+        windows.close();
+    }
+    let conf = res.jsonResult.ret;
+    app_handle.updateidentifyconf(conf);
+}
 function runtempanalysisfetch(conf){
     var map={
         action:"ZH_Medicine_run_temp_analysis",
@@ -1931,6 +2058,32 @@ function gettempataskstatusfetchcallback(res){
     }
     //app_handle.update_task_info(task);
 }
+function synctempconffetch(conf){
+    if(conf.length === 0) return;
+    var map={
+        action:"ZH_Medicine_save_temp_conf",
+        type:"query",
+        body:
+        conf
+        ,
+        lang:default_language,
+        user:null
+    };
+    fetch(request_head,
+        {
+            method:'POST',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify(map)
+        }).then(jsonParse)
+        .then(savetempconffetchcallback)
+        .catch( (error) => {
+            console.log('request error', error);
+            return { error };
+        });
+}
 function savetempconffetch(){
     let conf = app_handle.gettempparameter();
     if(conf.length === 0) return;
@@ -1968,6 +2121,7 @@ function savetempconffetchcallback(res){
         windows.close();
     }
     sysconffetch();
+    getIdentifyconffetch()
     tips(language.message.message7);
 
 }

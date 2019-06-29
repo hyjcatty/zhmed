@@ -211,11 +211,11 @@ http.createServer(function(request, response) {
                 request.on("data",function(chunk){
                     str+=chunk;
                 });
-                request.on("end",function(){
+                request.on("end", async function(){
                     console.log("post data:"+str);
                     //var arg=querystring.parse(str);
                     //console.log(arg);
-                    var ret = req.database(JSON.parse(str));
+                    var ret = await req.database(JSON.parse(str));
                     console.log("Server response :"+ret);
                     response.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
                     response.write(ret);

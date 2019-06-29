@@ -205,6 +205,7 @@ export default class foot extends Component {
             this.setState({systeminfo:""});
         }.bind(this),1200)
     }
+
     switch_button_icon(){
         if(this.state.icon == "fa fa-angle-double-left"){
             this.setState({icon:"fa fa-angle-double-right",hideDebug:"block"});

@@ -37,6 +37,7 @@ export default class debugcard extends Component {
             key2:"debug_conf_input",
             callback:null,
             configure:null,
+            disable:"",
             language:{
                 "systeminfo":"调试命令",
                 "consoletitle":"实时日志"
@@ -130,6 +131,13 @@ export default class debugcard extends Component {
         if(this.state.hide === "block") return;
         this.setState({hide:"block",animate:"animated fadeInRight"});
     }
+    lockdebug(bool){
+        if(bool){
+            this.setState({disable:"disabled"});
+        }else{
+            this.setState({disable:""});
+        }
+    }
     switch_system_info(){
         if(this.state.hide == "none"){
             this.setState({hide:"block",animate:"animated fadeInRight"});
@@ -174,7 +182,8 @@ export default class debugcard extends Component {
                 button.push(<div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key={"button"+i}>
                     <button  type="button" className="btn btn-warning btn-sm pull-left"
                              style={{marginLeft:"10px",marginTop:"15px",height:60,width:"90%"}}
-                             data-i-series={""+i} onClick={this.handle_click_send.bind(this)}>
+                             data-i-series={""+i} onClick={this.handle_click_send.bind(this)}
+                             disabled={this.state.disable}>
                         <i data-i-series={""+i}
                            style={{color:"#ffffff",fontSize:"15px",fontWeight:"bold"}}>
                             {this.state.configure.buttons[i].paraname}</i>

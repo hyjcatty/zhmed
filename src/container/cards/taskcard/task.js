@@ -29,10 +29,15 @@ export default class taskcard extends Component {
             animate:"animated fadeInLeft",
             callback:null,
             footcallback:null,
+            synccallback:null,
+            historycallback:null,
             margintop:20,
             disabled:"",
             disabledreset:"",
             key:"taskinfo",
+            identify:{
+
+            },
             parameter:[
                 {"title":"状态1","value":"123","alarm":false},
                 {"title":"状态2","value":"123","alarm":false},
@@ -46,12 +51,21 @@ export default class taskcard extends Component {
             running:false,
 
             language:{
-                "taskparameter":"识别参数",
-                "taskinfo":"任务信息",
-                "consoletitle":"实时日志",
+                "systemparameter":"系统识别参数",
+                "taskparameter":"当前批次识别参数",
+                "taskresult":"分析结果",
+                "usesystem":"使用系统参数",
+                "onlyshoot":"仅拍照",
                 "start":"开始",
                 "stop":"停止",
-                "reset":"重置状态"
+                "reset":"重置点位",
+                "analysis":"重新分析",
+                "lasthistory":"上次数据",
+                "parametersync":"同步设置",
+                "batch":"批次",
+                "date":"日期",
+                "owner":"操作人",
+                "tupid":"TUPID"
             }
         };
 
@@ -116,15 +130,24 @@ export default class taskcard extends Component {
             console.log("task set running true");
             this.props.basiccallbacklockfoot(true);
             x=true;
+
         }
         else this.props.basiccallbacklockfoot(false);
-        this.syncSetState({parameter:task.parameter.info,running:x,configure:task.configure});
+        this.syncSetState({running:x,configure:task.configure},this.switchery_initialize);
+        this.set_running(x);
+        //console.log("Update task"+JSON.stringify(task.configure));
+    }
+    update_identify_conf(identify){
+        this.syncSetState({identify:identify});
     }
     update_configure_panel(configure){
         this.syncSetState({configure:configure});
     }
-    update_callback(callback,footcallback){
-        this.syncSetState({callback:callback,footcallback:footcallback});
+    update_callback(callback,footcallback,
+                    callbacksynctempconf,
+                    callbacklasthistoryinfo){
+        this.syncSetState({callback:callback,footcallback:footcallback
+        ,synccallback:callbacksynctempconf,historycallback:callbacklasthistoryinfo});
     }
     set_running(bool){
         if(bool){
@@ -173,31 +196,266 @@ export default class taskcard extends Component {
             },this.timeout);
         }
     }
+    switchery_initialize(){
+        $(".task-conf-checkbox-label").each(function(){
+            $(this).find("span").each(function(){
+                $(this).remove();
+            });
+        });
+        /*
+         let switchery_list = $("#preemption_tab").find("span").each(function(){
+         $(this).remove();
+         });*/
+        if(this.state.configure!==null){
+            /*
+            for(let i=0;i<this.state.configure.parameter.groups.length;i++){
+                for(let j=0;j<this.state.configure.parameter.groups[i].list.length;j++){
+                    if(this.state.configure.parameter.groups[i].list[j].type === "checkbox"){
+                        $("#"+this.state.key2+"G"+i+"P"+j+this.state.configure.parameter.groups[i].list[j].type).prop("checked",this.state.configure.parameter.groups[i].list[j].value);
+                    }
+                }
+
+            }*/
+            $("#checkboxonlycheck").prop("checked",false);
+            $("#checkboxonlyidentifypara").prop("checked",false);
+        }
+
+        if ($(".task_conf_checkbox")[0]) {
+            var elems = Array.prototype.slice.call(document.querySelectorAll('.task_conf_checkbox'));
+            //console.log("switchery list lenght:"+elems.length);
+            elems.forEach(function (html) {
+                var switchery = new Switchery(html, {
+                    color: '#26B99A'
+                });
+            });
+        }
+    }
+    getUpdatedValue(){
+        let tempconf = {
+            "onlyshoot":false,
+            "usesystem":false
+        };
+        tempconf.onlyshoot = $("#checkboxonlycheck").is(":checked");
+        tempconf.usesystem = $("#checkboxonlyidentifypara").is(":checked");
+
+        return tempconf;
+    }
     handle_click(){
         this.syncSetState({disabled:"disabled"});
         if(this.get_running()){
-            this.state.callback(false);
+            this.state.callback(false,false,false,this.state.identify);
         }else{
-            this.state.callback(true);
+            let temp = this.getUpdatedValue;
+            let temppara = this.state.identify;
+            if(!$.isEmptyObject(this.state.configure.basic.parameter) && temp.usesystem ){
+                temppara = this.state.configure.basic.parameter;
+            }
+            if(temp.onlyshoot){
+                this.state.callback(true,true,false,temppara);
+            }else{
+                this.state.callback(true,true,true,temppara);
+            }
         }
-        let temp = this;
         setTimeout(function(){
-            temp.syncSetState({disabled:""});
-        },this.timeout);
+            this.syncSetState({disabled:""});
+        }.bind(this),this.timeout);
         //console.log("click start button");
+    }
+    handle_analysis(){
+        if(this.get_running()){
+            return;
+        }else{
+
+            this.syncSetState({disabled:"disabled"});
+            let temp = this.getUpdatedValue;
+            let temppara = this.state.identify;
+            if(!$.isEmptyObject(this.state.configure.basic.parameter) && temp.usesystem ){
+                temppara = this.state.configure.basic.parameter;
+            }
+            this.state.callback(true,false,true,temppara);
+
+            setTimeout(function(){
+                this.syncSetState({disabled:""});
+            }.bind(this),this.timeout);
+        }
+    }
+    handle_sync(){
+        if($.isEmptyObject(this.state.configure.basic.parameter))return;
+        this.state.synccallback(this.state.configure.basic.parameter);
+    }
+    handle_history(){
+        this.state.historycallback();
     }
     handle_reset(){
         //console.log("click reset button");
         this.props.taskcallbackreset();
     }
+    handleChangecheck(){
+
+    }
     render() {
+        if(this.state.configure== null){
+            return (
+                <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,left:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',zIndex:"99",willChange: "transform, opacity"}}>
+
+                </div>
+            );
+        }
+        /*
         let center_panel=[];
         for(let i=0;i<this.state.parameter.length;i++){
             let temp = <h3 style={{fontSize:15,marginRight:5,color:"#333"}}  key={this.state.key+i}>{this.state.parameter[i].title+":"+this.state.parameter[i].value}</h3>
             if(this.state.parameter[i].alarm)
                 temp = <h3 style={{fontSize:15,marginRight:5,color:"#FF6633"}}  key={this.state.key+i}>{this.state.parameter[i].title+":"+this.state.parameter[i].value}</h3>
             center_panel.push(temp);
+        }*/
+        let sysindentify = [];
+
+        for(let i in this.state.identify){
+            let temp = <h3 style={{fontSize:15,marginRight:5,color:"#333"}}  key={this.state.key+i}>{i+":"+this.state.identify[i]}</h3>
+            sysindentify.push(temp);
         }
+        let sysindentifyblock=
+            <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key="firstblock" style={{height:this.state.height/6}}>
+                <div className="tile-stats"  style={{marginTop:"15px"}}>
+                    <div className="count" style={{fontSize:24}}>{this.state.language.systemparameter}</div>
+                    <div style={{height:this.state.height/6-73,overflow:'scroll',overflowX:'hidden',overflowY:'scroll'}}>
+                        {sysindentify}
+                    </div>
+                </div>
+            </div>
+        let batchindentifyblock = <div key="secondblock"></div>
+        //console.log("this.state.configure.basic.parameter:["+this.state.configure.basic.parameter.toString()+"]")
+        if(!$.isEmptyObject(this.state.configure.basic.parameter)){
+            let batchindentify = [];
+            for(let i in this.state.configure.basic.parameter){
+                let temp = <h3 style={{fontSize:15,marginRight:5,color:"#333"}}  key={this.state.key+i}>{i+":"+this.state.identify[i]}</h3>
+                batchindentify.push(temp);
+            }
+            batchindentifyblock=
+                <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key="secondblock" style={{height:this.state.height/6}}>
+                    <div className="tile-stats"  style={{marginTop:"15px"}}>
+                        <div className="count" style={{fontSize:24}}>{this.state.language.taskparameter}</div>
+                        <div style={{height:this.state.height/6-73,overflow:'scroll',overflowX:'hidden',overflowY:'scroll'}}>
+
+                            {batchindentify}
+                        </div>
+                    </div>
+                </div>
+        }
+
+        let analysisresult = <div key="thirdblock"></div>
+        let info_list = this.get_batch_info();
+        if(this.state.configure.basic.batch!=""){
+            let task_detai=[];
+            for(let i=0;i<info_list.length;i++){
+                let temp = <h3 style={{fontSize:15,marginRight:5,color:"#333"}}  key={this.state.key+i}>{info_list[i].title+":"+info_list[i].value}</h3>
+                task_detai.push(temp);
+            }
+            analysisresult=
+                <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key="thirdblock" style={{height:this.state.height/6}}>
+                    <div className="tile-stats"  style={{marginTop:"15px"}}>
+                        <div className="count" style={{fontSize:24}}>{this.state.language.taskresult}</div>
+                        <div style={{height:this.state.height/6-73,overflow:'scroll',overflowX:'hidden',overflowY:'scroll'}}>
+                            {task_detai}
+                        </div>
+
+                    </div>
+                </div>
+        }
+        let checkshoot =
+            <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" key="check1">
+                <div className="count" style={{fontSize:20,marginTop:15,verticalAlign:'bottom',width:"90%"}} >
+                    <div>
+                        <label className="task-conf-checkbox-label" style={{fontSize: "16px",color:"#555"}}>
+                            {this.state.language.onlyshoot+":"}&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="checkbox" id={"checkboxonlycheck"} className="js-switch task_conf_checkbox" onChange={this.handleChangecheck.bind(this)} data-switchery="true" value="on" disabled={this.state.disabledreset}/>
+                        </label>
+                    </div></div></div>;
+        let checkidentifyparadisplay = "none";
+        if(!$.isEmptyObject(this.state.configure.basic.parameter)) checkidentifyparadisplay = "block";
+
+        let checkidentifypara =
+            <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" key="check2" style={{display:checkidentifyparadisplay}}>
+                <div className="count" style={{fontSize:20,marginTop:15,verticalAlign:'bottom',width:"90%"}} >
+                    <div>
+                        <label className="task-conf-checkbox-label" style={{fontSize: "16px",color:"#555"}}>
+                            {this.state.language.usesystem+":"}&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="checkbox" id={"checkboxonlyidentifypara"} className="js-switch task_conf_checkbox" onChange={this.handleChangecheck.bind(this)} data-switchery="true" value="on" disabled={this.state.disabledreset}/>
+                        </label>
+                    </div></div></div>;
+        let button_text = this.state.language.start;
+        if(this.state.running) button_text = this.state.language.stop;
+        let buttonstart =
+            <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" key={"buttonstart"}>
+                <button  type="button" className="btn btn-warning btn-sm pull-left"
+                         style={{marginLeft:"10px",marginTop:"15px",height:60,width:"90%"}}
+                         onClick={this.handle_click.bind(this)} disabled={this.state.disabled}>
+                    <i style={{color:"#ffffff",fontSize:"15px",fontWeight:"bold"}}>
+                        {button_text}</i>
+                </button>
+            </div>
+        let buttonpoint =
+            <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" key={"buttonpoint"}>
+                <button  type="button" className="btn btn-warning btn-sm pull-left"
+                         style={{marginLeft:"10px",marginTop:"15px",height:60,width:"90%"}}
+                         onClick={this.handle_reset.bind(this)} disabled={this.state.disabledreset}>
+                    <i style={{color:"#ffffff",fontSize:"15px",fontWeight:"bold"}}>
+                        {this.state.language.reset}</i>
+                </button>
+            </div>
+        let displaybuttonanalysis = "none";
+        if(this.state.configure.basic.batch!=""){ displaybuttonanalysis = "block";}
+        let buttonanalysis =
+            <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" key={"buttonanalysis"} style={{display:displaybuttonanalysis}}>
+                <button  type="button" className="btn btn-warning btn-sm pull-left"
+                         style={{marginLeft:"10px",marginTop:"15px",height:60,width:"90%"}}
+                         onClick={this.handle_analysis.bind(this)} disabled={this.state.disabledreset}>
+                    <i style={{color:"#ffffff",fontSize:"15px",fontWeight:"bold"}}>
+                        {this.state.language.analysis}</i>
+                </button>
+            </div>
+
+        let displaybuttonsync = "none";
+        if(!$.isEmptyObject(this.state.configure.basic.parameter)){ displaybuttonsync = "block";}
+        let buttonsync =
+            <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" key={"buttonsync"} style={{display:displaybuttonsync}}>
+                <button  type="button" className="btn btn-warning btn-sm pull-left"
+                         style={{marginLeft:"10px",marginTop:"15px",height:60,width:"90%"}}
+                         onClick={this.handle_sync.bind(this)} disabled={this.state.disabledreset}>
+                    <i style={{color:"#ffffff",fontSize:"15px",fontWeight:"bold"}}>
+                        {this.state.language.parametersync}</i>
+                </button>
+            </div>
+        let buttonhistory =
+            <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" key={"buttonhistory"} >
+                <button  type="button" className="btn btn-warning btn-sm pull-left"
+                         style={{marginLeft:"10px",marginTop:"15px",height:60,width:"90%"}}
+                         onClick={this.handle_history.bind(this)} disabled={this.state.disabledreset}>
+                    <i style={{color:"#ffffff",fontSize:"15px",fontWeight:"bold"}}>
+                        {this.state.language.lasthistory}</i>
+                </button>
+            </div>
+
+        return (
+            <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,left:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',zIndex:"99",willChange: "transform, opacity"}}>
+                {sysindentifyblock}
+                {batchindentifyblock}
+                {analysisresult}
+                <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" style={{height:5}} ></div>
+                {checkshoot}
+                {checkidentifypara}
+                <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" style={{height:5}} ></div>
+                {buttonstart}{buttonpoint}{buttonanalysis}{buttonsync}{buttonhistory}
+            </div>
+        );
+
+
+
+
+
+/*
+
         let button_text = this.state.language.start;
         let task_information =[];
         if(this.state.configure!= null && this.state.configure.basic.batch != ""){
@@ -234,6 +492,6 @@ export default class taskcard extends Component {
                     </button>
                 </div>
             </div>
-        );
+        );*/
     }
 }

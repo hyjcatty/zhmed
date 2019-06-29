@@ -9,7 +9,9 @@
     "modalcancel":"cancel",
     "userunknown":"",
     "tempmodaltitle":"Temp Parameter",
-    "tempmodalrun":"Try"
+    "tempmodalrun":"Try",
+    "debugmodaltitle":"Debug",
+    "debugmodalcontent":"Debug running, please wait ..."
   },
   "head":{
     "icon":"",
@@ -46,12 +48,21 @@
       "shieldtitle":"Re-analysis by temp parameter"
     },
     "task":{
-      "taskparameter":"parameter",
-      "taskinfo":"task info",
-      "consoletitle":"Realtime log",
+      "systemparameter":"System Parameter",
+      "taskparameter":"Batch Parameter",
+      "taskresult":"Analysis Result",
+      "usesystem":"SysPara",
+      "onlyshoot":"ShootOnly",
       "start":"Start",
       "stop":"Stop",
-      "reset":"Reset"
+      "reset":"Reset",
+      "analysis":"ReAnalysis",
+      "lasthistory":"LastBatch",
+      "parametersync":"SyncPara",
+      "batch":"Batch",
+      "date":"Date",
+      "owner":"Operator",
+      "tupid":"TUPID"
     },
     "location":{
       "locationinfo":"location calibration",
@@ -110,7 +121,7 @@
     "message4":"Save successfully!",
     "message5":"Please confirm if want to delete:",
     "message6":"Please confirm if want to stop:",
-    "message7":"Temp Parameter is saved",
+    "message7":"Analysis Parameter is saved",
     "message8":"",
     "message9":"",
     "message10":"",
