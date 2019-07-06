@@ -162,9 +162,13 @@ gulp.task('scripts', function() {
 gulp.task("server",function(){
     gulp.src("./jsserver/ejs/req.js")
         .pipe(gulp.dest(option.buildPath+"/ejs/"));
+    gulp.src("./jsserver/ejs/mqtt.js")
+        .pipe(gulp.dest(option.buildPath+"/ejs/"));
     gulp.src("./jsserver/launch.js")
         .pipe(gulp.dest(option.buildPath+"/"));
     gulp.src("./jsserver/mqttserver.js")
+        .pipe(gulp.dest(option.buildPath+"/"));
+    gulp.src("./jsserver/debug.js")
         .pipe(gulp.dest(option.buildPath+"/"));
     gulp.src("./jsserver/jpg/*")
         .pipe(gulp.dest(option.buildPath+"/jpg/"));

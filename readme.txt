@@ -79,6 +79,7 @@ Directory structure:
 
 before u open the web, go to the !src code! folder,run these command in 2 different command windows:
 node mqttserver.js
-node mqttclient.js
+node launch.js
+node debug.js
 
 the server must be launched before client, and your sever's 1883/3000 port should be free.

@@ -1,5 +1,6 @@
 ﻿
     var fs = require('fs');
+    const mqttlib = require('./mqtt.js');
     var msg;
     var baseconf;
     var sysconf;
@@ -12,6 +13,9 @@
     var history;
     var debug;
     var if_cali = "false";
+
+
+
     async function database(data){
     var key = data.action;
     switch(key){
@@ -115,7 +119,7 @@
                                     "value": ""+GetRandomNum(1,40000)
                                 }
                             );
-                        }
+                        }xia
                     }
                     break;
                 }
@@ -322,21 +326,56 @@
         case "ZH_Medicine_debug_command":
             var ret = msg.ZH_Medicine_cali_command;
             ret.status="true";
-            var pending =  function(){
+            mqttlib.publicdebug("mqtt_debug_start");
+            var pending_send =  function(){
                 return new Promise((resolve,reject)=>{
-                   setTimeout(()=>{
-                       resolve(1);
-                   },8000);
+                   let Interval = setInterval(()=>{
+                       //console.log("in cycle1");
+                       if(mqttlib.getdebuginfo().start){
+                           resolve(1);
+                           clearInterval(Interval);
+                       }
+                   },300);
                 });
             };
-            let res1 = await pending();
+            let res1 = await pending_send();
+
+            mqttlib.publicdebug("mqtt_debug_done");
+            var pending_done =  function(){
+                return new Promise((resolve,reject)=>{
+                    let Interval = setInterval(()=>{
+
+                        //console.log("in cycle2");
+                        if(mqttlib.getdebuginfo().done){
+                            resolve(1);
+                            clearInterval(Interval);
+                        }
+                    },300);
+                });
+            };
+            res1 = await pending_done();
+
+            mqttlib.publicdebug("mqtt_debug_end");
+            var pending_end =  function(){
+                return new Promise((resolve,reject)=>{
+                    let Interval = setInterval(()=>{
+                        //console.log("in cycle3");
+                        if(mqttlib.getdebuginfo().end){
+                            mqttlib.resetdebuginfo();
+                            resolve(1);
+                            clearInterval(Interval);
+                        }
+                    },300);
+                });
+            };
+            res1 = await pending_end();
             return JSON.stringify(ret);
         default:
             console.log("Don't understand query key:"+key);
             return JSON.stringify(msg.ZH_Medicine_default);
     }
 }
-    function mqttdatabase(data){}
+
     function check_usr(data){
     }
     function req_test(){
@@ -492,6 +531,5 @@
     exports.database=database;
     exports.check_usr=check_usr;
     exports.prepareconf=prepareconf;
-    exports.mqttdatabase=mqttdatabase;
     exports.GetRandomNum=GetRandomNum;
     exports.is_calibration=is_calibration;

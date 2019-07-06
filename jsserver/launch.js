@@ -2,9 +2,10 @@
 const http = require("http");
 const fs = require('fs');
 const url = require('url');
-const mqtt = require('mqtt');
 const path = require('path');
+const mqtt = require('mqtt');
 const req = require('./ejs/req');
+const mqttlib = require('./ejs/mqtt');
 const querystring = require('querystring');
 
 
@@ -16,11 +17,7 @@ var sio = require('socket.io');
 
 var connect=false;
 var start=0;
-var client  = mqtt.connect('mqtt://127.0.0.1',{
-    username:'username',
-    password:'password',
-    clientId:'MQTT_ZH_Medicine_NODE'
-});
+
 
 req.prepareconf();
 
@@ -316,72 +313,10 @@ http.createServer(function(request, response) {
 var socket = sio.listen(http);
 //req.req_test();
 console.log("server start......");
-client.on('connect', function () {
-    console.log('Mqtt connected.....');
-    client.subscribe('MQTT_ZH_Medicine_UI');
-    fakelog(); //TODO: This function need to remove from the real environment
-    realtimepic();
-});
-client.on('message', function (topic, message) {
-    var msg = JSON.parse(message.toString());
-    req.mqttdatabase(msg);
-});
-/*
-var socket = sio.listen(http);
-var bstring;
-fs.readFile('./img/default.jpg', function (err, data) {
-    if (err) throw err
-    console.log('isBuffer: ' + Buffer.isBuffer(data)) // isBuffer: true
-    bstring =data;// <Buffer 72 6f ... >
-});
-socket.on('connection',function(socket){
-    console.log("Socket.IO connected");
-    socket.emit('news',{shuju:bstring});
-    connect=true;
-});
-socket.on('disconnect',function(socket){
-    console.log("Socket.IO disconnected");
-    connect=false;
-});
-var handle=setInterval(function(){
-    if(connect===false) return;
-    if(!is_calibration()) return;
-    fs.readFile('./jpg/'+start+'.jpg', function (err, data) {
-        if (err) throw err
-        console.log('isBuffer: ' + Buffer.isBuffer(data)) // isBuffer: true
-        bstring =data;// <Buffer 72 6f ... >
-        socket.emit('news',{shuju:bstring});
-        start++;
-        if(start==23) start=0;
-    });
-},100);*/
-function realtimepic(){
-    setInterval(function(){
-        //console.log("what is calimode:"+req.is_calibration());
-        if(!req.is_calibration()) return;
-        let x = req.GetRandomNum(0,22);
-        let msg = {
-            action : "ZH_Medicine_Realtime_Picture_Update",
-            msg: "./jpg/"+x+".jpg",
-            blur: "4."+x
-        }
-        //console.log("send pic:"+"./jpg/"+x+".jpg");
-        client.publish('MQTT_ZH_Medicine_UI', JSON.stringify(msg));
-    },100);
-}
-function fakelog(){
-    setInterval(function(){
-        let x = req.GetRandomNum(5,50);
-        let str = "["+x+"]:";
-        for(let i=0;i<x;i++){
-            str = str + "y ";
-        }
-        let msg = {
-            action : "ZH_Medicine_Log_Update",
-            msg: str
-        }
-        client.publish('MQTT_ZH_Medicine_UI', JSON.stringify(msg));
-    },40000);
-}
+
+mqttlib.mqttstart();
+
+
+
 
 
