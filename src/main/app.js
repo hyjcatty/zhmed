@@ -896,7 +896,7 @@ function sysconffetch(){
 }
 function sysconffetchcallback(res){
     if(res.jsonResult.status == "false"){
-        alert(language.message.alert1);
+        alert(res.jsonResult.msg);//alert(language.message.alert1);
         return;
     }
     if(res.jsonResult.auth == "false"){
@@ -971,7 +971,7 @@ function debugconffetch(){
 }
 function debugconffetchcallback(res){
     if(res.jsonResult.status == "false"){
-        alert(language.message.alert1);
+        alert(res.jsonResult.msg);//alert(language.message.alert1);
         return;
     }
     if(res.jsonResult.auth == "false"){
@@ -1018,7 +1018,7 @@ function zhmedrundebugconf(command,conf){
 }
 function zhmedrundebugconfcallback(res){
     if(res.jsonResult.status == "false"){
-        alert(language.message.alert9);
+        alert(res.jsonResult.msg);//alert(language.message.alert9);
         return;
     }
     if(res.jsonResult.auth == "false"){
@@ -1054,7 +1054,7 @@ function caliconffetch(){
 }
 function caliconffetchcallback(res){
     if(res.jsonResult.status == "false"){
-        alert(language.message.alert1);
+        alert(res.jsonResult.msg);//alert(language.message.alert1);
         return;
     }
     if(res.jsonResult.auth == "false"){
@@ -1094,7 +1094,7 @@ function zhmedruncaliconf(command,conf){
 }
 function zhmedruncaliconfcallback(res){
     if(res.jsonResult.status == "false"){
-        alert(language.message.alert9);
+        alert(res.jsonResult.msg);//alert(language.message.alert9);
         return;
     }
     if(res.jsonResult.auth == "false"){
@@ -1133,7 +1133,7 @@ function zhmedcalimode(triger,action){
 }
 function zhmedcalimodecallback(res){
     if(res.jsonResult.status == "false"){
-        alert(language.message.alert9);
+        alert(res.jsonResult.msg);//alert(language.message.alert9);
         return;
     }
     if(res.jsonResult.auth == "false"){
@@ -1172,7 +1172,7 @@ function zhmedcheckcalimode(){
 }
 function zhmedcheckcalimodecallback(res){
     if(res.jsonResult.status == "false"){
-        alert(language.message.alert9);
+        alert(res.jsonResult.msg);//alert(language.message.alert9);
         return;
     }
     if(res.jsonResult.auth == "false"){
@@ -2209,7 +2209,7 @@ function showtempmodal(){
  * for image_show
  */
 //var socket = io.connect();
-var start = 98;
+var start = 199;
 //var image_handle = document.getElementById("imgview");
 function update_image_test(src,blur){
     var image_handle = document.getElementById("imgview");
@@ -2228,7 +2228,7 @@ function update_image_test(src,blur){
     image_handle.appendChild(img);
     image_handle.removeChild(image_handle.firstChild);
     blur_handle.innerHTML="blur:"+blur;
-    if(start==0) start = 99;
+    if(start==0) start = 199;
 }
 /*
 socket.on('news',function(data){
@@ -2262,7 +2262,7 @@ function clearwebview(){
     img.style="position: absolute; left: 10px; top: 20px;z-index: 99";
     image_handle.appendChild(img);
     blur_handle.innerHTML="";
-    start = 98;
+    start = 199;
 }
 function removeAllChild(_element)  {
 
