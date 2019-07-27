@@ -86,8 +86,16 @@ gulp.task("resourcecopy",function(){
         .pipe(gulp.dest(option.buildPath+"/resource/switchery/"));
     gulp.src("./resource/pnotify/*")
         .pipe(gulp.dest(option.buildPath+"/resource/pnotify/"));
+    gulp.src("./resource/nprogress/**/*")
+        .pipe(gulp.dest(option.buildPath+"/resource/nprogress/"));
     gulp.src("./resource/colorpicker/**/*")
         .pipe(gulp.dest(option.buildPath+"/resource/colorpicker/"));
+    gulp.src("./resource/fastclick/**/*")
+        .pipe(gulp.dest(option.buildPath+"/resource/fastclick/"));
+    gulp.src("./resource/bootstrap-progressbar/**/*")
+        .pipe(gulp.dest(option.buildPath+"/resource/bootstrap-progressbar/"));
+    gulp.src("./resource/select2/**/*")
+        .pipe(gulp.dest(option.buildPath+"/resource/select2/"));
     //gulp.src("./resource/xhgrid/assets/**/*")
     //    .pipe(gulp.dest(option.buildPath+"/resource/xhgrid/assets/"));
     gulp.src("./resource/xhgrid/Web/**/*")
@@ -154,8 +162,8 @@ gulp.task('scripts', function() {
     gulp.src('./index.html')
         .pipe(htmlmin(option_html))
         .pipe(gulp.dest(option.buildPath+'/'));
-    gulp.src('./Loading.html')
-        .pipe(rename('login.html'))
+    gulp.src('./booting.html')
+        .pipe(rename('booting.html'))
         .pipe(htmlmin(option_html))
         .pipe(gulp.dest(option.buildPath+'/'));
 });
@@ -169,6 +177,8 @@ gulp.task("server",function(){
     gulp.src("./jsserver/mqttserver.js")
         .pipe(gulp.dest(option.buildPath+"/"));
     gulp.src("./jsserver/debug.js")
+        .pipe(gulp.dest(option.buildPath+"/"));
+    gulp.src("./jsserver/boot.js")
         .pipe(gulp.dest(option.buildPath+"/"));
     gulp.src("./jsserver/jpg/*")
         .pipe(gulp.dest(option.buildPath+"/jpg/"));

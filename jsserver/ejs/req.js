@@ -12,8 +12,20 @@
     var calibration;
     var history;
     var debug;
+    var booting=false;
     var if_cali = "false";
+    var if_run = "false";
+    var run_panel = {};
 
+    function bootreset(bool){
+        booting = bool;
+        if_cali = "false";
+        if_run = "false";
+        run_panel = {};
+    }
+    function if_boot(){
+        return booting;
+    }
 
 
     async function database(data){
@@ -45,11 +57,19 @@
             return JSON.stringify(ret);
         case "ZH_Medicine_task_info":
             var ret = msg.ZH_Medicine_task_info;
-            var panel = buildrandomemptyresult();
-            ret.ret.parameter=systeminfo;
-            ret.ret.configure=panel;
-            ret.ret.running="false";
-            ret.status="true";
+            if(if_run == "true"){
+                ret.ret.parameter=systeminfo;
+                ret.ret.configure=run_panel;
+                ret.ret.running="true";
+                ret.status="true";
+            }else{
+                var panel = buildrandomemptyresult();
+                ret.ret.parameter=systeminfo;
+                ret.ret.configure=panel;
+                ret.ret.running="false";
+                ret.status="true";
+            }
+
             return JSON.stringify(ret);
         case "ZH_Medicine_last_history":
             var ret = msg.ZH_Medicine_task_info;
@@ -71,6 +91,8 @@
             ret.ret.configure=panel;
             ret.ret.running=retstatus;
             ret.status="true";
+            if_run = retstatus;
+            run_panel = panel;
             return JSON.stringify(ret);
         case "ZH_Medicine_task_running":
             var ret = msg.ZH_Medicine_task_running;
@@ -119,7 +141,7 @@
                                     "value": ""+GetRandomNum(1,40000)
                                 }
                             );
-                        }xia
+                        }
                     }
                     break;
                 }
@@ -205,6 +227,12 @@
             ret.ret.configure=panel;
             ret.ret.running=retstatus;
             ret.status="true";
+            if_run = retstatus;
+            if(retstatus == "true"){
+                run_panel = panel;
+            }else{
+                run_panel = {};
+            }
             return JSON.stringify(ret);
         case "ZH_Medicine_set_temp_conf":
             var ret = msg.ZH_Medicine_set_temp_conf;
@@ -329,7 +357,7 @@
             mqttlib.publicdebug("mqtt_debug_start");
             var pending_send =  function(){
                 return new Promise((resolve,reject)=>{
-                   let Interval = setInterval(()=>{
+                   var Interval = setInterval(()=>{
                        //console.log("in cycle1");
                        if(mqttlib.getdebuginfo().start){
                            resolve(1);
@@ -338,12 +366,12 @@
                    },300);
                 });
             };
-            let res1 = await pending_send();
+            var res1 = await pending_send();
 
             mqttlib.publicdebug("mqtt_debug_done");
             var pending_done =  function(){
                 return new Promise((resolve,reject)=>{
-                    let Interval = setInterval(()=>{
+                    var Interval = setInterval(()=>{
 
                         //console.log("in cycle2");
                         if(mqttlib.getdebuginfo().done){
@@ -358,7 +386,7 @@
             mqttlib.publicdebug("mqtt_debug_end");
             var pending_end =  function(){
                 return new Promise((resolve,reject)=>{
-                    let Interval = setInterval(()=>{
+                    var Interval = setInterval(()=>{
                         //console.log("in cycle3");
                         if(mqttlib.getdebuginfo().end){
                             mqttlib.resetdebuginfo();
@@ -382,8 +410,8 @@
     }
     function GetRandomNum(Min,Max)
     {
-        var Range = Max - Min;
-        var Rand = Math.random();
+        let Range = Max - Min;
+        let Rand = Math.random();
         return(Min + Math.round(Rand * Range));
     }
 
@@ -392,8 +420,8 @@
 
         msg = JSON.parse(jsReadFiles("./msg/message.json"));
         baseconf={};
-        var templist = getfilelist("./baseconf/plateconf/");
-        for(var i=0;i<templist.length;i++){
+        let templist = getfilelist("./baseconf/plateconf/");
+        for(let i=0;i<templist.length;i++){
             baseconf[templist[i].split(".")[0]]=JSON.parse(jsReadFiles("./baseconf/plateconf/"+templist[i]));
         }
         sysconf = JSON.parse(jsReadFiles("./sysconf/configure.json"));
@@ -413,12 +441,12 @@
 
 
     function getfilelist(filePath){
-        var list = fs.readdirSync(filePath);
+        let list = fs.readdirSync(filePath);
         return list;
     }
 
     function jsReadFiles(files) {
-        var output = fs.readFileSync(files, 'utf8');
+        let output = fs.readFileSync(files, 'utf8');
         return output;
     }
     function jsWriteFiles(files,data) {
@@ -428,7 +456,7 @@
         return JSON.parse(JSON.stringify(data));
     }
     function buildoneresult(series){
-        var subpic={
+        let subpic={
             "series":series,
             "shoot":[],
             "video":"./demo/video/avorion.mp4",
@@ -437,14 +465,14 @@
             "analysising":"done",
             "analysis":{}
         }
-        var shootnumber= GetRandomNum(1,4);
-        var resultpic=[]
-        for(var i=0;i<shootnumber;i++){
+        let shootnumber= GetRandomNum(1,4);
+        let resultpic=[]
+        for(let i=0;i<shootnumber;i++){
             subpic.shoot.push("./demo/pic/shoot"+(i+1)+".png");
             resultpic.push("./demo/pic/result.png");
         }
-        var resultAna = [];
-        for(var i=0;i<5;i++){
+        let resultAna = [];
+        for(let i=0;i<5;i++){
             resultAna.push({
                 "title":"result"+i,
                 "value":""+GetRandomNum(1,1000000)
@@ -457,19 +485,24 @@
         return subpic;
     }
     function buildrandomemptyresult(){
-        var filename = ["2x3","3x4","4x6","6x8","8x12","16x24"];
-        var temp = GetRandomNum(0,5);
-        var retarray=jsondeepcopy(baseconf[filename[temp]]);
+        let filename = ["2x3","3x4","4x6","6x8","8x12","16x24"];
+        let temp = GetRandomNum(0,5);
+        let retarray=jsondeepcopy(baseconf[filename[temp]]);
         retarray.basic.parameter={};
         return retarray;
     }
     function buildrandomresult(){
-        var filename = ["2x3","3x4","4x6","6x8","8x12","16x24"];
-        var temp = GetRandomNum(0,5);
-        var retarray=jsondeepcopy(baseconf[filename[temp]]);
+        let filename = ["2x3","3x4","4x6","6x8","8x12","16x24"];
+        let temp = GetRandomNum(0,5);
+        let retarray=jsondeepcopy(baseconf[filename[temp]]);
         retarray.basic.batch="12312312312";
+        retarray.basic.parameter.smallsize = GetRandomNum(180,220);
+        retarray.basic.parameter.smallmiddle = GetRandomNum(450,550);
+        retarray.basic.parameter.middlelarge = GetRandomNum(1800,2200);
+        retarray.basic.parameter.largesize = GetRandomNum(4800,5200);
+
         if(temp === 0 ){
-            for(var i=0;i<retarray.basic.longitude.length;i++){
+            for(let i=0;i<retarray.basic.longitude.length;i++){
                 if(10>GetRandomNum(0,100)){
                     continue;
                 }else{
@@ -478,8 +511,8 @@
 
             }
         }else{
-            for(var i=0;i<retarray.basic.latitude.length;i++){
-                for(var j=0;j<retarray.basic.longitude.length;j++){
+            for(let i=0;i<retarray.basic.latitude.length;i++){
+                for(let j=0;j<retarray.basic.longitude.length;j++){
                     if(30>GetRandomNum(0,100)){
                         continue;
                     }else{
@@ -533,3 +566,5 @@
     exports.prepareconf=prepareconf;
     exports.GetRandomNum=GetRandomNum;
     exports.is_calibration=is_calibration;
+    exports.bootreset=bootreset;
+    exports.if_boot=if_boot;

@@ -239,8 +239,8 @@ http.createServer(function(request, response) {
                 request.on("end",function(){
                     var buffer = Buffer.concat(chunks , size);
                     if(!size){
-                        res.writeHead(404);
-                        res.end('');
+                        response.writeHead(404);
+                        response.end('');
                         return;
                     }
 
@@ -301,11 +301,21 @@ http.createServer(function(request, response) {
             }
             break;
         default:
-            console.log("Client require :"+pathname);
+            if(req.if_boot()){
+
+                console.log("Client require :"+pathname);
+                Data = fs.readFileSync('./booting.html','utf-8');
+                response.writeHead(200, {"Content-Type": "text/html"});
+                response.write(Data);
+                response.end();
+            }else{
+
+                console.log("Client require :"+pathname);
                 Data = fs.readFileSync('./index.html','utf-8');
                 response.writeHead(200, {"Content-Type": "text/html"});
                 response.write(Data);
                 response.end();
+            }
     }
 
 }).listen(8888);

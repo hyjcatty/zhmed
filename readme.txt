@@ -42,6 +42,9 @@ To your apache or node www path.
 If u want to run the node server, goto your node www path and run the command:
 node mqttserver.js
 node launch.js
+node debug.js
+
+(if u want to triger the TUP reboot case, u need to run "node boot.js" while UI is working)
 
 The mqttserver.js provide the mqtt Service and launch.js provide the httpd and mqttclient service.
 The web also need to link mqttserver service in further plan.

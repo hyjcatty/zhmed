@@ -232,29 +232,33 @@ export default class taskcard extends Component {
     }
     getUpdatedValue(){
         let tempconf = {
-            "onlyshoot":false,
+            //"onlyshoot":false,
             "usesystem":false
         };
-        tempconf.onlyshoot = $("#checkboxonlycheck").is(":checked");
+        //tempconf.onlyshoot = $("#checkboxonlycheck").is(":checked");
         tempconf.usesystem = $("#checkboxonlyidentifypara").is(":checked");
 
         return tempconf;
     }
     handle_click(){
         this.syncSetState({disabled:"disabled"});
+        let temp = this.getUpdatedValue();
+        let temppara = this.state.identify;
+
+        if(!$.isEmptyObject(this.state.configure.basic.parameter) && !temp.usesystem ){
+            temppara = this.state.configure.basic.parameter;
+        }
         if(this.get_running()){
-            this.state.callback(false,false,false,this.state.identify);
+            this.state.callback(false,false,false,temppara);
         }else{
-            let temp = this.getUpdatedValue;
-            let temppara = this.state.identify;
-            if(!$.isEmptyObject(this.state.configure.basic.parameter) && temp.usesystem ){
-                temppara = this.state.configure.basic.parameter;
-            }
+
+            this.state.callback(true,true,true,temppara);
+            /*
             if(temp.onlyshoot){
                 this.state.callback(true,true,false,temppara);
             }else{
                 this.state.callback(true,true,true,temppara);
-            }
+            }*/
         }
         setTimeout(function(){
             this.syncSetState({disabled:""});
@@ -267,7 +271,7 @@ export default class taskcard extends Component {
         }else{
 
             this.syncSetState({disabled:"disabled"});
-            let temp = this.getUpdatedValue;
+            let temp = this.getUpdatedValue();
             let temppara = this.state.identify;
             if(!$.isEmptyObject(this.state.configure.basic.parameter) && temp.usesystem ){
                 temppara = this.state.configure.basic.parameter;
@@ -329,7 +333,7 @@ export default class taskcard extends Component {
         if(!$.isEmptyObject(this.state.configure.basic.parameter)){
             let batchindentify = [];
             for(let i in this.state.configure.basic.parameter){
-                let temp = <h3 style={{fontSize:15,marginRight:5,color:"#333"}}  key={this.state.key+i}>{i+":"+this.state.identify[i]}</h3>
+                let temp = <h3 style={{fontSize:15,marginRight:5,color:"#333"}}  key={this.state.key+i}>{i+":"+this.state.configure.basic.parameter[i]}</h3>
                 batchindentify.push(temp);
             }
             batchindentifyblock=
@@ -363,6 +367,8 @@ export default class taskcard extends Component {
                     </div>
                 </div>
         }
+        let checkshoot=<div/>;
+        /*
         let checkshoot =
             <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" key="check1">
                 <div className="count" style={{fontSize:20,marginTop:15,verticalAlign:'bottom',width:"90%"}} >
@@ -371,7 +377,7 @@ export default class taskcard extends Component {
                             {this.state.language.onlyshoot+":"}&nbsp;&nbsp;&nbsp;&nbsp;
                             <input type="checkbox" id={"checkboxonlycheck"} className="js-switch task_conf_checkbox" onChange={this.handleChangecheck.bind(this)} data-switchery="true" value="on" disabled={this.state.disabledreset}/>
                         </label>
-                    </div></div></div>;
+                    </div></div></div>;*/
         let checkidentifyparadisplay = "none";
         if(!$.isEmptyObject(this.state.configure.basic.parameter)) checkidentifyparadisplay = "block";
 

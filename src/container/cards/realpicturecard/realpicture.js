@@ -94,7 +94,16 @@ export default class realpicturecard extends Component {
                     <div className="tile-stats"  style={{marginTop:"15px"}}>
                         <div className="count" style={{fontSize:24}}>{this.state.language.pictureinfo}</div>
                         <div id="imgview" style={{position:"relative",minHeight:520,paddingLeft:10,paddingRight:10,width:660,marginLeft:this.state.marginleft}}>
-                            <img src="./img/default.jpg" style={{position: "absolute", left: 10, top: 20,zIndex:99}}/>
+                            <img id="img0" src="./img/default.jpg" style={{position: "absolute", left: 10, top: 20,zIndex:99}}/>
+                            <img id="img1" src="./img/default.jpg" style={{position: "absolute", left: 10, top: 20,zIndex:98}}/>
+                            <img id="img2" src="./img/default.jpg" style={{position: "absolute", left: 10, top: 20,zIndex:97}}/>
+                            <img id="img3" src="./img/default.jpg" style={{position: "absolute", left: 10, top: 20,zIndex:96}}/>
+                            <img id="img4" src="./img/default.jpg" style={{position: "absolute", left: 10, top: 20,zIndex:95}}/>
+                            <img id="img5" src="./img/default.jpg" style={{position: "absolute", left: 10, top: 20,zIndex:94}}/>
+                            <img id="img6" src="./img/default.jpg" style={{position: "absolute", left: 10, top: 20,zIndex:93}}/>
+                            <img id="img7" src="./img/default.jpg" style={{position: "absolute", left: 10, top: 20,zIndex:92}}/>
+                            <img id="img8" src="./img/default.jpg" style={{position: "absolute", left: 10, top: 20,zIndex:91}}/>
+                            <img id="img9" src="./img/default.jpg" style={{position: "absolute", left: 10, top: 20,zIndex:90}}/>
                         </div>
                         <div className="clearfix"/>
                         <h3 style={{fontSize:15,marginRight:5,color:"#333"}}  id="blurvalue"></h3>

@@ -166,6 +166,11 @@
     "auth":"true",
     "msg":"12345"
   },
+  "ZH_Medicine_last_history":{
+    "status":"false",
+    "auth":"true",
+    "msg":"12345"
+  },
   "ZH_Medicine_default":{
     "status":"false",
     "auth":"true",

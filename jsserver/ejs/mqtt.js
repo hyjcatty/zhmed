@@ -43,7 +43,7 @@ function realtimepic(){
         }
         //console.log("send pic:"+"./jpg/"+x+".jpg");
         client.publish('MQTT_ZH_Medicine_UI', JSON.stringify(msg));
-    },100);
+    },200);
 }
 function fakelog(){
     setInterval(function(){
@@ -113,6 +113,17 @@ function mqttdatabase(data){
             debug_flag.end = true;
             console.log("mqtt_debug_end_res back");
             return;
+        case "mqtt_booting_trigger":
+            req.bootreset(true);
+            triggerboot(true);
+            return;
+        case "mqtt_booting_status":
+            updateboot(data);
+            return;
+        case "mqtt_booting_finish":
+            req.bootreset(false);
+            triggerboot(false);
+            return;
         default:
         //do nothing
     }
@@ -127,6 +138,29 @@ function resetdebuginfo(){
         'done':false,
         'end:':false
     };
+}
+function triggerboot(bool){
+    if(bool){
+        var msg = {
+            action : "ZH_Medicine_Boot_start"
+        }
+        client.publish('MQTT_ZH_Medicine_UI', JSON.stringify(msg));
+    }else{
+        var msg = {
+            action : "ZH_Medicine_Boot_finish"
+        }
+        client.publish('MQTT_ZH_Medicine_UI', JSON.stringify(msg));
+    }
+}
+function updateboot(data){
+        var msg = {
+            action : "ZH_Medicine_Boot_Update",
+            period:data.period,
+            message:data.message,
+            process: data.process
+        }
+        client.publish('MQTT_ZH_Medicine_UI', JSON.stringify(msg));
+
 }
 exports.publicdebug=public_debug;
 exports.resetdebuginfo=resetdebuginfo;

@@ -553,7 +553,7 @@ var inteval_handle = setInterval(function(){
     else{
         taskrunningfetch();
     }
-},5000);
+},1600);
 
 var temp_inteval_handle = setInterval(function(){
     if(!temprun)return;
@@ -592,6 +592,9 @@ function initialize_mqtt(){
                 return;
             case "ZH_Medicine_Realtime_Picture_Update":
                 update_image_test(ret.msg,ret.blur);
+                return;
+            case "ZH_Medicine_Boot_start":
+                location.reload(true);
                 return;
             default:
                 return;
@@ -2209,8 +2212,39 @@ function showtempmodal(){
  * for image_show
  */
 //var socket = io.connect();
-var start = 199;
-//var image_handle = document.getElementById("imgview");
+var start = 99;
+var startid=0;
+function update_image_test(src,blur){
+    var coverid = startid;
+    var imageid = startid+1;
+    if(imageid>9) imageid = 0;
+    var imgcover = document.getElementById("img"+coverid);
+    var img = document.getElementById("img"+imageid);
+    var blur_handle = document.getElementById("blurvalue");
+    if(img === null || img === undefined){
+        console.log("imgview can not find")
+        return;
+    }
+    var radom = GetRandomNum(100000,999999);
+    //var img = document.createElement('img');
+    img.src = src+"?"+radom;
+    img.onload = function(){
+
+        imgcover.style.zIndex= imgcover.style.zIndex -10;
+    };
+
+    blur_handle.innerHTML="blur:"+blur;
+
+    if(imgcover.style.zIndex<0){
+        for(var i=0;i<10;i++){
+            var image_handle = document.getElementById("img"+i);
+            image_handle.style.zIndex= 99 -i;
+        }
+    }
+    startid = imageid;
+
+}
+/*
 function update_image_test(src,blur){
     var image_handle = document.getElementById("imgview");
     var blur_handle = document.getElementById("blurvalue");
@@ -2229,7 +2263,7 @@ function update_image_test(src,blur){
     image_handle.removeChild(image_handle.firstChild);
     blur_handle.innerHTML="blur:"+blur;
     if(start==0) start = 199;
-}
+}*/
 /*
 socket.on('news',function(data){
 
@@ -2253,6 +2287,14 @@ socket.on('news',function(data){
     if(start==-99) start = 99;
 });*/
 function clearwebview(){
+    for(var i=0;i<10;i++){
+        var image_handle = document.getElementById("img"+i);
+        image_handle.src = "./img/default.jpg";
+        image_handle.style.zIndex= 99 -i;
+    }
+    var blur_handle = document.getElementById("blurvalue");
+    blur_handle.innerHTML="";
+    /*
     var image_handle = document.getElementById("imgview");
     var blur_handle = document.getElementById("blurvalue");
     removeAllChild(image_handle);
@@ -2262,7 +2304,7 @@ function clearwebview(){
     img.style="position: absolute; left: 10px; top: 20px;z-index: 99";
     image_handle.appendChild(img);
     blur_handle.innerHTML="";
-    start = 199;
+    start = 199;*/
 }
 function removeAllChild(_element)  {
 
