@@ -166,6 +166,10 @@ gulp.task('scripts', function() {
         .pipe(rename('booting.html'))
         .pipe(htmlmin(option_html))
         .pipe(gulp.dest(option.buildPath+'/'));
+    gulp.src('./subplayer.html')
+        .pipe(rename('subplayer.html'))
+        .pipe(htmlmin(option_html))
+        .pipe(gulp.dest(option.buildPath+'/'));
 });
 gulp.task("server",function(){
     gulp.src("./jsserver/ejs/req.js")

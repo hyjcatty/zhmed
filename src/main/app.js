@@ -2229,18 +2229,19 @@ function update_image_test(src,blur){
     //var img = document.createElement('img');
     img.src = src+"?"+radom;
     img.onload = function(){
-
         imgcover.style.zIndex= imgcover.style.zIndex -10;
+        blur_handle.innerHTML="blur:"+blur;
+        if(imgcover.style.zIndex<0){
+            for(let i=0;i<10;i++){
+                let image_handle = document.getElementById("img"+i); //need optimize
+                image_handle.style.zIndex= 99 -i;
+            }
+        }
+
     };
 
-    blur_handle.innerHTML="blur:"+blur;
 
-    if(imgcover.style.zIndex<0){
-        for(var i=0;i<10;i++){
-            var image_handle = document.getElementById("img"+i);
-            image_handle.style.zIndex= 99 -i;
-        }
-    }
+
     startid = imageid;
 
 }

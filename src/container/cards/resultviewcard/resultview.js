@@ -16,7 +16,9 @@ import React, {
 import classNames from 'classnames';
 import '../../../../resource/css/font-awesome.min.css';
 import './resultview.css';
+import { Player } from 'video-react';
 
+import "../../../../node_modules/video-react/dist/video-react.css";
 
 export default class resultview extends Component {
     constructor(props) {
@@ -34,6 +36,9 @@ export default class resultview extends Component {
             content:null,
             image:null,
             result:null,
+            video:null,
+            vresult:null,
+            videolength:0,
             defaultvalue:"",
             disabled:"",
             key:"pictureinfo",
@@ -43,6 +48,8 @@ export default class resultview extends Component {
             savetemp:null,
             runtemp:null,
             shieldmsg:"",
+            ifshowpic:true,
+            playicon:"fa fa-play",
             language:{
                 "pictureinfo":"拍摄照片",
                 "consoletitle":"分析结果",
@@ -56,6 +63,11 @@ export default class resultview extends Component {
         }
 
         this.timeout = 1200;
+        this.videor=null;
+        this.videoa=null;
+        this.processbar = null;
+        this.interval = 0;
+        this.lock = true;
     }
     update_timeout(timeout){
         this.timeout=timeout;
@@ -93,37 +105,91 @@ export default class resultview extends Component {
     handle_hide(){
         this.hide();
     }
+    handle_change(){
+        this.stop();
+        if(this.state.ifshowpic ){
+            this.setState({ifshowpic:false});
+        }else{
+            this.setState({ifshowpic:true});
+        }
+    }
     hide(){
         if(this.state.hide === "none") return;
         else{
+            this.stop();
             this.lockhidebutton();
             this.setState({animate:"animated fadeOutUp"});
             let self = this;
 
             self.distroycropper();
             setTimeout(function(){
-                self.setState({hide:"none",defaultvalue:"",image:null,result:null});
+                self.setState({hide:"none",defaultvalue:"",image:null,result:null,video:null,
+                    vresult:null,
+                    videolength:0,
+                    ifshowpic:true,
+                    playicon:"fa fa-play"});
+                this.lock=true;
+                this.videor=null;
+                this.videoa=null;
+                this.processbar = null;
             },this.timeout);
         }
-        //this.setState({hide:"none"});
+
+    }
+    componentDidMount(){
+        this.interval = setInterval(function(){
+            if(this.lock || this.processbar === null || this.videor === null ||this.videor.currentTime === undefined )return;
+            let process = parseInt(this.videor.currentTime);
+            //console.log("Playtime:"+process);
+            this.processbar.value = process;
+            if(this.videor.paused){
+                this.setState({playicon:"fa fa-play"});
+            }else{
+                this.setState({playicon:"fa fa-stop"});
+            }
+        }.bind(this),1000);
+    }
+
+    playstop(){
+        if (this.videor.paused) {
+            this.videor.play();
+            if(undefined!=this.videoa.play) this.videoa.play();
+            this.setState({playicon:"fa fa-stop"});
+        } else {
+            this.videor.pause();
+            if(undefined!=this.videoa.pause) this.videoa.pause();
+            this.setState({playicon:"fa fa-play"});
+        }
+    }
+    stop(){
+        if(this.videor === null) return;
+        if(undefined!=this.videor.pause) this.videor.pause();
+        if(undefined!=this.videoa.pause) this.videoa.pause();
+    }
+    moveprocess(){
+        this.lock=true;
+        let current = this.processbar.value;
+        if(this.videoa !== null  ) this.videoa.currentTime= current;
+        this.videor.currentTime = current;
+        this.lock=false;
     }
     show(){
-        //this.setState({hide:"block"});
-        if(this.state.hide === "block") return;
-        else{
-            this.setState({hide:"block",animate:"animated fadeInDown"});
-            let self = this;
+            this.setState({hide:"block",animate:"animated fadeInDown",ifshowpic:true,videoicon:"fa fa-play"});
+
+
             setTimeout(function(){
                 let id = null;
-                if(self.state.content != null && self.state.content.shoot.length>0) id = 0;
-                if(id != null)
-                    self.setselectpicture(id);
+                if(this.state.content != null && this.state.content.shoot.length>0) id = 0;
+                if(id != null){
+
+                    this.setselectpicture(id);
+                }
                 else{
-                    self.setState({defaultvalue:"",image:null,result:null});
+                    this.setState({defaultvalue:"",image:null,result:null});
                 }
                 //self.addcropper();
-            },this.timeout);
-        }
+            }.bind(this),this.timeout);
+
     }
 
     switch_system_info(){
@@ -149,14 +215,36 @@ export default class resultview extends Component {
     }
     setselectpicture(id){
         if(id === undefined || id === null){
-            this.setState({image:null,result:null});
+            this.setState({image:null,result:null,video:null,vresult:null});
             return;
         }
         if(this.state.content === null || this.state.content.shooting !== "done"){
-            this.setState({image:null,result:null});
+            this.setState({image:null,result:null,video:null,vresult:null});
             return;
         }
+        if(this.state.content.videoing !== "done"){
+            this.setState({video:null,vresult:null});
+        }else{
 
+            let videourl = null;
+            let vresulturl = null;
+            let videolength = null;
+            videourl = this.state.content.video;
+            videolength = parseInt(this.state.content.videolength);
+            if(this.state.content.analysising === "done") {
+                vresulturl = this.state.content.analysis.resultVideo;
+            }
+            this.setState({video:videourl,vresult:vresulturl,videolength:videolength},function(){
+
+                this.videor = document.getElementById('videoR');
+                this.videoa = document.getElementById('videoA');
+                /*
+                this.videor = this.refs.videoR;
+                this.videoa = this.refs.videoA;*/
+                this.processbar = document.getElementById('h5pro');
+                this.lock=false;
+            }.bind(this));
+        }
         this.lockhidebutton();
         let imageurl = null;
         let resulturl = null;
@@ -254,9 +342,6 @@ export default class resultview extends Component {
         },1500);
 
     }
-    componentDidMount(){
-
-    }
 
     showshield(){
         this.setState({shield:"block"},this.calculate_margin);
@@ -303,7 +388,9 @@ export default class resultview extends Component {
     updatetempconf(conf){
         this.setState({tempconf:conf},this.showmodal);
     }
+    monitorcycle(){
 
+    }
     modal_middle(modal){
 
         setTimeout(function () {
@@ -314,6 +401,7 @@ export default class resultview extends Component {
             }
         },300);
     }
+
     render() {
         let picchoice;
         let buttonmod;
@@ -343,11 +431,11 @@ export default class resultview extends Component {
             </div>
 
         buttonmod =
-            <button  type="button" className="btn btn-warning btn-sm pull-left" style={{marginLeft:"calc(5%-5px)",marginTop:"5px",height:50,width:"90%"}} disabled={this.state.disabled} onClick={this.handleshowmodalClick.bind(this)}>
+            <button  type="button" className="btn btn-warning btn-sm pull-left" style={{marginLeft:'calc(5% - 5px)',marginTop:"5px",height:50,width:"90%"}} disabled={this.state.disabled} onClick={this.handleshowmodalClick.bind(this)}>
             <i style={{fontSize:25}}> {this.state.language.buttonmod}</i>
         </button>
         buttonsave =
-            <button  type="button" className="btn btn-warning btn-sm pull-left" style={{marginLeft:"calc(5%-5px)",marginTop:"5px",height:50,width:"90%"}} disabled={this.state.disabled} onClick={this.handlesaveconfClick.bind(this)}>
+            <button  type="button" className="btn btn-warning btn-sm pull-left" style={{marginLeft:'calc(5% - 5px)',marginTop:"5px",height:50,width:"90%"}} disabled={this.state.disabled} onClick={this.handlesaveconfClick.bind(this)}>
                 <i style={{fontSize:25}}> {this.state.language.buttonsave}</i>
             </button>
 
@@ -387,6 +475,36 @@ export default class resultview extends Component {
         }else{
             resultcontainer = <div id="result"/>;
         }
+        let videocontainer;
+        if(this.state.video !== null){
+            videocontainer = <video src={this.state.video}  muted width="640px"  height="480px" id="videoR" type="video/mp4" preload="auto"></video>
+            //videocontainer = <Player ref="videoR" videoId="video-1" muted={true} width={640}  height={480} ><source src={this.state.video}/></Player>
+        }else{
+            videocontainer = <div id="video"/>;
+        }
+        let vresultcontainer;
+        if(this.state.vresult !== null){
+            vresultcontainer = <video src={this.state.vresult} muted width="640px"  height="480px" id="videoA" type="video/mp4" preload="auto"></video>
+            //vresultcontainer = <Player ref="videoA" videoId="video-2" muted={true} width={640}  height={480} ><source src={this.state.vresult}/></Player>
+        }else{
+            vresultcontainer = <div id="vresult"/>;
+        }
+        let videocontroler;
+        if(this.state.videolength>0){
+            videocontroler=
+                <div>
+                    <button id="play" onClick={this.playstop.bind(this)} className="pull-left"  style={{width:"50px"}}><i className={this.state.playicon} > </i></button>
+                    <input type="range" name="points" min="0" max={this.state.videolength-1}
+                           className="pull-left" style={{width:'calc(100% - 130px)',marginLeft:"50px"}} id="h5pro" onClick={this.moveprocess.bind(this)} />
+                </div>
+        }else{
+            videocontroler=
+                <div/>
+        }
+        let iconname = "fa fa-file-video-o expand";
+        let marginleft = 0;
+        if (!this.state.ifshowpic)
+        { iconname = "fa fa-file-photo-o expand"; marginleft="-100%";}
 
         return (
             <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,right:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',zIndex:"99",willChange: "transform, opacity"}}>
@@ -402,34 +520,63 @@ export default class resultview extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="col-xs-2 col-md-2 col-sm-2 col-lg-2" key="status-left">
-                    {picchoice}
-                    {buttonmod}
+                <div style={{width:"200%",marginLeft:marginleft}}>
+                    <div className="col-xs-1 col-md-1 col-sm-1 col-lg-1" key="status-left">
+                        {picchoice}
+                        {buttonmod}
 
-                    {buttonsave}
-                    {result_information}
-                </div>
-                <div className="col-xs-10 col-md-10 col-sm-10 col-lg-10" key="status-top">
-                    <div className="tile-stats"  style={{marginTop:"15px",height:this.state.height-67}}>
-                        <div className="count" style={{fontSize:24}}>{this.state.language.pictureinfo}</div>
-                        <div className="container cropper" >
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <div className="img-container">
-                                        {imagecontainer}
+                        {buttonsave}
+                        {result_information}
+                    </div>
+                    <div className="col-xs-5 col-md-5 col-sm-5 col-lg-5" key="status-top">
+                        <div className="tile-stats"  style={{marginTop:"15px",height:this.state.height-67}}>
+                            <div className="count" style={{fontSize:24}}>{this.state.language.pictureinfo}</div>
+                            <div className="container cropper" >
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <div className="img-container">
+                                            {imagecontainer}
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="col-md-6">
-                                    <div className="img-container">
-                                        {resultcontainer}
+                                    <div className="col-md-6">
+                                        <div className="img-container">
+                                            {resultcontainer}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div className="col-xs-6 col-md-6 col-sm-6 col-lg-6" key="status-video">
+                        <div className="tile-stats"  style={{marginTop:"15px",height:this.state.height-67}}>
+                            <div className="count" style={{fontSize:24}}>{this.state.language.pictureinfo}</div>
+                            <div className="container cropper" >
+                                <div className="row">
+
+                                    <div className="col-md-6">
+                                        <div className="img-container">
+                                            {videocontainer}
+                                        </div>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <div className="img-container">
+                                            {vresultcontainer}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key="status-bottom">
+                                    {videocontroler}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key="status-bottom">
-                    <button  type="button" className="btn btn-warning  btn-sm pull-left hidebutton blingbling-LGRAY" style={{marginLeft:0,marginTop:"5px",height:25,width:'100%',background:"rgba(0,0,0,0.3)"}} onClick={this.handle_hide.bind(this)} disabled={this.state.disabled}>
+                    <button  type="button" className="btn btn-warning  btn-sm pull-left hidebutton blingbling-LGRAY" style={{marginLeft:0,marginTop:"5px",height:25,width:25,background:"rgba(0,0,0,0.3)"}} onClick={this.handle_change.bind(this)} disabled={this.state.disabled}>
+                        <i className={iconname} style={{marginLeft:"-3px",marginTop:"-5px",}}> </i>
+                    </button>
+                    <button  type="button" className="btn btn-warning  btn-sm pull-left hidebutton blingbling-LGRAY" style={{marginLeft:0,marginTop:"5px",height:25,width:'calc(100% - 35px)',background:"rgba(0,0,0,0.3)"}} onClick={this.handle_hide.bind(this)} disabled={this.state.disabled}>
                         <i className="fa fa-angle-double-up expand" > </i>
                     </button>
                 </div>
@@ -437,4 +584,21 @@ export default class resultview extends Component {
             </div>
         );
     }
+
 }
+
+/*
+ <div className="col-md-6">
+ <div className="img-container">
+ {videocontainer}
+ </div>
+ </div>
+ <div className="col-md-6">
+ <div className="img-container">
+ {vresultcontainer}
+ </div>
+ </div>
+ </div>
+ <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key="status-bottom">
+ {videocontroler}
+ </div>*/

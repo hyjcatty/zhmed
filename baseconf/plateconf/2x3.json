@@ -26,12 +26,14 @@
     "series":"",
     "shoot":[],
     "video":"",
+    "videolength":0,
 
     "shooting":"false",
     "videoing":"false",
     "analysising":"false",
     "analysis":{
       "resultPic":"",
+      "resultVideo":"",
       "result":[{"title":"","value":""}]
     }
   }

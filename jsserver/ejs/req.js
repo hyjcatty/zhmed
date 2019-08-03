@@ -118,7 +118,8 @@
                     }
                     if((i-2)>=0){
                         panel.picture[i-2].videoing = "done";
-                        panel.picture[i-2].video = "./demo/video/avorion.mp4";
+                        panel.picture[i-2].video = "./demo/video/test1.mp4";
+                        panel.picture[i-2].videolength = "60";
                         panel.picture[i-2].shooting = "done";
                         panel.picture[i-2].analysising = "true";
                     }
@@ -133,6 +134,7 @@
                             );
                         }
 
+                        panel.picture[i-3].analysis.resultVideo="./demo/video/test2.mp4";
                         panel.picture[i-3].analysis.result=[];
                         for(var j=0;j<5;j++){
                             panel.picture[i-3].analysis.result.push(
@@ -158,7 +160,8 @@
                         panel.picture[i].shoot = shootarray;
                         if((i-1)>=0){
                             panel.picture[i-1].videoing = "done";
-                            panel.picture[i-1].video = "./demo/video/avorion.mp4";
+                            panel.picture[i-1].video = "./demo/video/test1.mp4";
+                            panel.picture[i-1].videolength = "60";
                             panel.picture[i-1].analysising = "true";
                         }
                         if((i-2)>=0){
@@ -170,6 +173,7 @@
                                 );
                             }
 
+                            panel.picture[i-2].analysis.resultVideo="./demo/video/test2.mp4";
                             panel.picture[i-2].analysis.result=[];
                             for(var j=0;j<5;j++){
                                 panel.picture[i-2].analysis.result.push(
@@ -182,7 +186,8 @@
                         }
                     }else if(panel.picture[i].videoing !== "done"){
                         panel.picture[i].videoing = "done";
-                        panel.picture[i].video = "./demo/video/avorion.mp4";
+                        panel.picture[i].video = "./demo/video/test1.mp4";
+                        panel.picture[i].videolength = "60";
                         panel.picture[i].analysising = "true";
                         if((i-1)>=0){
                             panel.picture[i-1].analysising = "done";
@@ -192,6 +197,8 @@
                                     "./demo/pic/result.png"
                                 );
                             }
+
+                            panel.picture[i-1].analysis.resultVideo="./demo/video/test2.mp4";
                             panel.picture[i-1].analysis.result=[];
                             for(var j=0;j<5;j++){
                                 panel.picture[i-1].analysis.result.push(
@@ -210,6 +217,8 @@
                                 "./demo/pic/result.png"
                             );
                         }
+
+                        panel.picture[i].analysis.resultVideo="./demo/video/test2.mp4";
                         panel.picture[i].analysis.result=[];
                         for(var j=0;j<5;j++){
                             panel.picture[i].analysis.result.push(
@@ -459,7 +468,8 @@
         let subpic={
             "series":series,
             "shoot":[],
-            "video":"./demo/video/avorion.mp4",
+            "video":"./demo/video/test1.mp4",
+            "videolength":60,
             "shooting":"done",
             "videoing":"done",
             "analysising":"done",
@@ -480,6 +490,7 @@
         }
         subpic.analysis={
             'resultPic':resultpic,
+            'resultVideo':"./demo/video/test2.mp4",
             'result':resultAna
         };
         return subpic;

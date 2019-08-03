@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <title></title>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+        </head>
+<body >
+<video src="./demo/video/test1.mp4" muted width="640px"  height="480px" id="videL" type="video/mp4"></video>
+<video src="./demo/video/test2.mp4" muted width="640px"  height="480px" id="videM" type="video/mp4"></video>
+<button id="button">start/stop</button>
+<input type="range" name="points" min="0" max="60" id="h5pro"/>
+<script>
+    var videL = document.getElementById('videL');
+    var videM = document.getElementById('videM');
+    var total = videL.duration;
+    var lock = false;
+    button.onclick = function () {
+        if (videL.paused) {
+            videL.play();
+            videM.play();
+        } else {
+            videL.pause();
+            videM.pause();
+        }
+    }
+    var interval=setInterval(function(){
+        if(lock)return;
+        var process = parseInt(videL.currentTime);
+        //console.log(videL.currentTime)
+        h5pro.value = process;
+    },1000);
+    h5pro.onclick=function(){
+        lock=true;
+        videL.currentTime = h5pro.value;
+        videM.currentTime= h5pro.value;
+        lock=false;
+        //console.log(h5pro.value);
+    }
+</script>
+</body>
+
+</html>
