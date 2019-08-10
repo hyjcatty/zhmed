@@ -7,6 +7,7 @@ const mqtt = require('mqtt');
 const req = require('./ejs/req');
 const mqttlib = require('./ejs/mqtt');
 const querystring = require('querystring');
+const mfs = require("mz/fs");
 
 
 var sio = require('socket.io');
@@ -21,7 +22,30 @@ var start=0;
 
 req.prepareconf();
 
-http.createServer(function(request, response) {
+
+async function listener(req, res) {
+    let range = req.headers["range"];
+    let p = path.resovle(__dirname, url.parse(url, true).pathname);
+    if (range) {
+        let [, start, end] = range.match(/(\d*)-(\d*)/);
+        try {
+            let statObj = await fs.stat(p);
+        } catch (e) {
+            res.end("Not Found");
+        }
+        let total = statObj.size;
+        start = start ? ParseInt(start) : 0;
+        end = end ? ParseInt(end) : total - 1;
+        res.statusCode = 206;
+        res.setHeader("Accept-Ranges", "bytes");
+        res.setHeader("Content-Range", `bytes ${start}-${end}/${total}`);
+        fs.createReadStream(p, { start, end }).pipe(res);
+    } else {
+        fs.createReadStream(p).pipe(res);
+    }
+}
+
+http.createServer(async function(request, response) {
     //console.log(request.url);
     var pathname = url.parse(request.url,false).pathname;
     var ext = pathname.match(/(\.[^.]+|)$/)[0];
@@ -173,6 +197,7 @@ http.createServer(function(request, response) {
         case ".mp4":
             console.log("Client require :"+pathname);
             //Data = fs.readFileSync("."+pathname,'binary');
+            /*
             response.writeHead(200, {"Content-Type": "application/x-font-ttf"});
             //response.write(Data);
             //response.end();
@@ -182,7 +207,32 @@ http.createServer(function(request, response) {
                 response.contentType = 'application/x-font-ttf';
                 response.contentLength = stat.size;
                 response.end(img, 'binary');
-            });
+            });*/
+
+
+
+            let range = request.headers["range"];
+            let p = "."+pathname;//path.resovle(__dirname, url.parse(request.url, true).pathname);
+            if (range) {
+                let [, start, end] = range.match(/(\d*)-(\d*)/);
+                let statObj;
+                try {
+                    statObj = await mfs.stat(p);
+                } catch (e) {
+                    console.log(e.message);
+                    response.end("Not Found");
+                    break;
+                }
+                let total = statObj.size;
+                start = start ? parseInt(start) : 0;
+                end = end ? parseInt(end) : total - 1;
+                response.statusCode = 206;
+                response.setHeader("Accept-Ranges", "bytes");
+                response.setHeader("Content-Range", `bytes ${start}-${end}/${total}`);
+                mfs.createReadStream(p, { start, end }).pipe(response);
+            } else {
+                mfs.createReadStream(p).pipe(response);
+            }
             break;
         case ".html":
             console.log("Client require :"+pathname);

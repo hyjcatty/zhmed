@@ -4,6 +4,8 @@ npm install gulp -g
 npm install webpack -g
 npm install -g node-gyp
 npm install --global --production windows-build-tools
+if we finally use express and PM2 as the httpserver management, we need to install in TARGET server:
+npm install PM2 -g
 
 pay attention: these command may need administrator power.
 
@@ -20,6 +22,8 @@ npm run build
 #3) copy the useful resource to the deliver folder, command:
 #gulp
 #PHP may not support anymore
+
+-----------NodeJS server-----------
 If u want to use NodeJS server instead of apache and PHP, u need to run extra command:
 1) cd ./target_module
 2) npm install --save-dev
@@ -28,6 +32,14 @@ If u want to use NodeJS server instead of apache and PHP, u need to run extra co
 the 4) step will update the Node server's node_modules, and it will cost time. so if your environment already has the modules, u can just run
 4) gulp jsupdate
 
+-----------Express server-----------
+If u want to use use Express server, u need to run as follow:
+1) cd ./express_module
+2) npm install --save-dev
+3) cd ..
+4) gulp exserver
+the 4) step will update the Express server's node_modules, and it will cost time. so if your environment already has the modules, u can just run
+4) gulp exall
 
 
 
@@ -43,6 +55,13 @@ If u want to run the node server, goto your node www path and run the command:
 node mqttserver.js
 node launch.js
 node debug.js
+
+If u want to run the node server, goto your express www path and run the command:
+pm2 start ecosystem.configure.js
+PS: pm2 will launch in background, so if u want to close the server, u need to run:
+pm2 stop all
+And if your code is changed and want to restart the code again, u need to run this before the pm2 start:
+pm2 delete all
 
 (if u want to triger the TUP reboot case, u need to run "node boot.js" while UI is working)
 
@@ -86,3 +105,5 @@ node launch.js
 node debug.js
 
 the server must be launched before client, and your sever's 1883/3000 port should be free.
+
+

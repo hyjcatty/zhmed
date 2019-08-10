@@ -1,5 +1,5 @@
 {
-  "name": "zhmedserver",
+  "name": "zhmedexpress",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -9,6 +9,10 @@
   "author": "hyj",
   "license": "ISC",
   "devDependencies": {
+    "express": "^4.17.1",
+    "cookie-parser": "^1.4.4",
+    "body-parser": "^1.19.0",
+    "multer": "^1.4.2",
     "lodash": "^3.10.1",
     "mkdirp": "^0.5.0",
     "mosca": "^2.5.2",

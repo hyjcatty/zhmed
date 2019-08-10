@@ -522,11 +522,13 @@ export default class resultview extends Component {
                 </div>
                 <div style={{width:"200%",marginLeft:marginleft}}>
                     <div className="col-xs-1 col-md-1 col-sm-1 col-lg-1" key="status-left">
-                        {picchoice}
-                        {buttonmod}
+                        <div className="tile-stats"  style={{marginTop:"15px",height:this.state.height-67}}>
+                            {picchoice}
+                            {buttonmod}
 
-                        {buttonsave}
-                        {result_information}
+                            {buttonsave}
+                            {result_information}
+                        </div>
                     </div>
                     <div className="col-xs-5 col-md-5 col-sm-5 col-lg-5" key="status-top">
                         <div className="tile-stats"  style={{marginTop:"15px",height:this.state.height-67}}>
@@ -543,6 +545,10 @@ export default class resultview extends Component {
                                             {resultcontainer}
                                         </div>
                                     </div>
+                                </div>
+
+                                <div style={{position:"absolute",height:100,width:100,bottom:25,right:55,zIndex:199}}>
+                                    <a className="fa fa-youtube-play" style={{fontSize:"100px",opacity:0.3}} onClick={this.handle_change.bind(this)} disabled={this.state.disabled}></a>
                                 </div>
                             </div>
                         </div>
@@ -570,13 +576,15 @@ export default class resultview extends Component {
 
                             </div>
                         </div>
+                        <div style={{position:"absolute",height:100,width:100,bottom:25,right:55,zIndex:199}}>
+                            <a className="fa fa-picture-o" style={{fontSize:"100px",opacity:0.3}} onClick={this.handle_change.bind(this)} disabled={this.state.disabled}></a>
+                        </div>
+
                     </div>
                 </div>
                 <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key="status-bottom">
-                    <button  type="button" className="btn btn-warning  btn-sm pull-left hidebutton blingbling-LGRAY" style={{marginLeft:0,marginTop:"5px",height:25,width:25,background:"rgba(0,0,0,0.3)"}} onClick={this.handle_change.bind(this)} disabled={this.state.disabled}>
-                        <i className={iconname} style={{marginLeft:"-3px",marginTop:"-5px",}}> </i>
-                    </button>
-                    <button  type="button" className="btn btn-warning  btn-sm pull-left hidebutton blingbling-LGRAY" style={{marginLeft:0,marginTop:"5px",height:25,width:'calc(100% - 35px)',background:"rgba(0,0,0,0.3)"}} onClick={this.handle_hide.bind(this)} disabled={this.state.disabled}>
+
+                    <button  type="button" className="btn btn-warning  btn-sm pull-left hidebutton blingbling-LGRAY" style={{marginLeft:0,marginTop:"5px",height:25,width:"100%",background:"rgba(0,0,0,0.3)"}} onClick={this.handle_hide.bind(this)} disabled={this.state.disabled}>
                         <i className="fa fa-angle-double-up expand" > </i>
                     </button>
                 </div>
