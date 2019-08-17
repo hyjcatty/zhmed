@@ -26,7 +26,7 @@ export default class taskcard extends Component {
             width:600,
             margin:75,
             hide:"none",
-            animate:"animated fadeInLeft",
+            animate:"first-card-level animated fadeInLeft",
             callback:null,
             footcallback:null,
             synccallback:null,
@@ -162,7 +162,7 @@ export default class taskcard extends Component {
     hide(){
         if(this.state.hide === "none") return;
         else{
-            this.syncSetState({animate:"animated fadeOutLeft"});
+            this.syncSetState({animate:"first-card-level animated fadeOutLeft"});
             this.transform=true;
             let self = this;
             setTimeout(function(){
@@ -177,7 +177,7 @@ export default class taskcard extends Component {
         if(this.state.hide === "block") return;
         else{
 
-            this.syncSetState({hide:"block",animate:"animated fadeInLeft"});
+            this.syncSetState({hide:"block",animate:"first-card-level animated fadeInLeft"});
             this.transform=true;
             let self = this;
             setTimeout(function(){
@@ -187,9 +187,9 @@ export default class taskcard extends Component {
     }
     switch_system_info(){
         if(this.state.hide == "none"){
-            this.syncSetState({hide:"block",animate:"animated fadeInLeft"});
+            this.syncSetState({hide:"block",animate:"first-card-level animated fadeInLeft"});
         }else{
-            this.syncSetState({animate:"animated fadeOutleft"});
+            this.syncSetState({animate:"first-card-level animated fadeOutleft"});
             let self = this;
             setTimeout(function(){
                 self.syncSetState({hide:"none"});
@@ -300,7 +300,7 @@ export default class taskcard extends Component {
     render() {
         if(this.state.configure== null){
             return (
-                <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,left:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',zIndex:"99",willChange: "transform, opacity"}}>
+                <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,left:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',willChange: "transform, opacity"}}>
 
                 </div>
             );
@@ -444,7 +444,7 @@ export default class taskcard extends Component {
             </div>
 
         return (
-            <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,left:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',zIndex:"99",willChange: "transform, opacity"}}>
+            <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,left:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',willChange: "transform, opacity"}}>
                 {sysindentifyblock}
                 {batchindentifyblock}
                 {analysisresult}
@@ -481,7 +481,7 @@ export default class taskcard extends Component {
         }
         if(this.state.running) button_text = this.state.language.stop;
         return (
-            <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,left:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',zIndex:"99",willChange: "transform, opacity"}}>
+            <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,left:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',willChange: "transform, opacity"}}>
                 <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key="status-top">
                     <div className="tile-stats"  style={{marginTop:"15px"}}>
                         <div className="count" style={{fontSize:24}}>{this.state.language.taskparameter}</div>

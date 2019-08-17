@@ -27,7 +27,7 @@ export default class locationcard extends Component {
             width:600,
             margin:75,
             hide:"none",
-            animate:"animated fadeInLeft",
+            animate:"first-card-level animated fadeInLeft",
             callback:null,
             margintop:20,
             content:[],
@@ -73,7 +73,7 @@ export default class locationcard extends Component {
     hide(){
         if(this.state.hide === "none") return;
         else{
-            this.setState({animate:"animated fadeOutLeft"});
+            this.setState({animate:"first-card-level animated fadeOutLeft"});
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
@@ -85,14 +85,14 @@ export default class locationcard extends Component {
         //this.setState({hide:"block"});
         if(this.state.hide === "block") return;
         else{
-            this.setState({hide:"block",animate:"animated fadeInLeft"});
+            this.setState({hide:"block",animate:"first-card-level animated fadeInLeft"});
         }
     }
     switch_system_info(){
         if(this.state.hide == "none"){
-            this.setState({hide:"block",animate:"animated fadeInLeft"});
+            this.setState({hide:"block",animate:"first-card-level animated fadeInLeft"});
         }else{
-            this.setState({animate:"animated fadeOutleft"});
+            this.setState({animate:"first-card-level animated fadeOutleft"});
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
@@ -373,7 +373,7 @@ export default class locationcard extends Component {
         }
 
         return (
-        <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,left:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',zIndex:"99",willChange: "transform, opacity"}}>
+        <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,left:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',willChange: "transform, opacity"}}>
 
             <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key="status-top">
                 <div className="tile-stats"  style={{marginTop:"15px"}}>

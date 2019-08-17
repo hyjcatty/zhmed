@@ -93,8 +93,8 @@ export default class alarmview extends Component {
                 </div>
         }
         return (
-            <div style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:'100%',display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',backgroundImage: "url(./resource/image/zhihe.png)"
-                ,backgroundRepeat:"no-repeat",backgroundSize:"100% 100%",MozBackgroundSize:"100% 100%",top:"0px",left:"0px",zIndex:"9999"}}>
+            <div className="alarm-level" style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:'100%',display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',backgroundImage: "url(./resource/image/zhihe.png)"
+                ,backgroundRepeat:"no-repeat",backgroundSize:"100% 100%",MozBackgroundSize:"100% 100%",top:"0px",left:"0px"}}>
                 <div className="container">
                     <div className="leaderboard" style={{marginTop: this.state.margintop}}>
                         {center_panel}

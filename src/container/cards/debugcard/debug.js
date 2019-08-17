@@ -28,7 +28,7 @@ export default class debugcard extends Component {
             consoleheight:420,
             margin:75,
             hide:"none",
-            animate:"animated fadeInRight",
+            animate:"always-on-level2 animated fadeInRight",
             callback:null,
             margintop:20,
             content:[],
@@ -121,7 +121,7 @@ export default class debugcard extends Component {
     }
     hide(){
         if(this.state.hide === "none") return;
-        this.setState({animate:"animated fadeOutRight"});
+        this.setState({animate:"always-on-level2 animated fadeOutRight"});
         setTimeout(function(){
             this.setState({hide:"none"});
         }.bind(this),this.timeout);
@@ -129,7 +129,7 @@ export default class debugcard extends Component {
     show(){
 
         if(this.state.hide === "block") return;
-        this.setState({hide:"block",animate:"animated fadeInRight"});
+        this.setState({hide:"block",animate:"always-on-level2 animated fadeInRight"});
     }
     lockdebug(bool){
         if(bool){
@@ -140,9 +140,9 @@ export default class debugcard extends Component {
     }
     switch_system_info(){
         if(this.state.hide == "none"){
-            this.setState({hide:"block",animate:"animated fadeInRight"});
+            this.setState({hide:"block",animate:"always-on-level2 animated fadeInRight"});
         }else{
-            this.setState({animate:"animated fadeOutRight"});
+            this.setState({animate:"always-on-level2 animated fadeOutRight"});
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
@@ -348,7 +348,7 @@ export default class debugcard extends Component {
 
 
         return (
-            <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:this.state.margin,right:this.state.width,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',zIndex:"998",willChange: "transform, opacity"}}>
+            <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:this.state.margin,right:this.state.width,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',willChange: "transform, opacity"}}>
                 <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key="status-top" ref={this.topref}>
                     <div className="tile-stats"  style={{marginTop:"15px"}}>
                         <div className="count" style={{fontSize:24}}>{this.state.language.systeminfo}</div>

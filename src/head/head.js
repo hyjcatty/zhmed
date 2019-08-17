@@ -86,9 +86,9 @@ export default class head extends Component {
             temp = this.state.language.greet;
         }
         return (
-            <div style={{position:"relative",background:"#eeeeee",height:this.state.height,width:'100%',display:this.state.hide}}>
+            <div className="top-level" style={{position:"relative",background:"#eeeeee",height:this.state.height,width:'100%',display:this.state.hide}}>
                 <div style={{position:"relative",background:"#eeeeee",height:this.state.height,width:'33%',display:'table',float:"left"}}>
-                    <a style={{position:"relative",height:this.state.height,display:'table-cell',verticalAlign:'middle',width:this.state.height}}><i style={{marginLeft:this.state.height*0.3,fontSize:this.state.height*0.5,color:"#62b900"}}><img src="./resource/image/logo.png"  style={{height:this.state.height*0.8,width:this.state.height*0.8,zIndex: -1}}></img></i>
+                    <a style={{position:"relative",height:this.state.height,display:'table-cell',verticalAlign:'middle',width:this.state.height}}><i style={{marginLeft:this.state.height*0.3,fontSize:this.state.height*0.5,color:"#62b900"}}><img src="./resource/image/logo.png"  style={{height:this.state.height*0.8,width:this.state.height*0.8}}></img></i>
                     </a>
                     <a style={{position:"relative",height:this.state.height,display:'table-cell',verticalAlign:'middle'}}><span className="headlabel" style={{fontSize:this.state.height*0.3,marginLeft:20}}>{this.state.language.title}</span></a>
                 </div>

@@ -30,7 +30,7 @@ export default class resultview extends Component {
             margin:75,
             hide:"none",
             tempconf:[],
-            animate:"animated fadeInDown",
+            animate:"first-subcard-level animated fadeInDown",
             callback:null,
             margintop:20,
             content:null,
@@ -118,7 +118,7 @@ export default class resultview extends Component {
         else{
             this.stop();
             this.lockhidebutton();
-            this.setState({animate:"animated fadeOutUp"});
+            this.setState({animate:"first-subcard-level animated fadeOutUp"});
             let self = this;
 
             self.distroycropper();
@@ -174,7 +174,7 @@ export default class resultview extends Component {
         this.lock=false;
     }
     show(){
-            this.setState({hide:"block",animate:"animated fadeInDown",ifshowpic:true,videoicon:"fa fa-play"});
+            this.setState({hide:"block",animate:"first-subcard-level animated fadeInDown",ifshowpic:true,videoicon:"fa fa-play"});
 
 
             setTimeout(function(){
@@ -194,9 +194,9 @@ export default class resultview extends Component {
 
     switch_system_info(){
         if(this.state.hide == "none"){
-            this.setState({hide:"block",animate:"animated fadeInDown"});
+            this.setState({hide:"block",animate:"first-subcard-level animated fadeInDown"});
         }else{
-            this.setState({animate:"animated fadeOutUp"});
+            this.setState({animate:"first-subcard-level animated fadeOutUp"});
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
@@ -344,13 +344,13 @@ export default class resultview extends Component {
     }
 
     showshield(){
-        this.setState({shield:"block"},this.calculate_margin);
+        //this.setState({shield:"block"},this.calculate_margin);
     }
     hideshield(){
-        this.setState({shield:"none"});
+        //this.setState({shield:"none"});
     }
     updateshieldmsg(msg){
-        this.setState({shieldmsg:msg});
+        //this.setState({shieldmsg:msg});
     }
     handleClick(e){
         this.setState({shield:"block"},this.calculate_margin);
@@ -507,19 +507,8 @@ export default class resultview extends Component {
         { iconname = "fa fa-file-photo-o expand"; marginleft="-100%";}
 
         return (
-            <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,right:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',zIndex:"99",willChange: "transform, opacity"}}>
-                <div style={{position:"absolute",background:"rgba(55,55,55,0.4)",height:this.state.height,width:this.state.width,top:0,right:0,display:this.state.shield,zIndex:200}}>
-                    <div className="container">
-                        <div className="leaderboard" style={{marginTop: this.state.margintop}}>
-                            <div className="panel panel-default" id="shieldsmall" >
-                                <div className="panel-body">
-                                    <a><i className="fa fa-spinner fa-spin" style={{marginRight:15}}/>{message}</a>
+            <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,right:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',willChange: "transform, opacity"}}>
 
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div style={{width:"200%",marginLeft:marginleft}}>
                     <div className="col-xs-1 col-md-1 col-sm-1 col-lg-1" key="status-left">
                         <div className="tile-stats"  style={{marginTop:"15px",height:this.state.height-67}}>
@@ -547,7 +536,7 @@ export default class resultview extends Component {
                                     </div>
                                 </div>
 
-                                <div style={{position:"absolute",height:100,width:100,bottom:25,right:55,zIndex:199}}>
+                                <div className="first-subcard-level-float" style={{position:"absolute",height:100,width:100,bottom:25,right:55}}>
                                     <a className="fa fa-youtube-play" style={{fontSize:"100px",opacity:0.3}} onClick={this.handle_change.bind(this)} disabled={this.state.disabled}></a>
                                 </div>
                             </div>
@@ -576,7 +565,7 @@ export default class resultview extends Component {
 
                             </div>
                         </div>
-                        <div style={{position:"absolute",height:100,width:100,bottom:25,right:55,zIndex:199}}>
+                        <div className="first-subcard-level-float" style={{position:"absolute",height:100,width:100,bottom:25,right:55}}>
                             <a className="fa fa-picture-o" style={{fontSize:"100px",opacity:0.3}} onClick={this.handle_change.bind(this)} disabled={this.state.disabled}></a>
                         </div>
 
@@ -609,4 +598,18 @@ export default class resultview extends Component {
  </div>
  <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key="status-bottom">
  {videocontroler}
- </div>*/
+ </div>
+ <div className="shield-level" style={{position:"absolute",background:"rgba(55,55,55,0.4)",height:this.state.height,width:this.state.width,top:0,right:0,display:this.state.shield}}>
+ <div className="container">
+ <div className="leaderboard" style={{marginTop: this.state.margintop}}>
+ <div className="panel panel-default" id="shieldsmall" >
+ <div className="panel-body">
+ <a><i className="fa fa-spinner fa-spin" style={{marginRight:15}}/>{message}</a>
+
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ */

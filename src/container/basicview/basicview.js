@@ -266,7 +266,7 @@ export default class basicview extends Component {
     }
     render() {
         return (
-            <div className="loginbackground" style={{position:"relative",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:'100%',display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',backgroundImage: "url(./resource/image/zhihe2.png)"
+            <div className="loginbackground view-level" style={{position:"relative",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:'100%',display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',backgroundImage: "url(./resource/image/zhihe2.png)"
                 ,backgroundRepeat:"no-repeat",backgroundSize:"100% 100%",MozBackgroundSize:"100% 100%",transformStyle: "preserve-3d"}}>
 
                     <Locationcard ref="Locationcard" basiccallbacklockfoot = {this.props.basiccallbacklockfoot}/>

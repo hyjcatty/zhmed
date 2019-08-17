@@ -39,6 +39,7 @@ class App extends Component{
             headfootheight: 50,
             headfootminheight: 50,
             canvasheight: 700,
+            margintop:20,
             userid: "user",
             username:"",
             buttonlist: [],
@@ -46,6 +47,8 @@ class App extends Component{
             originalconf:[],
             tempconf:[],
             tempruncallback:null,
+            shieldmsg:"",
+            shielddisplay:"none",
             language:{
                 "app":{
                     "modalhead":"Warning",
@@ -76,7 +79,7 @@ class App extends Component{
                     "message2":"Delete successfully!",
                     "message3":"run successfully!",
                     "message4":"Save successfully!",
-                    "message5":"",
+                    "message5":"On Process,please wait!",
                     "message6":"",
                     "message7":"",
                     "message8":"",
@@ -136,6 +139,14 @@ class App extends Component{
         if(headfootheight > 75) headfootheight = 75;
         let canvasheight = height - 2*headfootheight;
         console.log("headfootheight:"+headfootheight+"canvasheight:"+canvasheight);
+
+        let _modal = document.getElementById("shieldsmall");
+        let module_height = _modal.offsetHeight;
+        if(((height - module_height)/2)>0){
+            this.setState({margintop:parseInt((height - module_height)/2)});
+        }
+
+
         this.setState({width:width,height:height,headfootheight:headfootheight,canvasheight:canvasheight});
         this.refs.head.update_size(headfootheight);
         this.refs.foot.update_size(headfootheight);
@@ -144,6 +155,15 @@ class App extends Component{
         this.refs.Languageview.update_size(width,canvasheight);
         this.refs.Systeminfocard.update_size(parseInt(width/3),canvasheight,headfootheight);
         this.refs.Debugcard.update_size(parseInt(width/3),canvasheight,headfootheight);
+    }
+    showshield(){
+        this.setState({shielddisplay:"block"});
+    }
+    hideshield(){
+        this.setState({shielddisplay:"none"});
+    }
+    updateshieldmsg(msg){
+        this.setState({shieldmsg:msg});
     }
     initializeAlarmSize(width,height){
         this.refs.Alarmview.update_size(width,height);
@@ -350,15 +370,19 @@ class App extends Component{
         return this.refs.Basicview.get_result_content();
     }
     showtemprunshield(){
-        this.refs.Basicview.refs.Resultviewcard.showshield();
+        //this.refs.Basicview.refs.Resultviewcard.showshield();
+        this.showshield();
+        this.updateshieldmsg(this.state.language.message.message8);
         this.lockfoot(true);
     }
     hidetemprunshield(){
-        this.refs.Basicview.refs.Resultviewcard.hideshield();
+        //this.refs.Basicview.refs.Resultviewcard.hideshield();
+        this.hideshield();
         this.lockfoot(false);
     }
     updatetemprunshield(msg){
-        this.refs.Basicview.refs.Resultviewcard.updateshieldmsg(msg);
+        //this.refs.Basicview.refs.Resultviewcard.updateshieldmsg(msg);
+        this.updateshieldmsg(msg);
     }
     updateresultcontentdirectly(content){
         this.refs.Basicview.refs.Resultviewcard.update_content(content);
@@ -405,6 +429,19 @@ class App extends Component{
 
         return(
         <div style={{overflowY:'hidden',overflowX:'hidden'}}>
+
+            <div className="shield-level" style={{position:"absolute",background:"rgba(55,55,55,0.4)",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,right:0,display:this.state.shielddisplay}}>
+                <div className="container">
+                    <div className="leaderboard" style={{marginTop: this.state.margintop}}>
+                        <div className="panel panel-default" id="shieldsmall" >
+                            <div className="panel-body">
+                                <a><i className="fa fa-spinner fa-spin" style={{marginRight:15}}/>{this.state.shieldmsg}</a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div>
                 <Alarmview ref="Alarmview"/>
             </div>
@@ -2212,7 +2249,7 @@ function showtempmodal(){
  * for image_show
  */
 //var socket = io.connect();
-var start = 99;
+var start = 249;
 var startid=0;
 function update_image_test(src,blur){
     var coverid = startid;
@@ -2231,10 +2268,10 @@ function update_image_test(src,blur){
     img.onload = function(){
         imgcover.style.zIndex= imgcover.style.zIndex -10;
         blur_handle.innerHTML="blur:"+blur;
-        if(imgcover.style.zIndex<0){
+        if(imgcover.style.zIndex<=50){
             for(let i=0;i<10;i++){
                 let image_handle = document.getElementById("img"+i); //need optimize
-                image_handle.style.zIndex= 99 -i;
+                image_handle.style.zIndex= 249 -i;
             }
         }
 
@@ -2291,7 +2328,7 @@ function clearwebview(){
     for(var i=0;i<10;i++){
         var image_handle = document.getElementById("img"+i);
         image_handle.src = "./img/default.jpg";
-        image_handle.style.zIndex= 99 -i;
+        image_handle.style.zIndex= 249 -i;
     }
     var blur_handle = document.getElementById("blurvalue");
     blur_handle.innerHTML="";

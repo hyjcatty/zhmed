@@ -32,7 +32,7 @@ export default class historycard extends Component {
             footheight:100,
             margin:75,
             hide:"none",
-            animate:"animated fadeInLeft",
+            animate:"first-card-level animated fadeInLeft",
             callback:null,
 
             margintop:20,
@@ -78,7 +78,7 @@ export default class historycard extends Component {
     hide(){
         if(this.state.hide === "none") return;
         else{
-            this.setState({animate:"animated fadeOut"});
+            this.setState({animate:"first-card-level animated fadeOut"});
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
@@ -90,7 +90,7 @@ export default class historycard extends Component {
         //this.setState({hide:"block"});
         if(this.state.hide === "block") return;
         else{
-            this.setState({hide:"block",animate:"animated fadeIn"});
+            this.setState({hide:"block",animate:"first-card-level animated fadeIn"});
             let self = this;
             setTimeout(function(){
                 self.state.callback(self.state.content);
@@ -99,9 +99,9 @@ export default class historycard extends Component {
     }
     switch_system_info(){
         if(this.state.hide == "none"){
-            this.setState({hide:"block",animate:"animated fadeIn"});
+            this.setState({hide:"block",animate:"first-card-level animated fadeIn"});
         }else{
-            this.setState({animate:"animated fadeOut"});
+            this.setState({animate:"first-card-level animated fadeOut"});
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
@@ -117,7 +117,7 @@ export default class historycard extends Component {
     render() {
 
         return (
-            <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,left:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',zIndex:"99",willChange: "transform, opacity"}}>
+            <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,left:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',willChange: "transform, opacity"}}>
                 <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key="status-top" style={{height:this.state.height,maxHeight:this.state.height}}>
                     <div className="tile-stats"  style={{marginTop:"15px",height:(this.state.height-30),maxHeight:(this.state.height-30)}}>
                         <div className="count" style={{fontSize:24}}>{this.state.language.historyinfo}</div>

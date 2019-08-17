@@ -226,7 +226,7 @@ export default class foot extends Component {
     render() {
         return (
 
-            <div style={{position:"relative",background:"#eeeeee",height:this.state.height,width:'100%',display:'table'}}>
+            <div className="top-level" style={{position:"relative",background:"#eeeeee",height:this.state.height,width:'100%',display:'table'}}>
                 <div style={{position:"relative",background:"#eeeeee",height:this.state.height,width:'50%',display:'table',float:"left"}}>
 
                     <button  type="button" className="btn btn-warning btn-sm pull-left" style={{marginLeft:"5px",marginTop:"5px",height:(this.state.height-10),width:(this.state.height-10)*1.6,display:"none"}} disabled={this.state.disabled} onClick={this.handle_click_return.bind(this)}>

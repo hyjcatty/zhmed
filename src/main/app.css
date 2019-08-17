@@ -3,3 +3,43 @@
      background-color: #d4d4d4;
      border-color: #e0e0e0;
  }
+
+.shield-level{
+    z-index: 9999;
+}
+.alarm-level{
+    z-index: 9000;
+}
+.modal-level{
+     z-index: 999;
+ }
+.bubble-level{
+    z-index: 999;
+}
+.always-on-level{
+     z-index: 999;
+ }
+.always-on-level2{
+    z-index: 998;
+}
+.top-level{
+    z-index: 500;
+}
+.second-card-level{
+    z-index: 400;
+}
+.first-subcard-level-float{
+     z-index: 301;
+ }
+.first-subcard-level{
+    z-index: 300;
+}
+.date-control{
+    z-index: 109;
+}
+.first-card-level{
+    z-index: 1;
+}
+.view-level{
+    z-index: 0;
+}

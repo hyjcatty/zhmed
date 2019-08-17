@@ -27,7 +27,7 @@ export default class systeminfocard extends Component {
             consoleheight:420,
             margin:75,
             hide:"none",
-            animate:"animated fadeInRight",
+            animate:"always-on-level animated fadeInRight",
             callback:null,
             margintop:20,
             content:[],
@@ -63,9 +63,9 @@ export default class systeminfocard extends Component {
     }
     switch_system_info(){
         if(this.state.hide == "none"){
-            this.setState({hide:"block",animate:"animated fadeInRight"},this.calculate_height);
+            this.setState({hide:"block",animate:"always-on-level animated fadeInRight"},this.calculate_height);
         }else{
-            this.setState({animate:"animated fadeOutRight"});
+            this.setState({animate:"always-on-level animated fadeOutRight"});
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
@@ -92,7 +92,7 @@ export default class systeminfocard extends Component {
         }
         console.log(center_panel);
         return (
-            <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:this.state.margin,right:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',zIndex:"999",willChange: "transform, opacity"}}>
+            <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:this.state.margin,right:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',willChange: "transform, opacity"}}>
                 <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key="status-top" ref={this.topref}>
                     <div className="tile-stats"  style={{marginTop:"15px"}}>
                         <div className="count" style={{fontSize:24}}>{this.state.language.systeminfo}</div>

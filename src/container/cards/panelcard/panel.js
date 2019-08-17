@@ -32,7 +32,7 @@ export default class panelcard extends Component {
             hide:"none",
             showindex:"block",
             lock:"",
-            animate:"animated fadeInRight",
+            animate:"first-card-level animated fadeInRight",
             callback:null,
             margintop:20,
             key:"panelinfo",
@@ -381,7 +381,7 @@ export default class panelcard extends Component {
     hide(){
         if(this.state.hide == "none") return;
         else{
-            this.setState({animate:"animated fadeOutRight"});
+            this.setState({animate:"first-card-level animated fadeOutRight"});
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
@@ -393,7 +393,7 @@ export default class panelcard extends Component {
         //this.setState({hide:"block"});
         if(this.state.hide == "block") return;
         else{
-            this.setState({hide:"block",animate:"animated fadeInRight"});
+            this.setState({hide:"block",animate:"first-card-level animated fadeInRight"});
         }
     }
     clearruninfo(){
@@ -413,9 +413,9 @@ export default class panelcard extends Component {
     }
     switch_system_info(){
         if(this.state.hide == "none"){
-            this.setState({hide:"block",animate:"animated fadeInRight"});
+            this.setState({hide:"block",animate:"first-card-level animated fadeInRight"});
         }else{
-            this.setState({animate:"animated fadeOutRight"});
+            this.setState({animate:"first-card-level animated fadeOutRight"});
             let self = this;
             setTimeout(function(){
                 self.setState({hide:"none"});
@@ -637,7 +637,7 @@ export default class panelcard extends Component {
                 {buttons}
             </div>
         return (
-            <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,right:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',zIndex:"99",willChange: "transform, opacity"}}>
+            <div className={this.state.animate} style={{position:"absolute",background:"#FFFFFF",height:this.state.height,maxHeight:this.state.height,width:this.state.width,top:0,right:0,display:this.state.hide,overflow:'scroll',overflowX:'hidden',overflowY:'hidden',willChange: "transform, opacity"}}>
                 <div className="col-xs-12 col-md-12 col-sm-12 col-lg-12" key="status-top">
                     <div className="tile-stats"  style={{marginTop:"15px"}}>
                         <div className="count" style={{fontSize:24}}>{this.state.language.panelinfo}</div>

@@ -37,9 +37,9 @@ If u want to use use Express server, u need to run as follow:
 1) cd ./express_module
 2) npm install --save-dev
 3) cd ..
-4) gulp exserver
-the 4) step will update the Express server's node_modules, and it will cost time. so if your environment already has the modules, u can just run
 4) gulp exall
+the 4) step will update the Express server's node_modules, and it will cost time. so if your environment already has the modules, u can just run
+4) gulp exserver
 
 
 
